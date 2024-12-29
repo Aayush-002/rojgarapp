@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -56,3 +56,9 @@ def auth_signup(request):
         messages.success(request, "Account created successfully!")
         return redirect("login")
     return render(request, "auth/signup.html")
+
+
+def auth_logout(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully!")
+    return redirect("login")
