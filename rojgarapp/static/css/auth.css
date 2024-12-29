@@ -1,0 +1,85 @@
+/* Common Styles for both Login and Sign Up Pages */
+
+/* Styling for the card container */
+.auth-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin: 0 auto;
+}
+
+/* Heading for the form pages */
+.auth-heading {
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Custom styles for the input fields */
+.auth-input {
+  border-radius: 5px;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+/* Focus effect on inputs */
+.auth-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Submit Button */
+.auth-btn {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+/* Button hover effect */
+.auth-btn:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+/* Styling for alert messages */
+.alert {
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Style the link at the bottom */
+a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* General adjustments for the layout */
+footer {
+  margin-top: 20px;
+}
+
+.text-muted {
+  color: #777;
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .auth-card {
+    max-width: 90%; /* Makes the card more fluid on smaller screens */
+  }
+}

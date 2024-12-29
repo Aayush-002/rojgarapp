@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Login - RojgarApp{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<!-- Container for the Login Form -->
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4 auth-card">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4 auth-heading">Login to RojgarApp</h3>
+            <!-- Display Error/Sucess Messages -->
+            {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control auth-input" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control auth-input" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 auth-btn">Login</button>
+            </form>
+            <!-- <div class="mt-3 text-center">
+                <a href="#" class="text-muted">Forgot password?</a>
+            </div> -->
+            <div class="mt-3 text-center">
+                <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
