@@ -1,24 +1,44 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
-    <div class="container">
-        <a class="navbar-brand" href="/">RojgarApp</a>
+<header class="header">
+    <div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    </div>
+    <div class="container d-flex justify-content-between align-items-center py-3">
+        <a href="https://khadakmun.gov.np/" class="d-flex align-items-center text-decoration-none">
+            <img src="https://khadakmun.gov.np/sites/all/themes/newmun/new_logo.png" alt="Logo"
+                style="max-width: 150px;">
+            <span class="d-flex flex-column ms-3" style="color: #9e0c18;">
+                <span class="h5">खडक नगरपालिका, नगर कार्यपालिकाकाे कार्यालय</span>
+                <span class="h6">कल्याणपुर, सप्तरी, मधेश प्रदेश </span>
+            </span>
+        </a>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto"> <!-- 'ms-auto' for right-aligning the navbar items -->
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-            </ul>
+        <div>
+            <img src="https://khadakmun.gov.np/sites/khadakmun.gov.np/files/img/Flag_of_Nepal.gif" alt="Nepal Flag"
+                style="max-width: 100px;">
         </div>
     </div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container">
+            <a class="navbar-brand" href="/">RojgarApp</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto"> <!-- 'ms-auto' for right-aligning the navbar items -->
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
