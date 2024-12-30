@@ -1,0 +1,113 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="container min-vh-100">
+    <style>
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-icon {
+            font-size: 2.5rem;
+            color: #007bff;
+        }
+
+        .chart-container {
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+    <!-- Dashboard Header -->
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Dashboard</h1>
+        <!-- KPI Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <i class="kpi-icon bi bi-people"></i>
+                    <h5 class="mt-2">Total Users</h5>
+                    <p class="h3 mb-0">1,245</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <i class="kpi-icon bi bi-graph-up"></i>
+                    <h5 class="mt-2">Jobs Posted</h5>
+                    <p class="h3 mb-0">865</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <i class="kpi-icon bi bi-briefcase"></i>
+                    <h5 class="mt-2">Jobs Filled</h5>
+                    <p class="h3 mb-0">540</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <i class="kpi-icon bi bi-clock-history"></i>
+                    <h5 class="mt-2">Active Jobs</h5>
+                    <p class="h3 mb-0">325</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Monthly User Growth</h5>
+                        <div class="chart-container">
+                            <canvas id="userGrowthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Jobs Status</h5>
+                        <div class="chart-container">
+                            <canvas id="jobsStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Example Chart.js configuration
+    const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+    const userGrowthChart = new Chart(userGrowthCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'User Growth',
+                data: [100, 200, 300, 400, 500, 600],
+                borderColor: '#007bff',
+                fill: false
+            }]
+        }
+    });
+
+    const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
+    const jobsStatusChart = new Chart(jobsStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Active', 'Filled', 'Pending'],
+            datasets: [{
+                data: [40, 30, 30],
+                backgroundColor: ['#007bff', '#28a745', '#ffc107']
+            }]
+        }
+    });
+</script>
+{% endblock %}

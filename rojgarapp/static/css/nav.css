@@ -1,10 +1,10 @@
 .navbar-nav .nav-item.active .nav-link {
   font-weight: bold;
-  color: #6be1f4; /* Gold color for active item */
+  color: #6be1f4;
 }
 
 .navbar-nav .nav-item .nav-link:hover {
-  color: #6be1f4; /* Gold color when hovered */
+  color: #6be1f4;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
