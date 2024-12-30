@@ -9,3 +9,15 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.custom-carousel {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow: hidden;
+}
+
+.custom-carousel img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
