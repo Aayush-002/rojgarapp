@@ -1,0 +1,177 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>User Details Form</h1>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <!-- Personal Details -->
+        <h3>Personal Details</h3>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.middle_name.label_tag }}
+                {{ form.middle_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                {{ form.dob.label_tag }}
+                {{ form.dob|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.mobile_number.label_tag }}
+                {{ form.mobile_number|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.contact_number.label_tag }}
+                {{ form.contact_number|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                {{ form.email_address.label_tag }}
+                {{ form.email_address|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.national_id_number.label_tag }}
+                {{ form.national_id_number|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                {{ form.gender.label_tag }}
+                {{ form.gender|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.citizenship_number.label_tag }}
+                {{ form.citizenship_number|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.citizenship_issued_date.label_tag }}
+                {{ form.citizenship_issued_date|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.citizenship_issued_district.label_tag }}
+            {{ form.citizenship_issued_district|add_class:"form-control" }}
+        </div>
+
+        <!-- Parent Details -->
+        <h3>Parent Details</h3>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                {{ form.fathers_name.label_tag }}
+                {{ form.fathers_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.mothers_name.label_tag }}
+                {{ form.mothers_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.spouse_name.label_tag }}
+                {{ form.spouse_name|add_class:"form-control" }}
+            </div>
+        </div>
+
+        <!-- Permanent Address -->
+        <h3>Permanent Address</h3>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                {{ form.permanent_province.label_tag }}
+                {{ form.permanent_province|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.permanent_district.label_tag }}
+                {{ form.permanent_district|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.permanent_municipality_name.label_tag }}
+                {{ form.permanent_municipality_name|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                {{ form.permanent_ward_no.label_tag }}
+                {{ form.permanent_ward_no|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.permanent_tole_name.label_tag }}
+                {{ form.permanent_tole_name|add_class:"form-control" }}
+            </div>
+        </div>
+
+        <!-- Current Address -->
+        <h3>Current Address</h3>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                {{ form.current_province.label_tag }}
+                {{ form.current_province|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.current_district.label_tag }}
+                {{ form.current_district|add_class:"form-control" }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.current_municipality_name.label_tag }}
+                {{ form.current_municipality_name|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                {{ form.current_ward_no.label_tag }}
+                {{ form.current_ward_no|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.current_tole_name.label_tag }}
+                {{ form.current_tole_name|add_class:"form-control" }}
+            </div>
+        </div>
+
+        <!-- Education Background -->
+        <h3>Education Background</h3>
+        <div class="form-group">
+            {{ form.education_background.label_tag }}
+            {{ form.education_background|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+            {{ form.professional_skill.label_tag }}
+            {{ form.professional_skill|add_class:"form-control" }}
+        </div>
+
+        <!-- File Uploads -->
+        <h3>File Uploads</h3>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                {{ form.photo.label_tag }}
+                {{ form.photo|add_class:"form-control-file" }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.citizenship_photo_front.label_tag }}
+                {{ form.citizenship_photo_front|add_class:"form-control-file" }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                {{ form.citizenship_photo_back.label_tag }}
+                {{ form.citizenship_photo_back|add_class:"form-control-file" }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.cv_resume.label_tag }}
+                {{ form.cv_resume|add_class:"form-control-file" }}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="btn btn-primary" type="submit">Submit Form</button>
+    </form>
+</div>
+{% endblock %}

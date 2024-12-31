@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
+from .forms import UserDetailsForm
 
 
 def home(request):
@@ -62,3 +64,16 @@ def auth_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully!")
     return redirect("login")
+
+def user_details_view(request):
+    if request.method == 'POST':
+        form = UserDetailsForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
+        if form.is_valid():
+            print(form.cleaned_data)
+            
+            # Redirect to a success page
+            return HttpResponseRedirect('/success/')
+    else:
+        form = UserDetailsForm()
+
+    return render(request, 'app/forms.html', {'form': form})
