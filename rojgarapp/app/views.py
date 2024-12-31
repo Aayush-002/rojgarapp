@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
@@ -7,9 +8,15 @@ from datetime import datetime
 from .forms import UserDetailsForm
 
 
+@login_required
 def home(request):
     current_year = datetime.now().year
     return render(request, "app/index.html", {"current_year": current_year})
+
+
+@login_required
+def dashboard(request):
+    return render(request, "app/dashboard.html")
 
 
 def auth_login(request):
