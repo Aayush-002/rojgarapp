@@ -11,27 +11,9 @@
             </span>
         </a>
 
-<<<<<<< HEAD
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto"> <!-- 'ms-auto' for right-aligning the navbar items -->
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Form Submission</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-            </ul>
-=======
         <div>
             <img src="https://khadakmun.gov.np/sites/khadakmun.gov.np/files/img/Flag_of_Nepal.gif" alt="Nepal Flag"
                 style="max-width: 100px;">
->>>>>>> 85690d65da5eb66656f184825752c7f58fa6d561
         </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
@@ -51,7 +33,7 @@
                         <li class="nav-item"><a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}"
                                 href="/dashboard">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Notice</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/forms">Register Your Details</a></li>
                         {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                         {% else %}

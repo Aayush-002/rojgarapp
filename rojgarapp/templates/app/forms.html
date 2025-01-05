@@ -1,177 +1,324 @@
 {% extends 'layouts/base.html' %}
 
+{% block title %}Form - RojgarApp{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h1>User Details Form</h1>
-    <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
+<div class="container mt-2">
+    
 
-        <!-- Personal Details -->
-        <h3>Personal Details</h3>
+    <div class="row">
+    
+    <div class="col-md-3"> </div>
+    
+    <div class="col-md-6">
+
+          <!-- Display Error/Sucess Messages -->
+          {% if messages %}
+          <div class="alert alert-danger">
+              {% for message in messages %}
+              <p>{{ message }}</p>
+              {% endfor %}
+          </div>
+          {% endif %}
+    </div>
+</div>
+
+<form method="post" action = "{% url 'forms' %}" enctype="multipart/form-data" class="p-4 bg-light rounded shadow-sm">
+    {% csrf_token %}
+
+    <!-- Form Header -->
+    <div class="mb-4 text-center">
+        <h2 class="text-primary">Personal Details Form</h2>
+        <p class="text-muted">Please fill in the details below.</p>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="border rounded p-3 mb-4">
+        <h4 class="text-secondary text-center mb-4">Personal Information</h4>
         <div class="form-row">
-            <div class="col-md-4 mb-3">
-                {{ form.first_name.label_tag }}
-                {{ form.first_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="first_name" class="font-weight-bold">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.middle_name.label_tag }}
-                {{ form.middle_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="middle_name" class="font-weight-bold">Middle Name</label>
+                <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Middle Name">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.last_name.label_tag }}
-                {{ form.last_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="last_name" class="font-weight-bold">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
             </div>
         </div>
+
         <div class="form-row">
-            <div class="col-md-4 mb-3">
-                {{ form.dob.label_tag }}
-                {{ form.dob|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="dob" class="font-weight-bold">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" name="dob">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.mobile_number.label_tag }}
-                {{ form.mobile_number|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="mobile_number" class="font-weight-bold">Mobile Number</label>
+                <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Mobile Number">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.contact_number.label_tag }}
-                {{ form.contact_number|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="contact_number" class="font-weight-bold">Contact Number</label>
+                <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Contact Number">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="email" class="font-weight-bold">Email Address</label>
+                <input type="email" class="form-control" id="email_address" name="email_address" placeholder="Enter your email address">
+            </div>
+            
+            <div class="form-group col-md-4">
+                <label for="contact_number" class="font-weight-bold">National ID Number</label>
+                <input type="text" class="form-control" id="national_id_number" name="national_id_number" placeholder="National ID Number">
             </div>
         </div>
+
         <div class="form-row">
-            <div class="col-md-6 mb-3">
-                {{ form.email_address.label_tag }}
-                {{ form.email_address|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="gender" class="font-weight-bold">Gender</label>
+                <select id="gender" class="form-control" name="gender">
+                    <option value="" selected>Choose...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                </select>
             </div>
-            <div class="col-md-6 mb-3">
-                {{ form.national_id_number.label_tag }}
-                {{ form.national_id_number|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="citizenship_number" class="font-weight-bold">Citizenship Number</label>
+                <input type="text" class="form-control" id="citizenship_number" name="citizenship_number" placeholder="Citizenship Number">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="citizenship_issued_date" class="font-weight-bold">Citizenship Issued Date</label>
+                <input type="date" class="form-control" id="citizenship_issued_date" name="citizenship_issued_date">
             </div>
         </div>
-        <div class="form-row">
-            <div class="col-md-4 mb-3">
-                {{ form.gender.label_tag }}
-                {{ form.gender|add_class:"form-control" }}
-            </div>
-            <div class="col-md-4 mb-3">
-                {{ form.citizenship_number.label_tag }}
-                {{ form.citizenship_number|add_class:"form-control" }}
-            </div>
-            <div class="col-md-4 mb-3">
-                {{ form.citizenship_issued_date.label_tag }}
-                {{ form.citizenship_issued_date|add_class:"form-control" }}
-            </div>
-        </div>
+
         <div class="form-group">
-            {{ form.citizenship_issued_district.label_tag }}
-            {{ form.citizenship_issued_district|add_class:"form-control" }}
+            <label for="citizenship_issued_district" class="font-weight-bold">Citizenship Issued District</label>
+            <input type="text" class="form-control" id="citizenship_issued_district" name="citizenship_issued_district" placeholder="Issued District">
         </div>
+    </div>
 
-        <!-- Parent Details -->
-        <h3>Parent Details</h3>
+    <!-- Family Information -->
+    <div class="border rounded p-3 mb-4">
+        <h4 class="text-secondary text-center mb-4">Family Information</h4>
         <div class="form-row">
-            <div class="col-md-4 mb-3">
-                {{ form.fathers_name.label_tag }}
-                {{ form.fathers_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="fathers_name" class="font-weight-bold">Father's Name</label>
+                <input type="text" class="form-control" id="fathers_name" name="fathers_name" placeholder="Father's Name">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.mothers_name.label_tag }}
-                {{ form.mothers_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="mothers_name" class="font-weight-bold">Mother's Name</label>
+                <input type="text" class="form-control" id="mothers_name" name="mothers_name" placeholder="Mother's Name">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.spouse_name.label_tag }}
-                {{ form.spouse_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="spouse_name" class="font-weight-bold">Spouse Name</label>
+                <input type="text" class="form-control" id="spouse_name" name="spouse_name" placeholder="Spouse Name (Optional)">
             </div>
         </div>
+    </div>
 
-        <!-- Permanent Address -->
-        <h3>Permanent Address</h3>
+    <!-- Address Section -->
+    <div class="border rounded p-3 mb-4">
+        <h4 class="text-secondary text-center mb-4">Address</h4>
         <div class="form-row">
-            <div class="col-md-4 mb-3">
-                {{ form.permanent_province.label_tag }}
-                {{ form.permanent_province|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="province" class="font-weight-bold">Province</label>
+                <input type="text" class="form-control" id="province" name="province" placeholder="Province">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.permanent_district.label_tag }}
-                {{ form.permanent_district|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="district" class="font-weight-bold">District</label>
+                <input type="text" class="form-control" id="district" name="district" placeholder="District">
             </div>
-            <div class="col-md-4 mb-3">
-                {{ form.permanent_municipality_name.label_tag }}
-                {{ form.permanent_municipality_name|add_class:"form-control" }}
+            <div class="form-group col-md-4">
+                <label for="municipality" class="font-weight-bold">Municipality</label>
+                <input type="text" class="form-control" id="municipality" name="municipality" placeholder="Municipality">
             </div>
         </div>
         <div class="form-row">
-            <div class="col-md-6 mb-3">
-                {{ form.permanent_ward_no.label_tag }}
-                {{ form.permanent_ward_no|add_class:"form-control" }}
+            <div class="form-group col-md-6">
+                <label for="permanent_ward_no" class="font-weight-bold">Ward No</label>
+                <input type="number" class="form-control" id="ward_no" name="ward_no" placeholder="Ward No">
             </div>
-            <div class="col-md-6 mb-3">
-                {{ form.permanent_tole_name.label_tag }}
-                {{ form.permanent_tole_name|add_class:"form-control" }}
+            <div class="form-group col-md-6">
+                <label for="tole_name" class="font-weight-bold">Tole Name</label>
+                <input type="text" class="form-control" id="tole_name" name="tole_name" placeholder="Tole Name">
             </div>
         </div>
+    </div>
+       <!-- Education and Skills -->
+       <div class="border rounded p-3 mb-4">
+        <h4 class="text-secondary text-center mb-4">Education and Professional Skills</h4>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="education_background" class="font-weight-bold">Education Background</label>
+                <select id="education_background" class="form-control" name="education_background">
+                    <option value="" selected>Choose...</option>
+                    <option value="slc_see">SLC/SEE</option>
+                    <option value="plus_two">+2</option>
+                    <option value="bachelor">Bachelor</option>
+                    <option value="masters">Masters</option>
+                    <option value="diploma">Diploma</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="professional_skill" class="font-weight-bold">Professional Skills</label>
+                <textarea class="form-control" id="professional_skill" name="professional_skill" rows="3" placeholder="Describe your professional skills"></textarea>
+            </div>
+        </div>
+    </div>
+    <!-- File Uploads -->
+<div class="border rounded p-4 mb-4 bg-light shadow-sm">
+    <h4 class="text-secondary text-center mb-4">
+        <i class="fas fa-upload"></i> Documnets Upload
+    </h4>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="photo_pp" class="font-weight-bold text-primary">
+                <i class="fas fa-user-circle"></i> Profile Photo
+            </label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="photo_pp" name="photo_pp" accept="image/*">
+                <label class="custom-file-label" for="photo_pp">Choose file...</label>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="citizenship_photo_front" class="font-weight-bold text-primary">
+                <i class="fas fa-id-card"></i> Citizenship Photo (Front)
+            </label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="citizenship_photo_front" name="citizenship_photo_front" accept="image/*">
+                <label class="custom-file-label" for="citizenship_photo_front">Choose file...</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-row mt-3">
+        <div class="form-group col-md-6">
+            <label for="citizenship_photo_back" class="font-weight-bold text-primary">
+                <i class="fas fa-id-card-alt"></i> Citizenship Photo (Back)
+            </label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="citizenship_photo_back" name="citizenship_photo_back" accept="image/*">
+                <label class="custom-file-label" for="citizenship_photo_back">Choose file...</label>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="cv_resume" class="font-weight-bold text-primary">
+                <i class="fas fa-file-alt"></i> Resume/CV
+            </label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="cv_resume" name="cv_resume" accept=".pdf,.doc,.docx">
+                <label class="custom-file-label" for="cv_resume">Choose file...</label>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <!-- Current Address -->
-        <h3>Current Address</h3>
-        <div class="form-row">
-            <div class="col-md-4 mb-3">
-                {{ form.current_province.label_tag }}
-                {{ form.current_province|add_class:"form-control" }}
-            </div>
-            <div class="col-md-4 mb-3">
-                {{ form.current_district.label_tag }}
-                {{ form.current_district|add_class:"form-control" }}
-            </div>
-            <div class="col-md-4 mb-3">
-                {{ form.current_municipality_name.label_tag }}
-                {{ form.current_municipality_name|add_class:"form-control" }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-md-6 mb-3">
-                {{ form.current_ward_no.label_tag }}
-                {{ form.current_ward_no|add_class:"form-control" }}
-            </div>
-            <div class="col-md-6 mb-3">
-                {{ form.current_tole_name.label_tag }}
-                {{ form.current_tole_name|add_class:"form-control" }}
-            </div>
-        </div>
 
-        <!-- Education Background -->
-        <h3>Education Background</h3>
+    <!-- Submit Button -->
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+    </div>
+</form>
+
+{% comment %} <script>
+    // Handle form submission
+    const form = document.getElementById('personal-details-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        const formData = new FormData(form);
+
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.redirect_url) {
+                // Display success message for 2 seconds
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 2000); // 2-second delay
+            }
+        }
+    });
+</script> {% endcomment %}
+
+{% comment %} <form method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    {{form.as_p}}
+    <br>
+        <div class="d-grid gap-2">
+          <button class="btn btn-warning" type="submit">Submit</button>
+        </div> 
+</form> {% endcomment %}
+
+{% endblock %}
+        
+    
+    
+    {% comment %} form code {% endcomment %}
+   
+    {% comment %} <form method="post">{% csrf_token %}
         <div class="form-group">
-            {{ form.education_background.label_tag }}
-            {{ form.education_background|add_class:"form-control" }}
+        <input type="text" class="form-control" name="name" placeholder="Enter Your Name" required>
         </div>
+        
+        
         <div class="form-group">
-            {{ form.professional_skill.label_tag }}
-            {{ form.professional_skill|add_class:"form-control" }}
+        <input type="email" class="form-control mt-2" name="Email" placeholder="Enter Your Email" required>
         </div>
 
-        <!-- File Uploads -->
-        <h3>File Uploads</h3>
-        <div class="form-row">
-            <div class="col-md-6 mb-3">
-                {{ form.photo.label_tag }}
-                {{ form.photo|add_class:"form-control-file" }}
-            </div>
-            <div class="col-md-6 mb-3">
-                {{ form.citizenship_photo_front.label_tag }}
-                {{ form.citizenship_photo_front|add_class:"form-control-file" }}
-            </div>
+        <div class="form-group">
+
+            <select class="form-control mt-2" id="Gender" name="Gender" required>
+              <option selected>Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Female">Others</option>
+            </select>
+          </div>
+        
+        <div class="form-group">
+        <input 
+            type="number" class="form-control mt-2" name="PhoneNumber" placeholder="Enter Your Number" required>
         </div>
-        <div class="form-row">
-            <div class="col-md-6 mb-3">
-                {{ form.citizenship_photo_back.label_tag }}
-                {{ form.citizenship_photo_back|add_class:"form-control-file" }}
-            </div>
-            <div class="col-md-6 mb-3">
-                {{ form.cv_resume.label_tag }}
-                {{ form.cv_resume|add_class:"form-control-file" }}
-            </div>
+        
+        <div class="form-group">
+            <input type="date" class="form-control mt-2" name="DOB" placeholder="Date Of Birth" required/>
+          </div>
+
+        <div class="form-group">
+        <input type="text" class="form-control" name="Skill" placeholder="Enter Your Skill" required>
         </div>
 
-        <!-- Submit Button -->
-        <button class="btn btn-primary" type="submit">Submit Form</button>
+        <div class="form-group">
+            <input type="text" class="form-control" name="Address" placeholder="Enter Your Address" required>
+        </div>
+        
+        <br>
+        <div class="d-grid gap-2">
+          <button class="btn btn-warning" type="submit">Submit</button>
+        
+        </div>
+        
     </form>
+        
+    
+    
+    </div>
+    
+    <div class="col-md-3"></div>
+    
+    </div>
+    
+    
+    
 </div>
 {% endblock %}
+
+
+ {% endcomment %}
+

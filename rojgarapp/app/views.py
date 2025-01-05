@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
-from .forms import UserDetailsForm
+from .forms import PersonalDetailsForm
+from .models import UserDetails
 
 
 @login_required
@@ -72,15 +73,54 @@ def auth_logout(request):
     messages.success(request, "You have been logged out successfully!")
     return redirect("login")
 
-def user_details_view(request):
-    if request.method == 'POST':
-        form = UserDetailsForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
-        if form.is_valid():
-            print(form.cleaned_data)
-            
-            # Redirect to a success page
-            return HttpResponseRedirect('/success/')
-    else:
-        form = UserDetailsForm()
 
-    return render(request, 'app/forms.html', {'form': form})
+# def forms(request):
+#     if request.method == "POST":
+#         name = request.POST.get('name')
+#         Email = request.POST.get('Email')
+#         Gender = request.POST.get('Gender')
+#         PhoneNumber = request.POST.get('PhoneNumber')
+#         DOB = request.POST.get('DOB')
+#         Skill = request.POST.get('Skill')
+#         Address = request.POST.get('Address')
+
+#         query  = UserDetails(name = name,Email = Email,Gender = Gender, 
+#                              PhoneNumber = PhoneNumber,DOB = DOB,
+#                              Skill = Skill, Address = Address)
+#         query.save()
+#         messages.success(request,"Successfully registered")
+#         return redirect('/forms')
+        
+
+#     return render(request, "app/forms.html")
+
+def forms(request):
+    if request.method =="POST":
+        form = PersonalDetailsForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Successfully registered")
+            return redirect('home')
+        else:
+            messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
+    else:
+        form = PersonalDetailsForm()
+    print(form)
+    return render(request,"app/forms.html",{'form':form})
+
+
+
+
+
+
+    # if request.method == 'POST':
+    #     form = UserDetailsForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
+    #     if form.is_valid():
+    #         print(form.cleaned_data)
+            
+    #         # Redirect to a success page
+    #         return HttpResponseRedirect('/success/')
+    # else:
+    #     form = UserDetailsForm()
+
+    # return render(request, 'app/forms.html', {'form': form})
