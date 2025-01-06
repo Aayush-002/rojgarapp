@@ -1,0 +1,54 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}List of Forms{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="display-4 mb-4 text-primary text-center">Form Records</h2>
+    
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col" class="h5 fw-bold">S.N.</th>
+                            <th scope="col" class="h5 fw-bold">Name</th>
+                            <th scope="col" class="h5 fw-bold">Mobile Number</th>
+                            <th scope="col" class="h5 fw-bold">Education</th>
+                            <th scope="col" class="h5 fw-bold">Citizenship Number</th>
+                            <th scope="col" class="h5 fw-bold">Professional Skill</th>
+                            <th scope="col" class="h5 fw-bold">Father's Name</th>
+                            <th scope="col" class="h5 fw-bold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in forms %}
+                        <tr class="align-middle">
+                            <th scope="row" class="fs-5">{{ forloop.counter }}</th>
+                            <td class="fs-5">{{ form.first_name|default:"" }} {{ form.middle_name|default:"" }} {{ form.last_name|default:"" }}</td>
+                            <td class="fs-5">{{form.mobile_number}}</td>
+                            <td class="fs-5">{{form.education_background}}</td>
+                            <td class="fs-5">{{form.citizenship_number}}</td>
+                            <td class="fs-5">{{form.professional_skill}}</td>
+                            <td class="fs-5">{{form.fathers_name}}</td>
+
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'forms_edit' form.id %}" class="btn btn-primary me-2">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="{% url 'forms_delete' form.id %}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
 from .forms import PersonalDetailsForm
-from .models import UserDetails
+from .models import PersonalDetails
 
 
 @login_required
@@ -15,7 +15,6 @@ def home(request):
     return render(request, "app/index.html", {"current_year": current_year})
 
 
-@login_required
 def dashboard(request):
     return render(request, "app/dashboard.html")
 
@@ -73,34 +72,14 @@ def auth_logout(request):
     messages.success(request, "You have been logged out successfully!")
     return redirect("login")
 
-
-# def forms(request):
-#     if request.method == "POST":
-#         name = request.POST.get('name')
-#         Email = request.POST.get('Email')
-#         Gender = request.POST.get('Gender')
-#         PhoneNumber = request.POST.get('PhoneNumber')
-#         DOB = request.POST.get('DOB')
-#         Skill = request.POST.get('Skill')
-#         Address = request.POST.get('Address')
-
-#         query  = UserDetails(name = name,Email = Email,Gender = Gender, 
-#                              PhoneNumber = PhoneNumber,DOB = DOB,
-#                              Skill = Skill, Address = Address)
-#         query.save()
-#         messages.success(request,"Successfully registered")
-#         return redirect('/forms')
-        
-
-#     return render(request, "app/forms.html")
-
+#create forms
 def forms(request):
     if request.method =="POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,"Successfully registered")
-            return redirect('home')
+            return redirect('forms_list')
         else:
             messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
     else:
@@ -109,6 +88,36 @@ def forms(request):
     return render(request,"app/forms.html",{'form':form})
 
 
+# show list of submitted forms
+def forms_list(request):
+    forms = PersonalDetails.objects.order_by('-created_at')
+    return render(request,'app/forms_list.html',{'forms':forms})
+
+#edit_forms
+def forms_edit(request,form_id):
+    edit_form = get_object_or_404(PersonalDetails, pk=form_id)
+    if request.method =="POST":
+        form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Successfully updated")
+            return redirect('forms_list')
+    else:
+        form = PersonalDetailsForm(instance=edit_form)
+    return render(request,"app/forms.html",{'form':form})
+
+#delete form
+def forms_delete(request,form_id):
+    delete_form = get_object_or_404(PersonalDetails, pk=form_id)
+    if request.method == 'POST':
+        delete_form.delete()
+        messages.success(request,"Successfully deleted")
+        return redirect('forms_list')
+    return render(request,"app/forms_confirm_delete.html",{'delete_form':delete_form})
+
+
+
+    
 
 
 
