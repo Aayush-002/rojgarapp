@@ -14,7 +14,7 @@ def home(request):
     current_year = datetime.now().year
     return render(request, "app/index.html", {"current_year": current_year})
 
-
+@login_required
 def dashboard(request):
     return render(request, "app/dashboard.html")
 
@@ -88,12 +88,19 @@ def forms(request):
     return render(request,"app/forms.html",{'form':form})
 
 
-# show list of submitted forms
+# show list of submitted forms 
+@login_required
 def forms_list(request):
     forms = PersonalDetails.objects.order_by('-created_at')
+    if request.method == "GET":
+        list = request.GET.get('form_search')
+        if list != None:
+            forms = PersonalDetails.objects.filter(first_name__icontains = list)
+            
     return render(request,'app/forms_list.html',{'forms':forms})
 
 #edit_forms
+@login_required
 def forms_edit(request,form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
     if request.method =="POST":
@@ -107,6 +114,7 @@ def forms_edit(request,form_id):
     return render(request,"app/forms.html",{'form':form})
 
 #delete form
+@login_required
 def forms_delete(request,form_id):
     delete_form = get_object_or_404(PersonalDetails, pk=form_id)
     if request.method == 'POST':
@@ -117,19 +125,3 @@ def forms_delete(request,form_id):
 
 
 
-    
-
-
-
-
-    # if request.method == 'POST':
-    #     form = UserDetailsForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
-    #     if form.is_valid():
-    #         print(form.cleaned_data)
-            
-    #         # Redirect to a success page
-    #         return HttpResponseRedirect('/success/')
-    # else:
-    #     form = UserDetailsForm()
-
-    # return render(request, 'app/forms.html', {'form': form})
