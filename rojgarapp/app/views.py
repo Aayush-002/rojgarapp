@@ -1,16 +1,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
+from .forms import PersonalDetailsForm
+from .models import PersonalDetails
 
 
 @login_required
 def home(request):
     current_year = datetime.now().year
     return render(request, "app/index.html", {"current_year": current_year})
-
 
 @login_required
 def dashboard(request):
@@ -69,3 +71,57 @@ def auth_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully!")
     return redirect("login")
+
+#create forms
+def forms(request):
+    if request.method =="POST":
+        form = PersonalDetailsForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Successfully registered")
+            return redirect('forms_list')
+        else:
+            messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
+    else:
+        form = PersonalDetailsForm()
+    print(form)
+    return render(request,"app/forms.html",{'form':form})
+
+
+# show list of submitted forms 
+@login_required
+def forms_list(request):
+    forms = PersonalDetails.objects.order_by('-created_at')
+    if request.method == "GET":
+        list = request.GET.get('form_search')
+        if list != None:
+            forms = PersonalDetails.objects.filter(first_name__icontains = list)
+            
+    return render(request,'app/forms_list.html',{'forms':forms})
+
+#edit_forms
+@login_required
+def forms_edit(request,form_id):
+    edit_form = get_object_or_404(PersonalDetails, pk=form_id)
+    if request.method =="POST":
+        form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Successfully updated")
+            return redirect('forms_list')
+    else:
+        form = PersonalDetailsForm(instance=edit_form)
+    return render(request,"app/forms.html",{'form':form})
+
+#delete form
+@login_required
+def forms_delete(request,form_id):
+    delete_form = get_object_or_404(PersonalDetails, pk=form_id)
+    if request.method == 'POST':
+        delete_form.delete()
+        messages.success(request,"Successfully deleted")
+        return redirect('forms_list')
+    return render(request,"app/forms_confirm_delete.html",{'delete_form':delete_form})
+
+
+

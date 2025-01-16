@@ -1,0 +1,291 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Personal Information Form - RojgarApp{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            {% if messages %}
+            <div class="alert alert-danger alert-dismissible fade show mb-4">
+                {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white p-4">
+                    <h2 class="text-center mb-2">
+                        {% if form.instance.pk %}
+                        Edit Personal Information
+                        {% else %}
+                        Personal Information Form
+                        {% endif %}
+                    </h2>
+                    <p class="text-center mb-0">Fields marked with <span class="text-danger fw-bold">*</span> are required</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Personal Information -->
+                        <div class="mb-5">
+                            <h4 class="text-primary border-bottom pb-2 mb-4">
+                                <i class="fas fa-user me-2"></i>Personal Information
+                            </h4>
+
+                            <!-- Name Fields in Same Row -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">First Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="first_name" value="{{ form.first_name.value|default:''}}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Middle Name</label>
+                                    <input type="text" class="form-control" name="middle_name" value="{{ form.middle_name.value|default:''}}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Last Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="last_name" value="{{ form.last_name.value|default:'' }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Date of Birth <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="dob" value="{{ form.dob.value|date:'Y-m-d' }}" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Mobile Number <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" name="mobile_number" value="{{ form.mobile_number.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Contact Number</label>
+                                    <input type="tel" class="form-control" name="contact_number">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Email Address <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email_address" value="{{ form.email_address.value|default:'' }}" >
+                                </div>
+                            </div>
+
+                            <!-- Identity Information -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Gender <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="gender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male" {% if form.gender.value == "male" %}selected{% endif %}>Male</option>
+                                        <option value="female" {% if form.gender.value == "female" %}selected{% endif %}>Female</option>
+                                        <option value="others" {% if form.gender.value == "others" %}selected{% endif %}>Others</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">National ID Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="national_id_number" value="{{ form.national_id_number.value|default:''}}" required>
+                                </div>
+                                
+                            </div>
+                           
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Citizenship Number<span class="text-danger">*</span></label>                                    
+                                    <input type="text" class="form-control" id="citizenship_number" name="citizenship_number"  value="{{ form.citizenship_number.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Citizenship Issued Date <span class="text-danger">*</span></label>                                                                 
+                                    <input type="date" class="form-control" id="citizenship_issued_date" name="citizenship_issued_date" value="{{ form.citizenship_issued_date.value|date:'Y-m-d' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Citizenship Issued District <span class="text-danger">*</span></label>                                    
+                                    <input type="text" class="form-control" id="citizenship_issued_district" name="citizenship_issued_district"  value="{{ form.citizenship_issued_district.value|default:'' }}" required>
+                                </div>
+                            </div>
+                    
+                
+                        </div>
+
+                        <!-- Family Information -->
+                        <div class="mb-5">
+                            <h4 class="text-primary border-bottom pb-2 mb-4">
+                                <i class="fas fa-users me-2"></i>Family Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Father's Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="fathers_name" value="{{ form.fathers_name.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Mother's Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="mothers_name" value="{{ form.mothers_name.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Spouse Name</label>
+                                    <input type="text" class="form-control" name="spouse_name" value="{{ form.spouse_name.value|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Address Information -->
+                        <div class="mb-5">
+                            <h4 class="text-primary border-bottom pb-2 mb-4">
+                                <i class="fas fa-map-marker-alt me-2"></i>Address Details
+                            </h4>
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Province <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="province" value="{{ form.province.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">District <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="district" value="{{ form.district.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Municipality <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="municipality" value="{{ form.municipality.value|default:''}}" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Ward No <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="ward_no" value="{{ form.ward_no.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Tole Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="tole_name" value="{{ form.tole_name.value|default:'' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education and Skills -->
+                        <div class="mb-5">
+                            <h4 class="text-primary border-bottom pb-2 mb-4">
+                                <i class="fas fa-graduation-cap me-2"></i>Education & Skills
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Education Background <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="education_background" required>
+                                        <option value="">Select Education Level</option>
+                                        <option value="slc_see" {% if form.education_background.value == "slc_see" %}selected{% endif %}>SLC/SEE</option>
+                                        <option value="plus_two" {% if form.education_background.value == "plus_two" %}selected{% endif %}>+2</option>
+                                        <option value="bachelor" {% if form.education_background.value == "bachelor" %}selected{% endif %}>Bachelor</option>
+                                        <option value="masters" {% if form.education_background.value == "masters" %}selected{% endif %}>Masters</option>
+                                        <option value="diploma" {% if form.education_background.value == "diploma" %}selected{% endif %}>Diploma</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Professional Skills <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="professional_skill" rows="3" required>{{ form.professional_skill.value|default:'' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Document Uploads -->
+                        <div class="mb-5">
+                            <h4 class="text-primary border-bottom pb-2 mb-4">
+                                <i class="fas fa-file-upload me-2"></i>Document Uploads
+                            </h4>
+                            
+                            <div class="row mb-4">
+                                <!-- Profile Photo -->
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="fas fa-user-circle me-2"></i>Profile Photo <span class="text-danger">*</span>
+                                            </h5>
+                                            {% if form.instance.photo_pp %}
+                                                <img src="{{ form.instance.photo_pp.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
+                                            {% endif %}
+                                            <input type="file" class="form-control" name="photo_pp" accept="image/*" {% if not form.instance.photo_pp %}required{% endif %}>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CV/Resume -->
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="fas fa-file-alt me-2"></i>Resume/CV <span class="text-danger">*</span>
+                                            </h5>
+                                            {% if form.instance.cv_resume %}
+                                                <p class="text-success">
+                                                    <i class="fas fa-check-circle me-2"></i>Current Resume Uploaded
+                                                    <a href="{{ form.instance.cv_resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
+                                                        <i class="fas fa-download me-1"></i>Download
+                                                    </a>
+                                                </p>
+                                            {% endif %}
+                                            <input type="file" class="form-control" name="cv_resume" accept=".pdf,.doc,.docx" {% if not form.instance.cv_resume %}required{% endif %}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Citizenship Photos -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="fas fa-id-card me-2"></i>Citizenship (Front) <span class="text-danger">*</span>
+                                            </h5>
+                                            {% if form.instance.citizenship_photo_front %}
+                                                <img src="{{ form.instance.citizenship_photo_front.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
+                                            {% endif %}
+                                            <input type="file" class="form-control" name="citizenship_photo_front" accept="image/*" {% if not form.instance.citizenship_photo_front %}required{% endif %}>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="fas fa-id-card me-2"></i>Citizenship (Back) <span class="text-danger">*</span>
+                                            </h5>
+                                            {% if form.instance.citizenship_photo_back %}
+                                                <img src="{{ form.instance.citizenship_photo_back.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
+                                            {% endif %}
+                                            <input type="file" class="form-control" name="citizenship_photo_back" accept="image/*" {% if not form.instance.citizenship_photo_back %}required{% endif %}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-save me-2"></i>Save Information
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form Validation Script -->
+<script>
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script> 
+{% endblock %}
