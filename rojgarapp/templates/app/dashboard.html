@@ -1,116 +1,191 @@
-{% extends 'layouts/base.html' %}
-
-{% block title %}Dashboard - RojgarApp{% endblock %}
-
-{% block content %}
+{% extends 'layouts/base.html' %} {% load i18n %} {% block title %}Dashboard -
+RojgarApp{% endblock %} {% block content %}
 <div class="container min-vh-100">
-    <style>
-        .card {
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+  <style>
+    .card {
+      border: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-        .kpi-icon {
-            font-size: 2.5rem;
-            color: #007bff;
-        }
+    .kpi-icon {
+      font-size: 2.5rem;
+      color: #007bff;
+    }
 
-        .chart-container {
-            height: 300px;
-            width: 100%;
-        }
-    </style>
-    <!-- Dashboard Header -->
-    <div class="container my-4">
-        <h1 class="text-center mb-4">Dashboard</h1>
-        <!-- KPI Cards -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="kpi-icon bi bi-people"></i>
-                    <h5 class="mt-2">Total Users</h5>
-                    <p class="h3 mb-0">1,245</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="kpi-icon bi bi-graph-up"></i>
-                    <h5 class="mt-2">Jobs Posted</h5>
-                    <p class="h3 mb-0">865</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="kpi-icon bi bi-briefcase"></i>
-                    <h5 class="mt-2">Jobs Filled</h5>
-                    <p class="h3 mb-0">540</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="kpi-icon bi bi-clock-history"></i>
-                    <h5 class="mt-2">Active Jobs</h5>
-                    <p class="h3 mb-0">325</p>
-                </div>
-            </div>
+    .chart-container {
+      height: 300px;
+      width: 100%;
+    }
+  </style>
+  <!-- Dashboard Header -->
+  <div class="container my-4">
+    <h1 class="text-center mb-4">{% trans "Dashboard" %}</h1>
+    <!-- KPI Cards -->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card p-3 text-center">
+          <i class="kpi-icon bi bi-people"></i>
+          <h5 class="mt-2">{% trans "Total Users" %}</h5>
+          <p class="h3 mb-0">{{ user_count }}</p>
         </div>
-
-        <!-- Charts Section -->
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Monthly User Growth</h5>
-                        <div class="chart-container">
-                            <canvas id="userGrowthChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Jobs Status</h5>
-                        <div class="d-flex justify-content-center align-items-center chart-container">
-                            <canvas id="jobsStatusChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>            
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3 text-center">
+          <i class="kpi-icon bi bi-graph-up"></i>
+          <h5 class="mt-2">{% trans "Jobs Posted" %}</h5>
+          <p class="h3 mb-0">865</p>
         </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3 text-center">
+          <i class="kpi-icon bi bi-briefcase"></i>
+          <h5 class="mt-2">{% trans "Jobs Filled" %}</h5>
+          <p class="h3 mb-0">540</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3 text-center">
+          <i class="kpi-icon bi bi-clock-history"></i>
+          <h5 class="mt-2">{% trans "Active Jobs" %}</h5>
+          <p class="h3 mb-0">325</p>
+        </div>
+      </div>
     </div>
+
+    <!-- Charts Section -->
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{% trans "Monthly User Growth" %}</h5>
+            <div class="chart-container">
+              <canvas id="userGrowthChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{% trans "Jobs Status" %}</h5>
+            <div
+              class="d-flex justify-content-center align-items-center chart-container"
+            >
+              <canvas id="jobsStatusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Chart.js from CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Example Chart.js configuration
-    const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
-    const userGrowthChart = new Chart(userGrowthCtx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'User Growth',
-                data: [100, 200, 300, 400, 500, 600],
-                borderColor: '#007bff',
-                fill: false
-            }]
-        }
-    });
+  const wardNumbers = {{ ward_numbers| safe }};
+  const wardCounts = {{ ward_counts| safe }};
+  const label = "{% trans 'User growth based on wards' %}";
+  const xlabel = "{% trans 'Ward numbers' %}";
+  const ylabel = "{% trans 'Number of registered users' %}";
 
-    const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
-    const jobsStatusChart = new Chart(jobsStatusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Active', 'Filled', 'Pending'],
-            datasets: [{
-                data: [40, 30, 30],
-                backgroundColor: ['#007bff', '#28a745', '#ffc107']
-            }]
+  const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+  const userGrowthChart = new Chart(userGrowthCtx, {
+    type: 'bar',
+    data: {
+      labels: wardNumbers,
+      datasets: [{
+        label: label,
+        data: wardCounts,
+        backgroundColor: wardNumbers.map((_, i) =>
+          `hsl(${(i * 360 / wardNumbers.length)}, 70%, 50%)`
+        ),
+        borderColor: '#ffffff',
+        borderWidth: 2,
+        hoverBackgroundColor: wardNumbers.map((_, i) =>
+          `hsl(${(i * 360 / wardNumbers.length)}, 80%, 60%)`
+        ),
+        hoverBorderColor: '#ffffff',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            color: '#333',
+            font: {
+              size: 14
+            }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: '#007bff',
+          borderWidth: 1,
+          cornerRadius: 4
         }
-    });
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: xlabel,
+            color: '#333',
+            font: {
+              size: 14,
+              weight: 'bold'
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: ylabel,
+            color: '#333',
+            font: {
+              size: 14,
+              weight: 'bold'
+            }
+          },
+          beginAtZero: true,
+          grid: {
+            color: '#e9ecef'
+          }
+        }
+      },
+      animation: {
+        duration: 1000,
+        easing: 'easeInOutQuart'
+      }
+    }
+  });
+  const alabel = "{% trans 'Active Jobs' %}";
+  const blabel = "{% trans 'Filled Jobs' %}";
+  const clabel = "{% trans 'Pending Jobs' %}";
+
+  const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
+  const jobsStatusChart = new Chart(jobsStatusCtx, {
+      type: 'doughnut',
+      data: {
+         labels: [alabel, blabel, clabel],
+          datasets: [{
+              data: [40, 30, 30],
+              backgroundColor: ['#007bff', '#28a745', '#ffc107']
+          }]
+      }
+  });
 </script>
 
 {% endblock %}
