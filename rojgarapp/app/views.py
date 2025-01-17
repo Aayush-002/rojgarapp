@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
 from .forms import PersonalDetailsForm
-from .models import PersonalDetails
+from .models import PersonalDetails, Professions
+from django.utils.translation import gettext_lazy as _
+from django.db.models import Count
 
 
 @login_required
@@ -14,9 +16,26 @@ def home(request):
     current_year = datetime.now().year
     return render(request, "app/index.html", {"current_year": current_year})
 
+
 @login_required
 def dashboard(request):
-    return render(request, "app/dashboard.html")
+    user_count = PersonalDetails.objects.count()
+    registered_users = (
+        PersonalDetails.objects.values("ward_no")
+        .annotate(count=Count("id"))
+        .order_by("ward_no")
+    )
+    ward_numbers = [entry["ward_no"] for entry in registered_users]
+    ward_counts = [entry["count"] for entry in registered_users]
+    return render(
+        request,
+        "app/dashboard.html",
+        {
+            "ward_numbers": ward_numbers,
+            "ward_counts": ward_counts,
+            "user_count": user_count,
+        },
+    )
 
 
 def auth_login(request):
@@ -72,56 +91,71 @@ def auth_logout(request):
     messages.success(request, "You have been logged out successfully!")
     return redirect("login")
 
-#create forms
+
+# create forms
 def forms(request):
-    if request.method =="POST":
+    editForm = False
+    professions = Professions.objects.all() 
+    if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
+        print(f"Forms detail:{request.FILES}")
         if form.is_valid():
+            print("validation pass")
             form.save()
-            messages.success(request,"Successfully registered")
-            return redirect('forms_list')
+            messages.success(request, "Successfully registered")
+            return redirect("forms_list", {"proffessions": professions})
         else:
             messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
     else:
         form = PersonalDetailsForm()
-    print(form)
-    return render(request,"app/forms.html",{'form':form})
+        
+    return render(
+        request,
+        "app/forms.html",
+        {"form": form, "editForm": editForm, "proffessions": professions},
+    )
 
 
-# show list of submitted forms 
+# show list of submitted forms
 @login_required
 def forms_list(request):
-    forms = PersonalDetails.objects.order_by('-created_at')
+    forms = PersonalDetails.objects.order_by("-created_at")
     if request.method == "GET":
-        list = request.GET.get('form_search')
+        list = request.GET.get("form_search")
         if list != None:
-            forms = PersonalDetails.objects.filter(first_name__icontains = list)
-            
-    return render(request,'app/forms_list.html',{'forms':forms})
+            forms = PersonalDetails.objects.filter(first_name__icontains=list)
+            print("forms", forms)
 
-#edit_forms
+    return render(request, "app/forms_list.html", {"forms": forms})
+
+
+# edit_forms
 @login_required
-def forms_edit(request,form_id):
+def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
-    if request.method =="POST":
+    editForm = True
+    professions = Professions.objects.all() 
+    # if edit_form.dob:
+    #     edit_form.dob = edit_form.dob.strftime('%Y-%m-%d')
+    if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
         if form.is_valid():
             form.save()
-            messages.success(request,"Successfully updated")
-            return redirect('forms_list')
+            messages.success(request, "Successfully updated")
+            return redirect("forms_list")
     else:
         form = PersonalDetailsForm(instance=edit_form)
-    return render(request,"app/forms.html",{'form':form})
+    return render(request, "app/forms.html", {"form": form, "editForm": editForm, "proffessions": professions})
 
-#delete form
+
+# delete form
 @login_required
-def forms_delete(request,form_id):
+def forms_delete(request, form_id):
     delete_form = get_object_or_404(PersonalDetails, pk=form_id)
-    if request.method == 'POST':
+    if request.method == "POST":
         delete_form.delete()
-        messages.success(request,"Successfully deleted")
-        return redirect('forms_list')
-    return render(request,"app/forms_confirm_delete.html",{'delete_form':delete_form})
-
-
-
+        messages.success(request, "Successfully deleted")
+        return redirect("forms_list")
+    return render(
+        request, "app/forms_confirm_delete.html", {"delete_form": delete_form}
+    )
