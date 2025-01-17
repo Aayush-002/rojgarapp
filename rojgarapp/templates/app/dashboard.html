@@ -68,7 +68,9 @@ RojgarApp{% endblock %} {% block content %}
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{% trans "Jobs Status" %}</h5>
-            <div class="d-flex justify-content-center align-items-center chart-container">
+            <div
+              class="d-flex justify-content-center align-items-center chart-container"
+            >
               <canvas id="jobsStatusChart"></canvas>
             </div>
           </div>
@@ -169,17 +171,20 @@ RojgarApp{% endblock %} {% block content %}
       }
     }
   });
+  const alabel = "{% trans 'Active Jobs' %}";
+  const blabel = "{% trans 'Filled Jobs' %}";
+  const clabel = "{% trans 'Pending Jobs' %}";
 
   const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
   const jobsStatusChart = new Chart(jobsStatusCtx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Active', 'Filled', 'Pending'],
-      datasets: [{
-        data: [40, 30, 30],
-        backgroundColor: ['#007bff', '#28a745', '#ffc107']
-      }]
-    }
+      type: 'doughnut',
+      data: {
+         labels: [alabel, blabel, clabel],
+          datasets: [{
+              data: [40, 30, 30],
+              backgroundColor: ['#007bff', '#28a745', '#ffc107']
+          }]
+      }
   });
 </script>
 
