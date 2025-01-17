@@ -171,12 +171,15 @@ RojgarApp{% endblock %} {% block content %}
           }
       }
   });
+  const alabel = "{% trans 'Active Jobs' %}";
+  const blabel = "{% trans 'Filled Jobs' %}";
+  const clabel = "{% trans 'Pending Jobs' %}";
 
   const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
   const jobsStatusChart = new Chart(jobsStatusCtx, {
       type: 'doughnut',
       data: {
-          labels: ['Active', 'Filled', 'Pending'],
+         labels: [alabel, blabel, clabel],
           datasets: [{
               data: [40, 30, 30],
               backgroundColor: ['#007bff', '#28a745', '#ffc107']
