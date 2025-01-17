@@ -49,8 +49,8 @@
                                             type="checkbox"
                                             id="statusToggle"
                                             name="status"
-                                            value="confirmed"
-                                            {% if form.status.value == "confirmed" %}checked{% endif %}
+                                            value="pending"
+                                            {% if form.status.value == "pending" %}checked{% endif %}
                                         />
                                         <label class="form-check-label" for="statusToggle" id="statusLabel">
                                             {{ form.status.value|default:_("Pending") }}
@@ -79,14 +79,14 @@
 <!-- Contact Information -->
 <div class="row mb-4">
     <div class="col-md-3">
-        <label class="form-label fw-bold">{% trans "Date of Birth" %} <span class="text-danger">*</span></label>
-        <div class="input-group">
-            <input type="date" class="form-control" id="dob" name="dob" value="{{ form.dob.value|date:'Y-m-d' }}" required placeholder="YYYY-MM-DD">
-            <span class="input-group-text" id="dob-icon">
-                <i class="fas fa-calendar-alt"></i>
-            </span>
-        </div>
+    <label class="form-label fw-bold">{% trans "Date of Birth" %} <span class="text-danger">*</span></label>
+    <div class="input-group">
+        <input type="text" class="form-control date-picker" id="dob" name="dob" value="{{ form.dob.value|date:'Y-m-d' }}" required placeholder="YYYY-MM-DD">
+        <span class="input-group-text" id="dob-icon">
+            <i class="fas fa-calendar-alt"></i>
+        </span>
     </div>
+</div>
     
     
     <div class="col-md-3">
@@ -126,14 +126,14 @@
         <input type="text" class="form-control" id="citizenship_number" name="citizenship_number" value="{{ form.citizenship_number.value|default:'' }}" required>
     </div>˝
     <div class="col-md-4">
-        <label class="form-label fw-bold">{% trans "Citizenship Issued Date" %} <span class="text-danger">*</span></label>
-        <div class="input-group">
-            <input type="date" class="form-control" id="citizenship_issued_date" name="citizenship_issued_date" value="{{ form.citizenship_issued_date.value|date:'Y-m-d' }}" required placeholder="YYYY-MM-DD">
-            <span class="input-group-text" id="dob-icon">
-                <i class="fas fa-calendar-alt"></i>
-            </span>
-        </div>
+    <label class="form-label fw-bold">{% trans "Citizenship Issued Date" %} <span class="text-danger">*</span></label>
+    <div class="input-group">
+        <input type="text" class="form-control date-picker" id="citizenship_issued_date" name="citizenship_issued_date" value="{{ form.citizenship_issued_date.value|date:'Y-m-d' }}" required placeholder="YYYY-MM-DD">
+        <span class="input-group-text" id="dob-icon">
+            <i class="fas fa-calendar-alt"></i>
+        </span>
     </div>
+</div>
     <div class="col-md-4">
         <label class="form-label fw-bold">{% trans "Citizenship Issued District" %} <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="citizenship_issued_district" name="citizenship_issued_district" value="{{ form.citizenship_issued_district.value|default:'' }}" required>
@@ -341,15 +341,9 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    document.querySelectorAll('.dob-icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const dateInput = this.closest('.input-group').querySelector('input[type="date"]');
-            dateInput.focus();
-        });
-    });
-
-    flatpickr("input[type='date']", {
-        dateFormat: "Y-m-d"
+    flatpickr(".date-picker", {
+        // dateFormat: "Y-m-d",  // Ensure the date format matches the input value
+        altInput: true,       // This will allow showing a more human-readable date format
     });
 </script>
 {% endblock %}

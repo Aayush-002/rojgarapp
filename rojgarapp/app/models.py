@@ -13,7 +13,8 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class PersonalDetails(models.Model):
     GENDER_CHOICES = [
         ("male", _("Male")),
@@ -92,7 +93,7 @@ class PersonalDetails(models.Model):
 
     # Status
     status = models.CharField(
-        _("Status"), max_length=10, choices=STATUS_CHOICES, default="pending"
+        max_length=20, choices=STATUS_CHOICES, default="pending", blank=True, null=True
     )
 
     def __str__(self):
@@ -101,6 +102,6 @@ class PersonalDetails(models.Model):
 
 class Professions(models.Model):
     name = models.CharField(_("Profession Name"), max_length=100)
-    
+
     def __str__(self):
         return self.name

@@ -95,20 +95,21 @@ def auth_logout(request):
 # create forms
 def forms(request):
     editForm = False
-    professions = Professions.objects.all() 
+    professions = Professions.objects.all()
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
-        print(f"Forms detail:{request.FILES}")
         if form.is_valid():
-            print("validation pass")
+            print("validation pass is here!")
             form.save()
             messages.success(request, "Successfully registered")
-            return redirect("forms_list", {"proffessions": professions})
+            return redirect("forms_list")
         else:
+            print("Validation failed!")
+            print(f"Form errors: {form.errors}")  # status error
             messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
     else:
         form = PersonalDetailsForm()
-        
+
     return render(
         request,
         "app/forms.html",
@@ -134,7 +135,7 @@ def forms_list(request):
 def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
     editForm = True
-    professions = Professions.objects.all() 
+    professions = Professions.objects.all()
     # if edit_form.dob:
     #     edit_form.dob = edit_form.dob.strftime('%Y-%m-%d')
     if request.method == "POST":
@@ -145,7 +146,11 @@ def forms_edit(request, form_id):
             return redirect("forms_list")
     else:
         form = PersonalDetailsForm(instance=edit_form)
-    return render(request, "app/forms.html", {"form": form, "editForm": editForm, "proffessions": professions})
+    return render(
+        request,
+        "app/forms.html",
+        {"form": form, "editForm": editForm, "proffessions": professions},
+    )
 
 
 # delete form

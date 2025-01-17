@@ -223,8 +223,6 @@ msgid "Jobs Filled"
 msgstr "भर्ना गरिएका रोजगारीहरू"
 
 #: templates/app/dashboard.html:49
-#, fuzzy
-#| msgid "Actions"
 msgid "Active Jobs"
 msgstr "कार्यहरू"
 
@@ -233,8 +231,6 @@ msgid "Monthly User Growth"
 msgstr "मासिक प्रयोगकर्ता वृद्धि"
 
 #: templates/app/dashboard.html:70
-#, fuzzy
-#| msgid "Status"
 msgid "Jobs Status"
 msgstr "स्थिति"
 
