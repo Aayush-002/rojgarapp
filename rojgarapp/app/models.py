@@ -89,7 +89,7 @@ class PersonalDetails(models.Model):
     citizenship_photo_back = models.ImageField(
         _("Citizenship Photo (Back)"), upload_to="uploads/citizenship/"
     )
-    cv_resume = models.FileField(_("Resume/CV"), upload_to="uploads/resumes/")
+    cv_resume = models.FileField(_("Resume/CV"), upload_to="uploads/resumes/",blank=True, null=True)
 
     # Status
     status = models.CharField(
