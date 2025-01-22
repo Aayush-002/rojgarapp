@@ -98,7 +98,7 @@
         <input type="tel" class="form-control" name="contact_number">
     </div>
     <div class="col-md-3">
-        <label class="form-label fw-bold">{% trans "Email Address" %} <span class="text-danger">*</span></label>
+        <label class="form-label fw-bold">{% trans "Email Address" %} </label>
         <input type="email" class="form-control" name="email_address" value="{{ form.email_address.value|default:'' }}">
     </div>
 </div>
@@ -115,8 +115,8 @@
         </select>
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-bold">{% trans "National ID Number" %} <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" name="national_id_number" value="{{ form.national_id_number.value|default:''}}" required>
+        <label class="form-label fw-bold">{% trans "National ID Number" %} </label>
+        <input type="text" class="form-control" name="national_id_number" value="{{ form.national_id_number.value|default:''}}" >
     </div>
 </div>
 
@@ -254,7 +254,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <i class="fas fa-file-alt me-2"></i>{% trans "Resume/CV" %} <span class="text-danger">*</span>
+                        <i class="fas fa-file-alt me-2"></i>{% trans "Resume/CV" %} 
                     </h5>
                     {% if form.instance.cv_resume %}
                         <p class="text-success">
