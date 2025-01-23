@@ -1,3 +1,5 @@
 Username: admin
 Email: admin@rojgarapp.com
 Password: pG7$kL9qR2@mZxYv
+
+Database: "postgres://neondb_owner:npg_oBQyli4wRkI5@ep-divine-salad-a1qyyimb-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
