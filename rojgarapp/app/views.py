@@ -150,12 +150,6 @@ def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
     editForm = True
     professions = Professions.objects.all()
-<<<<<<< HEAD
-
-=======
-    # if edit_form.dob:
-    #     edit_form.dob = edit_form.dob.strftime('%Y-%m-%d')
->>>>>>> 26b6202a6c0f308cd21435d040432e3af126775c
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
 
@@ -173,7 +167,6 @@ def forms_edit(request, form_id):
                 messages.error(request, f"{field}: {', '.join(errors)}")
     else:
         form = PersonalDetailsForm(instance=edit_form)
-<<<<<<< HEAD
 
     return render(
         request,
@@ -183,12 +176,6 @@ def forms_edit(request, form_id):
             "editForm": editForm,
             "professions": professions,
         },
-=======
-    return render(
-        request,
-        "app/forms.html",
-        {"form": form, "editForm": editForm, "proffessions": professions},
->>>>>>> 26b6202a6c0f308cd21435d040432e3af126775c
     )
 
 
