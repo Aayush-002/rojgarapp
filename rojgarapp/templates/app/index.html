@@ -1,93 +1,63 @@
-{% extends 'layouts/base.html' %} {% load i18n %}{% block title %}Home -
-RojgarApp{% endblock %} {% block content %}
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% block title %}Home - RojgarApp{% endblock %}
+{% block content %}
+
 <div class="container min-vh-100">
-  <!-- Carousel Section -->
-  <div
-    id="municipalityCarousel"
-    class="carousel slide mt-4"
-    data-bs-ride="carousel"
-  >
-    <div class="carousel-inner custom-carousel">
-      <div class="carousel-item active">
-        <img
-          src="/media/IMG_1467.jpg"
-          class="d-block w-100"
-          alt="Municipality Image 1"
-        />
-      </div>
-      <div class="carousel-item">
-        <img
-          src="https://picsum.photos/id/11/367/267"
-          class="d-block w-100"
-          alt="Municipality Image 2"
-        />
-      </div>
-      <div class="carousel-item">
-        <img
-          src="https://picsum.photos/id/12/367/267"
-          class="d-block w-100"
-          alt="Municipality Image 3"
-        />
-      </div>
-    </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#municipalityCarousel"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#municipalityCarousel"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+  <!-- App Title -->
+  <div class="text-center my-4">
+    <h1 class="display-3 fw-bold text-primary">{% trans "Job Registration Portal" %}</h1>
   </div>
 
-  <!-- Testimonials Section -->
-  <div class="container my-5">
-    <h2 class="text-center mb-4">Testimonials</h2>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <p class="card-text">
-              Testimony 1: Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit.
-            </p>
-            <h5 class="card-title">- User 1</h5>
-          </div>
-        </div>
+  <!-- Main Image Section -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+      <img 
+        src="/media/IMG_1467.jpg" 
+        class="img-fluid rounded shadow-lg" 
+        alt="Municipality Image"
+        style="width: 100%; height: 50vh; object-fit: cover;"
+      />
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="container px-4">
+    <div class="row g-4 justify-content-center">
+      <!-- First Button -->
+      <div class="col-md-6">
+        <a class="btn btn-primary w-100 py-4 rounded-lg shadow {% if request.path == '/' %}active{% endif %}" 
+           href="/" 
+           style="font-size: 1.5rem;">
+          <i class="fas fa-home me-2"></i>{% trans "Home" %}
+        </a>
       </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <p class="card-text">
-              Testimony 2: Sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
-            </p>
-            <h5 class="card-title">- User 2</h5>
-          </div>
-        </div>
+      <!-- Second Button -->
+      <div class="col-md-6">
+        <a class="btn btn-primary w-100 py-4 rounded-lg shadow {% if request.path == '/dashboard/' %}active{% endif %}" 
+           href="/dashboard"
+           style="font-size: 1.5rem;">
+          <i class="fas fa-chart-bar me-2"></i>{% trans "Dashboard" %}
+        </a>
       </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <p class="card-text">
-              Testimony 3: Ut enim ad minim veniam, quis nostrud exercitation
-              ullamco laboris.
-            </p>
-            <h5 class="card-title">- User 3</h5>
-          </div>
-        </div>
+      <!-- Third Button -->
+      <div class="col-md-6">
+        <a class="btn btn-primary w-100 py-4 rounded-lg shadow {% if request.path == '/forms_list/' %}active{% endif %}" 
+           href="/forms_list"
+           style="font-size: 1.5rem;">
+          <i class="fas fa-list me-2"></i>{% trans "Details" %}
+        </a>
+      </div>
+      <!-- Fourth Button -->
+      <div class="col-md-6">
+        <a class="btn btn-primary w-100 py-4 rounded-lg shadow" 
+           href="/forms"
+           style="font-size: 1.5rem;">
+          <i class="fas fa-edit me-2"></i>{% trans "Register Your Details" %}
+        </a>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}
