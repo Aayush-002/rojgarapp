@@ -27,6 +27,7 @@ class PersonalDetails(models.Model):
         ("bachelor", _("Bachelor")),
         ("masters", _("Masters")),
         ("diploma", _("Diploma")),
+        ("phd", _("PHD")),
         ("uneducated", _("Uneducated")),
         ("class_eight_pass", _("Class 8 pass")),
         ("class_five_pass", _("Class 5 pass")),
@@ -91,9 +92,14 @@ class PersonalDetails(models.Model):
     cv_resume = models.FileField(_("Resume/CV"), upload_to="uploads/resumes/")
 
     # Status
-    status = models.CharField(
-        _("Status"), max_length=10, choices=STATUS_CHOICES, default="pending"
-    )
+    status = models.CharField(  
+    _("Status"),
+    max_length=10,
+    choices=STATUS_CHOICES,
+    default="pending",
+    null=True, 
+    blank=True,
+)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
