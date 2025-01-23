@@ -6,16 +6,8 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
-      }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles",
-        "installCommand": "",
-        "buildCommand": "bash build_files.sh"
+        "runtime": "python3.9",
+        "installCommand": "apt-get update && apt-get install -y libsqlite3-dev && pip install -r requirements.txt && python3 manage.py collectstatic --no-input --clear"
       }
     }
   ],
@@ -23,10 +15,6 @@
     {
       "src": "/(.*)",
       "dest": "rojgarapp/wsgi.py"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
     }
   ]
 }
