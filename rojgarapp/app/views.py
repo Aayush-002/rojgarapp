@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
@@ -25,8 +24,19 @@ def dashboard(request):
         .annotate(count=Count("id"))
         .order_by("ward_no")
     )
+    genders = PersonalDetails.objects.values("gender").annotate(count=Count("id"))
+    male_count = next((entry["count"] for entry in genders if entry["gender"] == "male"), 0)
+    female_count = next((entry["count"] for entry in genders if entry["gender"] == "female"), 0)
+    others_count = next((entry["count"] for entry in genders if entry["gender"] == "others"), 0)
+
+
     ward_numbers = [entry["ward_no"] for entry in registered_users]
     ward_counts = [entry["count"] for entry in registered_users]
+
+    proffessions_count = PersonalDetails.objects.values(
+        "professional_skill"
+    ).annotate(count=Count("id")).order_by("professional_skill")
+    list_proffesions_count = list(proffessions_count)
     return render(
         request,
         "app/dashboard.html",
@@ -34,6 +44,10 @@ def dashboard(request):
             "ward_numbers": ward_numbers,
             "ward_counts": ward_counts,
             "user_count": user_count,
+            "male_count": male_count,
+            "female_count": female_count,
+            "others_count": others_count,
+            "proffessions_count": list_proffesions_count,
         },
     )
 
@@ -95,7 +109,7 @@ def auth_logout(request):
 # create forms
 def forms(request):
     editForm = False
-    professions = Professions.objects.all() 
+    professions = Professions.objects.all()
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
         print(f"Forms detail:{request.FILES}")
@@ -103,16 +117,16 @@ def forms(request):
             print("validation pass")
             form.save()
             messages.success(request, "Successfully registered")
-            return redirect("forms_list", {"proffessions": professions})
+            return redirect("forms_list", {"professions": professions})
         else:
             messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
     else:
         form = PersonalDetailsForm()
-        
+
     return render(
         request,
         "app/forms.html",
-        {"form": form, "editForm": editForm, "proffessions": professions},
+        {"form": form, "editForm": editForm, "professions": professions},
     )
 
 
@@ -134,18 +148,35 @@ def forms_list(request):
 def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
     editForm = True
-    professions = Professions.objects.all() 
-    # if edit_form.dob:
-    #     edit_form.dob = edit_form.dob.strftime('%Y-%m-%d')
+    professions = Professions.objects.all()
+
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
+
+        status_value = request.POST.get("status", "pending").lower()
+
+        form.data = form.data.copy()
+        form.data["status"] = status_value
+
         if form.is_valid():
             form.save()
             messages.success(request, "Successfully updated")
             return redirect("forms_list")
+        else:
+            for field, errors in form.errors.items():
+                messages.error(request, f"{field}: {', '.join(errors)}")
     else:
         form = PersonalDetailsForm(instance=edit_form)
-    return render(request, "app/forms.html", {"form": form, "editForm": editForm, "proffessions": professions})
+
+    return render(
+        request,
+        "app/forms.html",
+        {
+            "form": form,
+            "editForm": editForm,
+            "professions": professions,
+        },
+    )
 
 
 # delete form
