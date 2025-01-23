@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -14,6 +15,27 @@ class UserDetails(models.Model):
     def __str__(self):
         return self.name
     
+
+# Validators
+def validate_file_size(file, max_size_mb):
+    max_size_kb = max_size_mb * 1024  # Convert MB to KB
+    if file.size > max_size_kb * 1024:
+        raise ValidationError(
+            _(f"File size should not exceed {max_size_mb} MB.")
+        )
+
+# Specific validators
+def validate_photo_pp(file):
+    validate_file_size(file, 1)  # 1 MB limit for Profile Photo
+
+def validate_citizenship_photo(file):
+    validate_file_size(file, 2)  # 2 MB limit for Citizenship Photos
+
+def validate_cv_resume(file):
+    validate_file_size(file, 5)  # 5 MB limit for Resume/CV
+
+
+
 class PersonalDetails(models.Model):
     GENDER_CHOICES = [
         ("male", _("Male")),
@@ -82,15 +104,32 @@ class PersonalDetails(models.Model):
     professional_skill = models.TextField(_("Professional Skill"))
 
     # File Uploads
-    photo_pp = models.ImageField(_("Profile Photo"), upload_to="uploads/photos/")
+   # Profile Photo
+    photo_pp = models.ImageField(
+        _("Profile Photo"),
+        upload_to="uploads/photos/",
+        validators=[validate_photo_pp],  
+    )
+    # Citizenship Photo (Front)
     citizenship_photo_front = models.ImageField(
-        _("Citizenship Photo (Front)"), upload_to="uploads/citizenship/"
+        _("Citizenship Photo (Front)"),
+        upload_to="uploads/citizenship/",
+        validators=[validate_citizenship_photo],  
     )
+    # Citizenship Photo (Back)
     citizenship_photo_back = models.ImageField(
-        _("Citizenship Photo (Back)"), upload_to="uploads/citizenship/"
+        _("Citizenship Photo (Back)"),
+        upload_to="uploads/citizenship/",
+        validators=[validate_citizenship_photo],  
     )
-    cv_resume = models.FileField(_("Resume/CV"), upload_to="uploads/resumes/")
-
+    # Resume/CV
+    cv_resume = models.FileField(
+        _("Resume/CV"),
+        upload_to="uploads/resumes/",
+        blank=True,
+        null=True,
+        validators=[validate_cv_resume],  
+    )
     # Status
     status = models.CharField(  
     _("Status"),
@@ -107,6 +146,6 @@ class PersonalDetails(models.Model):
 
 class Professions(models.Model):
     name = models.CharField(_("Profession Name"), max_length=100)
-    
+
     def __str__(self):
         return self.name

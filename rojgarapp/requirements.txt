@@ -1,5 +1,11 @@
 asgiref==3.8.1
 Django==5.1.4
+gunicorn==21.2.0
+whitenoise==6.8.2
+psycopg2-binary==2.9.9
 pillow==11.0.0
 sqlparse==0.5.3
 typing_extensions==4.12.2
+whitenoise==6.8.2
+python-decouple==3.8
+dj-database-url==2.1.0

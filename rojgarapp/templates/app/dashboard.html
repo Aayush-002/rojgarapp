@@ -113,92 +113,92 @@ RojgarApp{% endblock %} {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const wardNumbers = {{ ward_numbers|safe }};
-  const wardCounts = {{ ward_counts|safe }};
+  const wardNumbers = {{ ward_numbers| safe }};
+  const wardCounts = {{ ward_counts| safe }};
   const label = "{% trans 'User growth based on wards' %}";
   const xlabel = "{% trans 'Ward numbers' %}";
   const ylabel = "{% trans 'Number of registered users' %}";
 
   const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
   const userGrowthChart = new Chart(userGrowthCtx, {
-      type: 'bar',
-      data: {
-          labels: wardNumbers,
-          datasets: [{
-              label: label,
-              data: wardCounts,
-              backgroundColor: wardNumbers.map((_, i) =>
-                  `hsl(${(i * 360 / wardNumbers.length)}, 70%, 50%)`
-              ),
-              borderColor: '#ffffff',
-              borderWidth: 2,
-              hoverBackgroundColor: wardNumbers.map((_, i) =>
-                  `hsl(${(i * 360 / wardNumbers.length)}, 80%, 60%)`
-              ),
-              hoverBorderColor: '#ffffff',
-              borderRadius: 4
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-              legend: {
-                  display: true,
-                  position: 'top',
-                  labels: {
-                      color: '#333',
-                      font: {
-                          size: 14
-                      }
-                  }
-              },
-              tooltip: {
-                  enabled: true,
-                  backgroundColor: 'rgba(0,0,0,0.8)',
-                  titleColor: '#fff',
-                  bodyColor: '#fff',
-                  borderColor: '#007bff',
-                  borderWidth: 1,
-                  cornerRadius: 4
-              }
-          },
-          scales: {
-              x: {
-                  title: {
-                      display: true,
-                      text: xlabel,
-                      color: '#333',
-                      font: {
-                          size: 14,
-                          weight: 'bold'
-                      }
-                  },
-                  grid: {
-                      display: false
-                  }
-              },
-              y: {
-                  title: {
-                      display: true,
-                      text: ylabel,
-                      color: '#333',
-                      font: {
-                          size: 14,
-                          weight: 'bold'
-                      }
-                  },
-                  beginAtZero: true,
-                  grid: {
-                      color: '#e9ecef'
-                  }
-              }
-          },
-          animation: {
-              duration: 1000,
-              easing: 'easeInOutQuart'
+    type: 'bar',
+    data: {
+      labels: wardNumbers,
+      datasets: [{
+        label: label,
+        data: wardCounts,
+        backgroundColor: wardNumbers.map((_, i) =>
+          `hsl(${(i * 360 / wardNumbers.length)}, 70%, 50%)`
+        ),
+        borderColor: '#ffffff',
+        borderWidth: 2,
+        hoverBackgroundColor: wardNumbers.map((_, i) =>
+          `hsl(${(i * 360 / wardNumbers.length)}, 80%, 60%)`
+        ),
+        hoverBorderColor: '#ffffff',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            color: '#333',
+            font: {
+              size: 14
+            }
           }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: '#007bff',
+          borderWidth: 1,
+          cornerRadius: 4
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: xlabel,
+            color: '#333',
+            font: {
+              size: 14,
+              weight: 'bold'
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: ylabel,
+            color: '#333',
+            font: {
+              size: 14,
+              weight: 'bold'
+            }
+          },
+          beginAtZero: true,
+          grid: {
+            color: '#e9ecef'
+          }
+        }
+      },
+      animation: {
+        duration: 1000,
+        easing: 'easeInOutQuart'
       }
+    }
   });
   const alabel = "{% trans 'Male' %}";
   const blabel = "{% trans 'Female' %}";
