@@ -16,6 +16,14 @@ class UserDetails(models.Model):
         return self.name
     
 
+class AdminDetails(models.Model):
+    name = models.CharField(_("Name"), max_length=20)
+    Email = models.EmailField(_("Email"))
+    Password = models.CharField(_("Password"), max_length=20)
+
+    def __str__(self):
+        return self.name
+
 # Validators
 def validate_file_size(file, max_size_mb):
     max_size_kb = max_size_mb * 1024  # Convert MB to KB
