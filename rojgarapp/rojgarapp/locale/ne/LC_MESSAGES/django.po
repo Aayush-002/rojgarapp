@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-17 13:43+0000\n"
+"POT-Creation-Date: 2025-01-23 09:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,201 +18,214 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/models.py:6 templates/app/forms_list.html:38
+#: app/models.py:7 templates/app/forms_list.html:38
 msgid "Name"
 msgstr "नाम"
 
-#: app/models.py:7
+#: app/models.py:8
 msgid "Email"
 msgstr "इमेल"
 
-#: app/models.py:8 app/models.py:55 templates/app/forms.html:109
+#: app/models.py:9 app/models.py:78 templates/app/forms.html:145
 msgid "Gender"
 msgstr "लिङ्ग"
 
-#: app/models.py:9
+#: app/models.py:10
 msgid "Phone Number"
 msgstr "फोन नम्बर"
 
-#: app/models.py:10 app/models.py:46 templates/app/forms.html:82
+#: app/models.py:11 app/models.py:69 templates/app/forms.html:121
 msgid "Date of Birth"
 msgstr "जन्म मिति"
 
-#: app/models.py:11
+#: app/models.py:12
 msgid "Skill"
 msgstr "कौशल"
 
-#: app/models.py:12
+#: app/models.py:13
 msgid "Address"
 msgstr "ठेगाना"
 
-#: app/models.py:19 templates/app/forms.html:112
+#: app/models.py:24
+#, python-brace-format
+msgid "File size should not exceed {max_size_mb} MB."
+msgstr ""
+
+#: app/models.py:41 templates/app/dashboard.html:203
+#: templates/app/forms.html:148
 msgid "Male"
 msgstr "पुरुष"
 
-#: app/models.py:20 templates/app/forms.html:113
+#: app/models.py:42 templates/app/dashboard.html:204
+#: templates/app/forms.html:149
 msgid "Female"
 msgstr "महिला"
 
-#: app/models.py:21 templates/app/forms.html:114
+#: app/models.py:43 templates/app/dashboard.html:205
+#: templates/app/forms.html:150
 msgid "Others"
 msgstr "अन्य"
 
-#: app/models.py:25 templates/app/forms.html:206
+#: app/models.py:47 templates/app/forms.html:237
 msgid "SLC/SEE"
 msgstr "एसएलसी/एसईई"
 
-#: app/models.py:26 templates/app/forms.html:207
+#: app/models.py:48 templates/app/forms.html:238
 msgid "+2"
 msgstr "+२"
 
-#: app/models.py:27 templates/app/forms.html:208
+#: app/models.py:49 templates/app/forms.html:239
 msgid "Bachelor"
 msgstr "स्नातक"
 
-#: app/models.py:28 templates/app/forms.html:209
+#: app/models.py:50 templates/app/forms.html:240
 msgid "Masters"
 msgstr "स्नातकोत्तर"
 
-#: app/models.py:29 templates/app/forms.html:210
+#: app/models.py:51 templates/app/forms.html:241
 msgid "Diploma"
 msgstr "डिप्लोमा"
 
-#: app/models.py:30 templates/app/forms.html:213
+#: app/models.py:52
+msgid "PHD"
+msgstr "पीएचडी"
+
+#: app/models.py:53 templates/app/forms.html:245
 msgid "Uneducated"
 msgstr "अशिक्षित"
 
-#: app/models.py:31 templates/app/forms.html:211
+#: app/models.py:54 templates/app/forms.html:243
 msgid "Class 8 pass"
 msgstr "कक्षा ८ पास"
 
-#: app/models.py:32 templates/app/forms.html:212
+#: app/models.py:55 templates/app/forms.html:244
 msgid "Class 5 pass"
 msgstr "कक्षा ५ पास"
 
-#: app/models.py:36 templates/app/forms.html:56
+#: app/models.py:59 templates/app/forms.html:96
 #: templates/app/forms_list.html:70
 msgid "Pending"
 msgstr "प्रतीक्षारत"
 
-#: app/models.py:37 templates/app/forms_list.html:73
+#: app/models.py:60 templates/app/forms_list.html:73
 msgid "Confirmed"
 msgstr "पुष्टि गरिएको"
 
-#: app/models.py:41 templates/app/forms.html:66
+#: app/models.py:64 templates/app/forms.html:105
 msgid "First Name"
 msgstr "पहिलो नाम"
 
-#: app/models.py:43 templates/app/forms.html:70
+#: app/models.py:66 templates/app/forms.html:110
 msgid "Middle Name"
 msgstr "बीचको नाम"
 
-#: app/models.py:45 templates/app/forms.html:74
+#: app/models.py:68 templates/app/forms.html:114
 msgid "Last Name"
 msgstr "थर"
 
-#: app/models.py:47 templates/app/forms.html:93
+#: app/models.py:70 templates/app/forms.html:130
 #: templates/app/forms_list.html:39
 msgid "Mobile Number"
 msgstr "मोबाइल नम्बर"
 
-#: app/models.py:49 templates/app/forms.html:97
+#: app/models.py:72 templates/app/forms.html:134
 msgid "Contact Number"
 msgstr "सम्पर्क नम्बर"
 
-#: app/models.py:51 templates/app/forms.html:101
+#: app/models.py:74 templates/app/forms.html:138
 msgid "Email Address"
 msgstr "इमेल ठेगाना"
 
-#: app/models.py:53 templates/app/forms.html:118
+#: app/models.py:76 templates/app/forms.html:154
 msgid "National ID Number"
 msgstr "राष्ट्रिय परिचयपत्र नम्बर"
 
-#: app/models.py:56 templates/app/forms.html:125
+#: app/models.py:79 templates/app/forms.html:160
 #: templates/app/forms_list.html:42
 msgid "Citizenship Number"
 msgstr "नागरिकता नम्बर"
 
-#: app/models.py:57 templates/app/forms.html:129
+#: app/models.py:80 templates/app/forms.html:164
 msgid "Citizenship Issued Date"
 msgstr "नागरिकता जारी मिति"
 
-#: app/models.py:59 templates/app/forms.html:138
+#: app/models.py:82 templates/app/forms.html:173
 msgid "Citizenship Issued District"
 msgstr "नागरिकता जारी गरिएको जिल्ला"
 
-#: app/models.py:61
+#: app/models.py:84
 msgid "Created At"
 msgstr "सिर्जना मिति"
 
-#: app/models.py:64 templates/app/forms.html:151
+#: app/models.py:87 templates/app/forms.html:184
 #: templates/app/forms_list.html:47
 msgid "Father's Name"
 msgstr "बुबाको नाम"
 
-#: app/models.py:65 templates/app/forms.html:155
+#: app/models.py:88 templates/app/forms.html:188
 msgid "Mother's Name"
 msgstr "आमाको नाम"
 
-#: app/models.py:67 templates/app/forms.html:159
+#: app/models.py:90 templates/app/forms.html:192
 msgid "Spouse Name"
 msgstr "जीवनसाथीको नाम"
 
-#: app/models.py:71 templates/app/forms.html:172
+#: app/models.py:94 templates/app/forms.html:204
 msgid "Province"
 msgstr "प्रदेश"
 
-#: app/models.py:72 templates/app/forms.html:176
+#: app/models.py:95 templates/app/forms.html:208
 msgid "District"
 msgstr "जिल्ला"
 
-#: app/models.py:73 templates/app/forms.html:180
+#: app/models.py:96 templates/app/forms.html:212
 msgid "Municipality"
 msgstr "नगरपालिका"
 
-#: app/models.py:74 templates/app/forms.html:186
+#: app/models.py:97 templates/app/forms.html:218
 msgid "Ward No"
 msgstr "वडा नम्बर"
 
-#: app/models.py:75 templates/app/forms.html:190
+#: app/models.py:98 templates/app/forms.html:222
 msgid "Tole Name"
 msgstr "टोलको नाम"
 
-#: app/models.py:79 templates/app/forms.html:203
+#: app/models.py:102 templates/app/forms.html:234
 msgid "Education Background"
 msgstr "शैक्षिक पृष्ठभूमि"
 
-#: app/models.py:81 templates/app/forms_list.html:45
+#: app/models.py:104 templates/app/forms_list.html:45
 msgid "Professional Skill"
 msgstr "पेशागत कौशल"
 
-#: app/models.py:84 templates/app/forms.html:242
+#: app/models.py:109 templates/app/forms.html:272
 msgid "Profile Photo"
 msgstr "प्रोफाइल फोटो"
 
-#: app/models.py:86
+#: app/models.py:115
 msgid "Citizenship Photo (Front)"
 msgstr "नागरिकता फोटो (अगाडिको भाग)"
 
-#: app/models.py:89
+#: app/models.py:121
 msgid "Citizenship Photo (Back)"
 msgstr "नागरिकता फोटो (पछाडिको भाग)"
 
-#: app/models.py:91 templates/app/forms.html:257
+#: app/models.py:127
 msgid "Resume/CV"
 msgstr "रिजुम/सीभी"
 
-#: app/models.py:95 templates/app/forms_list.html:48
+#: app/models.py:135 templates/app/forms_list.html:48
 msgid "Status"
 msgstr "स्थिति"
 
-#: app/models.py:103
+#: app/models.py:148
 #, fuzzy
 #| msgid "Professional Skill"
 msgid "Profession Name"
 msgstr "पेशागत कौशल"
 
-#: templates/app/dashboard.html:22 templates/includes/navbar.html:65
+#: templates/app/dashboard.html:22 templates/app/index.html:40
+#: templates/includes/navbar.html:65
 msgid "Dashboard"
 msgstr "ड्यासबोर्ड"
 
@@ -228,7 +241,7 @@ msgstr "प्रकाशित रोजगारीहरू"
 msgid "Jobs Filled"
 msgstr "भर्ना गरिएका रोजगारीहरू"
 
-#: templates/app/dashboard.html:49 templates/app/dashboard.html:174
+#: templates/app/dashboard.html:49
 msgid "Active Jobs"
 msgstr "कार्यहरू"
 
@@ -240,101 +253,127 @@ msgstr "मासिक प्रयोगकर्ता वृद्धि"
 msgid "Jobs Status"
 msgstr "स्थिति"
 
+#: templates/app/dashboard.html:82
+msgid "Profession Count"
+msgstr "पेशागत कौशल"
+
+#: templates/app/dashboard.html:88
+msgid "Profession"
+msgstr "पेशागत"
+
 #: templates/app/dashboard.html:89
+msgid "Count"
+msgstr "संख्या"
+
+#: templates/app/dashboard.html:101 templates/app/forms_list.html:98
+msgid "No data available"
+msgstr "कुनै डाटा उपलब्ध छैन"
+
+#: templates/app/dashboard.html:118
 msgid "User growth based on wards"
 msgstr "वार्डहरूमा आधारित प्रयोगकर्ता वृद्धि"
 
-#: templates/app/dashboard.html:90
+#: templates/app/dashboard.html:119
 msgid "Ward numbers"
 msgstr "वडा नम्बरहरू"
 
-#: templates/app/dashboard.html:91
+#: templates/app/dashboard.html:120
 msgid "Number of registered users"
 msgstr "दर्ता भएका प्रयोगकर्ताहरूको संख्या"
-
-#: templates/app/dashboard.html:175
-msgid "Filled Jobs"
-msgstr "भर्ना गरिएका रोजगारीहरू"
-
-#: templates/app/dashboard.html:176
-msgid "Pending Jobs"
-msgstr "प्रतीक्षारत"
 
 #: templates/app/forms.html:3
 msgid "Personal Information Form - RojgarApp"
 msgstr "व्यक्तिगत जानकारी फारम - रोजगारीएप"
 
-#: templates/app/forms.html:22
+#: templates/app/forms.html:21
 msgid "Edit Personal Information"
 msgstr "व्यक्तिगत जानकारी सम्पादन गर्नुहोस्"
 
-#: templates/app/forms.html:24
+#: templates/app/forms.html:23
 msgid "Personal Information Form"
 msgstr "व्यक्तिगत जानकारी फारम"
 
-#: templates/app/forms.html:28
+#: templates/app/forms.html:27
 msgid "Fields marked with"
 msgstr "सँग चिन्ह लगाइएको क्षेत्रहरू"
 
-#: templates/app/forms.html:30
+#: templates/app/forms.html:29
 msgid "are required"
 msgstr "आवश्यक छन्"
 
-#: templates/app/forms.html:42
+#: templates/app/forms.html:54 templates/includes/navbar.html:120
+msgid "English"
+msgstr "अंग्रेजी"
+
+#: templates/app/forms.html:67 templates/includes/navbar.html:135
+msgid "नेपाली"
+msgstr "नेपाली"
+
+#: templates/app/forms.html:82
 msgid "Personal Information"
 msgstr "व्यक्तिगत जानकारी"
 
-#: templates/app/forms.html:111
+#: templates/app/forms.html:107
+msgid "Please enter your first name"
+msgstr "कृपया आफ्नो पहिलो नाम प्रविष्ट गर्नुहोस्"
+
+#: templates/app/forms.html:147
 msgid "Select Gender"
 msgstr "लिङ्ग चयन गर्नुहोस्"
 
-#: templates/app/forms.html:147
+#: templates/app/forms.html:180
 msgid "Family Information"
 msgstr "पारिवारिक जानकारी"
 
-#: templates/app/forms.html:168
+#: templates/app/forms.html:200
 msgid "Address Details"
 msgstr "ठेगाना विवरण"
 
-#: templates/app/forms.html:199
+#: templates/app/forms.html:230
 msgid "Education & Skills"
 msgstr "शिक्षा र कौशल"
 
-#: templates/app/forms.html:205
+#: templates/app/forms.html:236
 msgid "Select Education Level"
 msgstr "शिक्षा स्तर चयन गर्नुहोस्"
 
-#: templates/app/forms.html:217
+#: templates/app/forms.html:242
+msgid "Phd"
+msgstr "पीएचडी"
+
+#: templates/app/forms.html:249
 msgid "Professional Skills"
 msgstr "पेशागत कौशल"
 
-#: templates/app/forms.html:219
-#, fuzzy
-#| msgid "Professional Skill"
+#: templates/app/forms.html:251
 msgid "Select Professional Skill"
 msgstr "पेशागत कौशल"
 
-#: templates/app/forms.html:233
+#: templates/app/forms.html:264
 msgid "Document Uploads"
 msgstr "कागजात अपलोड"
 
-#: templates/app/forms.html:261
+#: templates/app/forms.html:286
+msgid "Biodata"
+msgstr "व्यक्तिगत विवरण"
+
+#: templates/app/forms.html:290
 msgid "Current Resume Uploaded"
 msgstr "हालको रिजुम अपलोड गरिएको छ"
 
-#: templates/app/forms.html:263
+#: templates/app/forms.html:292
 msgid "Download"
 msgstr "डाउनलोड गर्नुहोस्"
 
-#: templates/app/forms.html:279
+#: templates/app/forms.html:307
 msgid "Citizenship (Front)"
 msgstr "नागरिकता (अगाडिको भाग)"
 
-#: templates/app/forms.html:292
+#: templates/app/forms.html:320
 msgid "Citizenship (Back)"
 msgstr "नागरिकता (पछाडिको भाग)"
 
-#: templates/app/forms.html:307
+#: templates/app/forms.html:334
 msgid "Save Information"
 msgstr "जानकारी सुरक्षित गर्नुहोस्"
 
@@ -390,21 +429,25 @@ msgstr "कार्यहरू"
 msgid "Edit"
 msgstr "सम्पादन गर्नुहोस्"
 
-#: templates/includes/navbar.html:41
-msgid "RojgarApp"
-msgstr "रोजगारीएप"
+#: templates/app/index.html:9
+msgid "Job Registration Portal"
+msgstr "रोजगार दर्ता पोर्टल"
 
-#: templates/includes/navbar.html:58
+#: templates/app/index.html:32 templates/includes/navbar.html:58
 msgid "Home"
 msgstr "गृहपृष्ठ"
 
-#: templates/includes/navbar.html:72
+#: templates/app/index.html:48 templates/includes/navbar.html:72
 msgid "Details"
 msgstr "विवरणहरू"
 
-#: templates/includes/navbar.html:77
+#: templates/app/index.html:56 templates/includes/navbar.html:77
 msgid "Register Your Details"
 msgstr "आफ्नो विवरण दर्ता गर्नुहोस्"
+
+#: templates/includes/navbar.html:41
+msgid "RojgarApp"
+msgstr "रोजगारीएप"
 
 #: templates/includes/navbar.html:83
 msgid "Logout"
@@ -418,13 +461,11 @@ msgstr "लगइन गर्नुहोस्"
 msgid "Language"
 msgstr "भाषा"
 
-#: templates/includes/navbar.html:120
-msgid "English"
-msgstr "अंग्रेजी"
+#~ msgid "Filled Jobs"
+#~ msgstr "भर्ना गरिएका रोजगारीहरू"
 
-#: templates/includes/navbar.html:135
-msgid "नेपाली"
-msgstr "नेपाली"
+#~ msgid "Pending Jobs"
+#~ msgstr "प्रतीक्षारत"
 
 #, fuzzy
 #~| msgid "Active Jobs"

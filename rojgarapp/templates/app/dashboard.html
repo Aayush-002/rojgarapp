@@ -77,6 +77,35 @@ RojgarApp{% endblock %} {% block content %}
         </div>
       </div>
     </div>
+    <div class="card mt-5">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">{% trans "Profession Count" %}</h4>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>{% trans "Profession" %}</th>
+              <th>{% trans "Count" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for profession in proffessions_count %}
+            <tr>
+              <td>{{ profession.professional_skill }}</td>
+              <td>{{ profession.count }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="2" class="text-center">
+                {% trans "No data available" %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -171,17 +200,20 @@ RojgarApp{% endblock %} {% block content %}
       }
     }
   });
-  const alabel = "{% trans 'Active Jobs' %}";
-  const blabel = "{% trans 'Filled Jobs' %}";
-  const clabel = "{% trans 'Pending Jobs' %}";
+  const alabel = "{% trans 'Male' %}";
+  const blabel = "{% trans 'Female' %}";
+  const clabel = "{% trans 'Others' %}";
+  const male_count = {{ male_count }};
+  const female_count = {{ female_count }};
+  const others_count = {{ others_count }};
 
   const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
   const jobsStatusChart = new Chart(jobsStatusCtx, {
-      type: 'doughnut',
+      type: 'pie',
       data: {
          labels: [alabel, blabel, clabel],
           datasets: [{
-              data: [40, 30, 30],
+              data: [male_count, female_count, others_count],
               backgroundColor: ['#007bff', '#28a745', '#ffc107']
           }]
       }
