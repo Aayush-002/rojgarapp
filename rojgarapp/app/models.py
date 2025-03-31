@@ -14,26 +14,26 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 # Validators
 def validate_file_size(file, max_size_mb):
     max_size_kb = max_size_mb * 1024  # Convert MB to KB
     if file.size > max_size_kb * 1024:
-        raise ValidationError(
-            _(f"File size should not exceed {max_size_mb} MB.")
-        )
+        raise ValidationError(_(f"File size should not exceed {max_size_mb} MB."))
+
 
 # Specific validators
 def validate_photo_pp(file):
     validate_file_size(file, 1)  # 1 MB limit for Profile Photo
 
+
 def validate_citizenship_photo(file):
     validate_file_size(file, 2)  # 2 MB limit for Citizenship Photos
 
+
 def validate_cv_resume(file):
     validate_file_size(file, 5)  # 5 MB limit for Resume/CV
-
 
 
 class PersonalDetails(models.Model):
@@ -104,23 +104,23 @@ class PersonalDetails(models.Model):
     professional_skill = models.TextField(_("Professional Skill"))
 
     # File Uploads
-   # Profile Photo
+    # Profile Photo
     photo_pp = models.ImageField(
         _("Profile Photo"),
         upload_to="uploads/photos/",
-        validators=[validate_photo_pp],  
+        validators=[validate_photo_pp],
     )
     # Citizenship Photo (Front)
     citizenship_photo_front = models.ImageField(
         _("Citizenship Photo (Front)"),
         upload_to="uploads/citizenship/",
-        validators=[validate_citizenship_photo],  
+        validators=[validate_citizenship_photo],
     )
     # Citizenship Photo (Back)
     citizenship_photo_back = models.ImageField(
         _("Citizenship Photo (Back)"),
         upload_to="uploads/citizenship/",
-        validators=[validate_citizenship_photo],  
+        validators=[validate_citizenship_photo],
     )
     # Resume/CV
     cv_resume = models.FileField(
@@ -128,17 +128,23 @@ class PersonalDetails(models.Model):
         upload_to="uploads/resumes/",
         blank=True,
         null=True,
-        validators=[validate_cv_resume],  
+        validators=[validate_cv_resume],
     )
     # Status
-    status = models.CharField(  
-    _("Status"),
-    max_length=10,
-    choices=STATUS_CHOICES,
-    default="pending",
-    null=True, 
-    blank=True,
-)
+    status = models.CharField(
+        _("Status"),
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="pending",
+        null=True,
+        blank=True,
+    )
+    employment_status = models.CharField(
+        _("Employment Status"),
+        max_length=20,
+        choices=[("occupied", "Occupied"), ("unoccupied", "Unoccupied")],
+        default="unoccupied",
+    )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -149,3 +155,24 @@ class Professions(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class JobAnnouncement(models.Model):
+    title = models.CharField(_("Job Title"), max_length=200)
+    description = models.TextField(_("Job Description"))
+    posted_by = models.ForeignKey(
+        "auth.User", on_delete=models.CASCADE, verbose_name=_("Posted By")
+    )
+    posted_date = models.DateTimeField(_("Posted Date"), auto_now_add=True)
+    is_active = models.BooleanField(_("Is Active"), default=True)
+    required_personnel = models.PositiveIntegerField(_("Required Personnel"), default=1)
+    profession = models.ForeignKey(
+        "Professions",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_("Profession"),
+    )
+
+    def __str__(self):
+        return self.title
