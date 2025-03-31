@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from datetime import datetime
-from .forms import PersonalDetailsForm
-from .models import PersonalDetails, Professions
+from .forms import PersonalDetailsForm, JobAnnouncementForm
+from .models import PersonalDetails, Professions, JobAnnouncement
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Count
 
@@ -13,7 +13,10 @@ from django.db.models import Count
 @login_required
 def home(request):
     current_year = datetime.now().year
-    return render(request, "app/index.html", {"current_year": current_year})
+    notices = JobAnnouncement.objects.filter(is_active=True).order_by("-posted_date")
+    return render(
+        request, "app/index.html", {"current_year": current_year, "notices": notices}
+    )
 
 
 @login_required
@@ -25,18 +28,47 @@ def dashboard(request):
         .order_by("ward_no")
     )
     genders = PersonalDetails.objects.values("gender").annotate(count=Count("id"))
-    male_count = next((entry["count"] for entry in genders if entry["gender"] == "male"), 0)
-    female_count = next((entry["count"] for entry in genders if entry["gender"] == "female"), 0)
-    others_count = next((entry["count"] for entry in genders if entry["gender"] == "others"), 0)
+    male_count = next(
+        (entry["count"] for entry in genders if entry["gender"] == "male"), 0
+    )
+    female_count = next(
+        (entry["count"] for entry in genders if entry["gender"] == "female"), 0
+    )
+    others_count = next(
+        (entry["count"] for entry in genders if entry["gender"] == "others"), 0
+    )
 
+    # Add employment status counts
+    status_stats = PersonalDetails.objects.values("employment_status").annotate(
+        count=Count("id")
+    )
+    occupied_count = next(
+        (
+            entry["count"]
+            for entry in status_stats
+            if entry["employment_status"] == "occupied"
+        ),
+        0,
+    )
+    unoccupied_count = next(
+        (
+            entry["count"]
+            for entry in status_stats
+            if entry["employment_status"] == "unoccupied"
+        ),
+        0,
+    )
 
     ward_numbers = [entry["ward_no"] for entry in registered_users]
     ward_counts = [entry["count"] for entry in registered_users]
 
-    proffessions_count = PersonalDetails.objects.values(
-        "professional_skill"
-    ).annotate(count=Count("id")).order_by("professional_skill")
-    list_proffesions_count = list(proffessions_count)
+    professions_count = (
+        PersonalDetails.objects.values("professional_skill")
+        .annotate(count=Count("id"))
+        .order_by("professional_skill")
+    )
+    list_professions_count = list(professions_count)
+
     return render(
         request,
         "app/dashboard.html",
@@ -47,7 +79,9 @@ def dashboard(request):
             "male_count": male_count,
             "female_count": female_count,
             "others_count": others_count,
-            "proffessions_count": list_proffesions_count,
+            "professions_count": list_professions_count,
+            "occupied_count": occupied_count,
+            "unoccupied_count": unoccupied_count,
         },
     )
 
@@ -190,3 +224,23 @@ def forms_delete(request, form_id):
     return render(
         request, "app/forms_confirm_delete.html", {"delete_form": delete_form}
     )
+
+
+@login_required
+def post_job(request):
+    if not request.user.groups.filter(name="Employers").exists():
+        messages.error(request, "Only employers can post jobs.")
+        return redirect("home")
+    if request.method == "POST":
+        form = JobAnnouncementForm(request.POST)
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.posted_by = request.user
+            job.save()
+            messages.success(request, "Job posted successfully!")
+            return redirect("home")
+        else:
+            messages.error(request, "Error posting job. Please correct the form.")
+    else:
+        form = JobAnnouncementForm()
+    return render(request, "app/post_job.html", {"form": form})

@@ -1,5 +1,5 @@
 from django import forms
-from .models import PersonalDetails
+from .models import PersonalDetails, JobAnnouncement
 
 
 class PersonalDetailsForm(forms.ModelForm):
@@ -25,3 +25,9 @@ class PersonalDetailsForm(forms.ModelForm):
         initial="pending",
         widget=forms.Select(attrs={"class": "form-select"}),
     )
+
+
+class JobAnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = JobAnnouncement
+        fields = ["title", "description", "required_personnel", "profession"]
