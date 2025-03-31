@@ -6,3 +6,4 @@ from app.models import UserDetails, PersonalDetails, Professions
 admin.site.register(UserDetails)
 admin.site.register(PersonalDetails)
 admin.site.register(Professions)
+admin.site.register(JobAnnouncement)
