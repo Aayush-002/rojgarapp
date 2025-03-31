@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import UserDetails, PersonalDetails, Professions
+from app.models import UserDetails, PersonalDetails, Professions, JobAnnouncement
 
 # Register your models here.
 
