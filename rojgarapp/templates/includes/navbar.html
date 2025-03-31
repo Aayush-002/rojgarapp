@@ -73,9 +73,14 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/forms"
-              >{% trans "Register Your Details" %}</a
+            <a
+              class="nav-link {% if request.path == '/post-job/' %}active{% endif %}"
+              href="/post-job"
+              >{% trans "Job Post" %}</a
             >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/forms">{% trans "Register Details" %}</a>
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item">

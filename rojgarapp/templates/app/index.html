@@ -1,63 +1,149 @@
-{% extends 'layouts/base.html' %}
-{% load i18n %}
-{% block title %}Home - RojgarApp{% endblock %}
-{% block content %}
+{% extends 'layouts/base.html' %} {% load i18n %} {% block title %}Home -
+RojgarApp{% endblock %} {% block content %}
 
-<div class="container min-vh-100">
+<div
+  class="container-fluid px-0 min-vh-100"
+  style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)"
+>
   <!-- App Title -->
-  <div class="text-center my-4">
-    <h1 class="display-3 fw-bold text-primary">{% trans "Job Registration Portal" %}</h1>
+  <div class="text-center py-5">
+    <h1
+      class="display-4 fw-bold text-primary animate__animated animate__fadeInDown"
+      style="letter-spacing: 1px"
+    >
+      {% trans "Job Registration Portal" %}
+    </h1>
+    <p class="lead text-muted mt-2 animate__animated animate__fadeInUp">
+      {% trans "Connecting Opportunities with Talent" %}
+    </p>
   </div>
 
-  <!-- Main Image Section -->
-  <div class="row justify-content-center mb-5">
-    <div class="col-md-8">
-      <img 
-        src="/media/IMG_1467.jpg" 
-        class="img-fluid rounded shadow-lg" 
-        alt="Municipality Image"
-        style="width: 100%; height: 50vh; object-fit: cover;"
-      />
+  <!-- Hero and Notices Section -->
+  <div class="container px-4 mb-5">
+    <div class="row g-4 align-items-start">
+      <!-- Main Image Section -->
+      <div class="col-lg-8">
+        <div class="card shadow-lg border-0 animate__animated animate__zoomIn">
+          <img
+            src="/media/IMG_1467.jpg"
+            class="img-fluid rounded-top"
+            alt="Municipality Image"
+            style="width: 100%; height: 50vh; object-fit: cover"
+          />
+          <div class="card-body text-center p-4">
+            <h3 class="fw-bold text-primary">
+              {% trans "Welcome to RojgarApp" %}
+            </h3>
+            <p class="text-muted">
+              {% trans "Your gateway to municipal job opportunities." %}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notices Section -->
+      <div class="col-lg-4">
+        <div
+          class="card shadow-lg border-0 animate__animated animate__fadeInRight"
+          style="height: 64vh"
+        >
+          <div class="card-header bg-primary text-white p-3 rounded-top">
+            <h5 class="fw-bold mb-0">
+              <i class="fas fa-bullhorn me-2"></i>{% trans "Job Notices" %}
+            </h5>
+          </div>
+          <div class="card-body p-0" style="max-height: 80vh; overflow-y: auto">
+            {% for notice in notices %}
+            <div
+              class="p-3 border-bottom hover-bg-light"
+              style="transition: background 0.3s"
+            >
+              <h6 class="fw-bold text-primary mb-1">
+                <i class="fas fa-briefcase me-2"></i>{{ notice.title }}
+              </h6>
+              <p class="text-muted small mb-1">
+                {{ notice.description|truncatewords:15 }}
+              </p>
+              <p class="text-muted small mb-1">
+                <i class="fas fa-user me-1"></i>{{ notice.posted_by.username }}
+              </p>
+              <p class="text-muted small mb-0">
+                <i class="fas fa-calendar-alt me-1"></i>
+                {{ notice.posted_date|date:"F d, Y" }}
+              </p>
+            </div>
+            {% empty %}
+            <div class="text-center p-3">
+              <p class="text-muted">
+                <i class="fas fa-info-circle me-2"></i>
+                {% trans "No active job notices." %}
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Navigation Buttons -->
-  <div class="container px-4">
+  <div class="container px-4 pb-5">
     <div class="row g-4 justify-content-center">
-      <!-- First Button -->
-      <div class="col-md-6">
-        <a class="btn btn-primary w-100 py-4 rounded-lg shadow {% if request.path == '/' %}active{% endif %}" 
-           href="/" 
-           style="font-size: 1.5rem;">
+      <div class="col-md-6 col-lg-3">
+        <a
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn {% if request.path == '/' %}active{% endif %}"
+          href="/"
+          style="font-size: 1.25rem; transition: transform 0.2s"
+        >
           <i class="fas fa-home me-2"></i>{% trans "Home" %}
         </a>
       </div>
-      <!-- Second Button -->
-      <div class="col-md-6">
-        <a class="btn btn-primary w-100 py-4 rounded-lg shadow {% if request.path == '/dashboard/' %}active{% endif %}" 
-           href="/dashboard"
-           style="font-size: 1.5rem;">
+      <div class="col-md-6 col-lg-3">
+        <a
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn {% if request.path == '/dashboard/' %}active{% endif %}"
+          href="/dashboard"
+          style="font-size: 1.25rem; transition: transform 0.2s"
+        >
           <i class="fas fa-chart-bar me-2"></i>{% trans "Dashboard" %}
         </a>
       </div>
-      <!-- Third Button -->
-      <div class="col-md-6">
-        <a class="btn btn-primary w-100 py-4 rounded-lg shadow {% if request.path == '/forms_list/' %}active{% endif %}" 
-           href="/forms_list"
-           style="font-size: 1.5rem;">
+      <div class="col-md-6 col-lg-3">
+        <a
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn {% if request.path == '/forms_list/' %}active{% endif %}"
+          href="/forms_list"
+          style="font-size: 1.25rem; transition: transform 0.2s"
+        >
           <i class="fas fa-list me-2"></i>{% trans "Details" %}
         </a>
       </div>
-      <!-- Fourth Button -->
-      <div class="col-md-6">
-        <a class="btn btn-primary w-100 py-4 rounded-lg shadow" 
-           href="/forms"
-           style="font-size: 1.5rem;">
+      <div class="col-md-6 col-lg-3">
+        <a
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn"
+          href="/forms"
+          style="font-size: 1.25rem; transition: transform 0.2s"
+        >
           <i class="fas fa-edit me-2"></i>{% trans "Register Your Details" %}
         </a>
       </div>
     </div>
   </div>
 </div>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  integrity="sha512-c42qTSw/wiW5oaDSLF/lTR69GYQw2M1m+aoIB03Q5v5O0JGGVpKwi3/ZuJ/AfnKOONlNO/7ZJ7W7wS84Oafc1w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+
+<style>
+  .btn:hover {
+    transform: scale(1.05);
+  }
+  .hover-bg-light:hover {
+    background-color: #f8f9fa;
+  }
+</style>
 
 {% endblock %}

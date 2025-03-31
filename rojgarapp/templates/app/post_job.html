@@ -1,0 +1,142 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Post a Job - RojgarApp" %}{% endblock %}
+{% load static %}
+{% block content %}
+<div class="container-fluid py-4">
+   <div class="row justify-content-center">
+      <div class="col-lg-10">
+         {% if messages %}
+         <div class="alert alert-danger alert-dismissible fade show mb-4">
+            {% for message in messages %}
+            <p class="mb-0">{{ message }}</p>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+         </div>
+         {% endif %}
+         <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white p-4">
+               <h2 class="text-center mb-2">
+                  {% trans "Post a Job" %}
+               </h2>
+               <p class="text-center mb-0">
+                  {% trans "Fields marked with" %}
+                  <span class="text-danger fw-bold">*</span>
+                  {% trans "are required" %}
+               </p>
+               <div class="d-flex justify-content-end align-items-center">
+                  <!-- Language Icon -->
+                  <div class="dropdown">
+                     <a
+                        href="#"
+                        class="btn btn-light dropdown-toggle"
+                        id="languageDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        >
+                     <img src="{% static 'images/language.png' %}" alt="Language" width="20" height="20" />
+                     </a>
+                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li>
+                           <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                              {% csrf_token %}
+                              <button
+                                 type="submit"
+                                 name="language"
+                                 value="en"
+                                 class="dropdown-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}"
+                                 >
+                              {% trans "English" %}
+                              </button>
+                           </form>
+                        </li>
+                        <li>
+                           <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                              {% csrf_token %}
+                              <button
+                                 type="submit"
+                                 name="language"
+                                 value="ne"
+                                 class="dropdown-item {% if LANGUAGE_CODE == 'ne' %}active{% endif %}"
+                                 >
+                              {% trans "नेपाली" %}
+                              </button>
+                           </form>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body p-4">
+               <form method="post" class="needs-validation" novalidate>
+                  {% csrf_token %}
+                  <div class="mb-5VOCATION
+                     <h4 class="text-primary border-bottom pb-2 mb-4">
+                        <i class="fas fa-briefcase me-2"></i>{% trans "Job Details" %}
+                     </h4>
+                     <div class="row mb-4">
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Job Title" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="title" value="{{ form.title.value|default:'' }}" required>
+                           <div class="invalid-feedback">{% trans "Please enter a job title" %}</div>
+                        </div>
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Required Personnel" %} <span class="text-danger">*</span></label>
+                           <input type="number" class="form-control" name="required_personnel" value="{{ form.required_personnel.value|default:'1' }}" min="1" required>
+                           <div class="invalid-feedback">{% trans "Please enter the number of personnel required" %}</div>
+                        </div>
+                     </div>
+                     <div class="row mb-4">
+                        <div class="col-md-12">
+                           <label class="form-label fw-bold">{% trans "Job Description" %} <span class="text-danger">*</span></label>
+                           <textarea class="form-control" name="description" rows="5" required>{{ form.description.value|default:'' }}</textarea>
+                           <div class="invalid-feedback">{% trans "Please enter a job description" %}</div>
+                        </div>
+                     </div>
+                     <div class="row mb-4">
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Profession" %}</label>
+                           <select class="form-select" name="profession">
+                              <option value="">{% trans "Select Profession (Optional)" %}</option>
+                              {% for profession in form.profession.field.queryset %}
+                              <option value="{{ profession.pk }}" {% if form.profession.value == profession.pk %}selected{% endif %}>
+                                 {{ profession.name }}
+                              </option>
+                              {% endfor %}
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="text-center mt-5">
+                     <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-save me-2"></i>{% trans "Post Job" %}
+                     </button>
+                     <a href="{% url 'home' %}" class="btn btn-secondary btn-lg px-5 ms-3">
+                        <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Home" %}
+                     </a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Form Validation Script -->
+<script>
+   (function () {
+       'use strict'
+       var forms = document.querySelectorAll('.needs-validation')
+       Array.prototype.slice.call(forms).forEach(function (form) {
+           form.addEventListener('submit', function (event) {
+               if (!form.checkValidity()) {
+                   event.preventDefault()
+                   event.stopPropagation()
+               }
+               form.classList.add('was-validated')
+           }, false)
+       })
+   })()
+</script>
+{% endblock %}
