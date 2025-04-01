@@ -5,7 +5,7 @@ from .models import PersonalDetails, JobAnnouncement
 class PersonalDetailsForm(forms.ModelForm):
     class Meta:
         model = PersonalDetails
-        fields = "__all__"  # Include all fields from the model
+        fields = "__all__"
 
         widgets = {
             "dob": forms.DateInput(attrs={"type": "date"}),

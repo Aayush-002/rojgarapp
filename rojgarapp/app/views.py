@@ -144,6 +144,10 @@ def auth_logout(request):
 def forms(request):
     editForm = False
     professions = Professions.objects.all()
+    is_employer = (
+        request.user.is_authenticated
+        and request.user.groups.filter(name="Employers").exists()
+    )
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
         if form.is_valid():
@@ -158,10 +162,16 @@ def forms(request):
     else:
         form = PersonalDetailsForm()
 
+    context = {
+        "form": form,
+        "editForm": editForm,
+        "professions": professions,
+        "is_employer": is_employer,
+    }
     return render(
         request,
         "app/forms.html",
-        {"form": form, "editForm": editForm, "professions": professions},
+        context,
     )
 
 
@@ -184,6 +194,10 @@ def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
     editForm = True
     professions = Professions.objects.all()
+    is_employer = (
+        request.user.is_authenticated
+        and request.user.groups.filter(name="Employers").exists()
+    )
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
 
@@ -202,14 +216,16 @@ def forms_edit(request, form_id):
     else:
         form = PersonalDetailsForm(instance=edit_form)
 
+    context = {
+        "form": form,
+        "editForm": editForm,
+        "professions": professions,
+        "is_employer": is_employer,
+    }
     return render(
         request,
         "app/forms.html",
-        {
-            "form": form,
-            "editForm": editForm,
-            "professions": professions,
-        },
+        context,
     )
 
 
