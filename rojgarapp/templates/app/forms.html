@@ -259,33 +259,28 @@
                         </div>
                      </div>
                   </div>
-                  <!-- Employment Status -->
+                  
+                  <!-- Employment Status Section (Visible only to employers when editing) -->
+                  {% if editForm and is_employer %}
                   <div class="mb-5">
-                     <h4 class="text-primary border-bottom pb-2 mb-4">
-                        <i class="fas fa-briefcase me-2"></i>{% trans "Employment Status" %}
-                     </h4>
                      <div class="row">
                         <div class="col-md-6">
-                           <div class="form-check form-switch">
-                              <input
-                                 class="form-check-input"
-                                 type="checkbox"
-                                 id="employmentStatusToggle"
-                                 name="employment_status"
-                                 value="occupied"
-                                 {% if form.employment_status.value == "occupied" %}checked{% endif %}
-                                 {% if not editForm or not request.user.is_staff and not is_employer %}disabled{% endif %}
-                              />
-                              <label class="form-check-label" for="employmentStatusToggle" id="employmentStatusLabel">
-                                 {{ form.employment_status.value|default:_("Unoccupied")|capfirst }}
-                              </label>
-                           </div>
-                           {% if not editForm or not request.user.is_staff and not is_employer %}
-                           <small class="text-muted">{% trans "Only employers or staff can update employment status." %}</small>
-                           {% endif %}
+                           <label class="form-label fw-bold">{% trans "Employment Status" %}</label>
+                           <select class="form-select" name="employment_status" required>
+                              <option value="unoccupied" {% if form.employment_status.value == "unoccupied" %}selected{% endif %}>
+                                 {% trans "Unoccupied" %}
+                              </option>
+                              <option value="occupied" {% if form.employment_status.value == "occupied" %}selected{% endif %}>
+                                 {% trans "Occupied" %}
+                              </option>
+                           </select>
                         </div>
                      </div>
                   </div>
+                  {% else %}
+                  <input type="hidden" name="employment_status" value="{{ form.employment_status.value|default:'unoccupied' }}">
+                  {% endif %}
+
                   <!-- Document Uploads -->
                   <div class="mb-5">
                      <h4 class="text-primary border-bottom pb-2 mb-4">
@@ -403,19 +398,21 @@
 </script>
 <script>
    const empToggle = document.getElementById('employmentStatusToggle');
-   const empLabel = document.getElementById('employmentStatusLabel');
-   const hiddenEmpStatusInput = document.createElement('input');
-   hiddenEmpStatusInput.type = 'hidden';
-   hiddenEmpStatusInput.name = 'employment_status';
-   
-   hiddenEmpStatusInput.value = empToggle.checked ? 'occupied' : 'unoccupied';
-   document.querySelector('form').appendChild(hiddenEmpStatusInput);
-   
-   empToggle.addEventListener('change', () => {
-       const newStatus = empToggle.checked ? 'occupied' : 'unoccupied';
-       empLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-       hiddenEmpStatusInput.value = newStatus;
-   });
+   if (empToggle) {
+       const empLabel = document.getElementById('employmentStatusLabel');
+       const hiddenEmpStatusInput = document.createElement('input');
+       hiddenEmpStatusInput.type = 'hidden';
+       hiddenEmpStatusInput.name = 'employment_status';
+       
+       hiddenEmpStatusInput.value = empToggle.checked ? 'occupied' : 'unoccupied';
+       document.querySelector('form').appendChild(hiddenEmpStatusInput);
+       
+       empToggle.addEventListener('change', () => {
+           const newStatus = empToggle.checked ? 'occupied' : 'unoccupied';
+           empLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+           hiddenEmpStatusInput.value = newStatus;
+       });
+   }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
