@@ -15,3 +15,12 @@ def get_employment_status_counts():
         "occupied": next((entry["count"] for entry in status_stats if entry["employment_status"] == "occupied"), 0),
         "unoccupied": next((entry["count"] for entry in status_stats if entry["employment_status"] == "unoccupied"), 0),
     }
+
+def get_status_badge_class(status: str):
+    if status == 'accepted':
+        return 'bg-success'
+    elif status == 'rejected':
+        return 'bg-danger'
+    elif status == 'pending':
+        return 'bg-warning'
+    return 'bg-info'
