@@ -3,19 +3,24 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Count
+from django.http import JsonResponse
+from django.utils.translation import gettext_lazy as _
+
 from datetime import datetime
 from .forms import PersonalDetailsForm, JobAnnouncementForm
-from .models import PersonalDetails, Professions, JobAnnouncement
-from django.utils.translation import gettext_lazy as _
-from django.db.models import Count
+from .models import PersonalDetails, Professions, JobAnnouncement, JobApplication
+from .utils import get_gender_counts, get_employment_status_counts, get_status_badge_class
 
+def check_employer(user):
+    return user.groups.filter(name="Employers").exists()
 
 @login_required
 def home(request):
-    current_year = datetime.now().year
-    notices = JobAnnouncement.objects.filter(is_active=True).order_by("-posted_date")
+    jobs = JobAnnouncement.objects.filter(is_active=True).order_by("-posted_date")
     return render(
-        request, "app/index.html", {"current_year": current_year, "notices": notices}
+        request, "app/index.html", {"jobs": jobs}
     )
 
 
@@ -27,38 +32,6 @@ def dashboard(request):
         .annotate(count=Count("id"))
         .order_by("ward_no")
     )
-    genders = PersonalDetails.objects.values("gender").annotate(count=Count("id"))
-    male_count = next(
-        (entry["count"] for entry in genders if entry["gender"] == "male"), 0
-    )
-    female_count = next(
-        (entry["count"] for entry in genders if entry["gender"] == "female"), 0
-    )
-    others_count = next(
-        (entry["count"] for entry in genders if entry["gender"] == "others"), 0
-    )
-
-    # Add employment status counts
-    status_stats = PersonalDetails.objects.values("employment_status").annotate(
-        count=Count("id")
-    )
-    occupied_count = next(
-        (
-            entry["count"]
-            for entry in status_stats
-            if entry["employment_status"] == "occupied"
-        ),
-        0,
-    )
-    unoccupied_count = next(
-        (
-            entry["count"]
-            for entry in status_stats
-            if entry["employment_status"] == "unoccupied"
-        ),
-        0,
-    )
-
     ward_numbers = [entry["ward_no"] for entry in registered_users]
     ward_counts = [entry["count"] for entry in registered_users]
 
@@ -67,22 +40,26 @@ def dashboard(request):
         .annotate(count=Count("id"))
         .order_by("professional_skill")
     )
-    list_professions_count = list(professions_count)
+
+    gender_counts = get_gender_counts()
+    employment_status_counts = get_employment_status_counts()
+
+    context = {
+        "ward_numbers": ward_numbers,
+        "ward_counts": ward_counts,
+        "user_count": user_count,
+        "male_count": gender_counts["male"],
+        "female_count": gender_counts["female"],
+        "others_count": gender_counts["others"],
+        "professions_count": list(professions_count),
+        "occupied_count": employment_status_counts["occupied"],
+        "unoccupied_count": employment_status_counts["unoccupied"],
+    }
 
     return render(
         request,
         "app/dashboard.html",
-        {
-            "ward_numbers": ward_numbers,
-            "ward_counts": ward_counts,
-            "user_count": user_count,
-            "male_count": male_count,
-            "female_count": female_count,
-            "others_count": others_count,
-            "professions_count": list_professions_count,
-            "occupied_count": occupied_count,
-            "unoccupied_count": unoccupied_count,
-        },
+        context,
     )
 
 
@@ -110,7 +87,6 @@ def auth_signup(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        # Validate the form
         if password != confirm_password:
             messages.error(request, "Passwords do not match!")
             return redirect("signup")
@@ -123,7 +99,6 @@ def auth_signup(request):
             messages.error(request, "Email already registered!")
             return redirect("signup")
 
-        # Create the user
         user = User.objects.create_user(
             username=username, email=email, password=password
         )
@@ -140,7 +115,6 @@ def auth_logout(request):
     return redirect("login")
 
 
-# create forms
 def forms(request):
     editForm = False
     professions = Professions.objects.all()
@@ -148,67 +122,58 @@ def forms(request):
         request.user.is_authenticated
         and request.user.groups.filter(name="Employers").exists()
     )
+
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
         if form.is_valid():
-            print("validation pass is here!")
             form.save()
-            messages.success(request, "Successfully registered")
-            return redirect("forms_list", {"professions": professions})
+            messages.success(request, "Successfully registered!")
+            return redirect("forms_list")
         else:
-            print("Validation failed!")
-            print(f"Form errors: {form.errors}")  # status error
-            messages.error(request, "त्रुटि भयो, कृपया त्रुटिहरू सच्याउनुहोस् र अगेन भर्नुहोस्.")
+            messages.error(request, "Something went wrong, please try again later.")
     else:
         form = PersonalDetailsForm()
 
-    context = {
-        "form": form,
-        "editForm": editForm,
-        "professions": professions,
-        "is_employer": is_employer,
-    }
     return render(
         request,
         "app/forms.html",
-        context,
+        {
+            "form": form,
+            "editForm": editForm,
+            "professions": professions,
+            "is_employer": is_employer,
+        },
     )
 
 
-# show list of submitted forms
 @login_required
 def forms_list(request):
     forms = PersonalDetails.objects.order_by("-created_at")
     if request.method == "GET":
-        list = request.GET.get("form_search")
-        if list != None:
-            forms = PersonalDetails.objects.filter(first_name__icontains=list)
-            print("forms", forms)
+        search_query = request.GET.get("form_search")
+        if search_query:
+            forms = PersonalDetails.objects.filter(first_name__icontains=search_query)
 
     return render(request, "app/forms_list.html", {"forms": forms})
 
 
-# edit_forms
 @login_required
 def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
-    editForm = True
     professions = Professions.objects.all()
     is_employer = (
         request.user.is_authenticated
         and request.user.groups.filter(name="Employers").exists()
     )
+
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
-
-        status_value = request.POST.get("status", "pending").lower()
-
         form.data = form.data.copy()
-        form.data["status"] = status_value
+        form.data["status"] = request.POST.get("status", "pending").lower()
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Successfully updated")
+            messages.success(request, "Successfully updated!")
             return redirect("forms_list")
         else:
             for field, errors in form.errors.items():
@@ -216,20 +181,18 @@ def forms_edit(request, form_id):
     else:
         form = PersonalDetailsForm(instance=edit_form)
 
-    context = {
-        "form": form,
-        "editForm": editForm,
-        "professions": professions,
-        "is_employer": is_employer,
-    }
     return render(
         request,
         "app/forms.html",
-        context,
+        {
+            "form": form,
+            "editForm": True,
+            "professions": professions,
+            "is_employer": is_employer,
+        },
     )
 
 
-# delete form
 @login_required
 def forms_delete(request, form_id):
     delete_form = get_object_or_404(PersonalDetails, pk=form_id)
@@ -247,6 +210,7 @@ def post_job(request):
     if not request.user.groups.filter(name="Employers").exists():
         messages.error(request, "Only employers can post jobs.")
         return redirect("home")
+
     if request.method == "POST":
         form = JobAnnouncementForm(request.POST)
         if form.is_valid():
@@ -259,4 +223,120 @@ def post_job(request):
             messages.error(request, "Error posting job. Please correct the form.")
     else:
         form = JobAnnouncementForm()
+
     return render(request, "app/post_job.html", {"form": form})
+
+@login_required
+def job_detail(request, job_id):
+    job = get_object_or_404(JobAnnouncement, pk=job_id, is_active=True)
+    applications = job.applications.all()
+    has_applied = False
+    user_application = None
+
+    if request.user.is_authenticated:
+        try:
+            personal_details = PersonalDetails.objects.get(pk=request.user.id)
+            has_applied = applications.filter(applicant=personal_details).exists()
+            if has_applied:
+                user_application = applications.get(applicant=personal_details)
+        except PersonalDetails.DoesNotExist:
+            pass
+
+    accepted_count = applications.filter(status='accepted').count()
+    
+    context = {
+        "job": job,
+        "applications": applications,
+        "accepted_count": accepted_count,
+        "has_applied": has_applied,
+        "user_application": user_application,
+    }
+    return render(request, "app/job_detail.html", context)
+
+@login_required
+def apply_job(request, job_id):
+    job = get_object_or_404(JobAnnouncement, pk=job_id, is_active=True)
+    
+    try:
+        personal_details = PersonalDetails.objects.get(pk=request.user.id)
+    except PersonalDetails.DoesNotExist:
+        messages.error(request, "You need to fill out your personal details first.")
+        return redirect("forms")
+
+    if job.applications.filter(applicant=personal_details).exists():
+        messages.error(request, "You have already applied for this job.")
+        return redirect('job_detail', job_id=job.id)
+
+    # Check if job has available positions
+    accepted_applications = job.applications.filter(status='accepted').count()
+    if accepted_applications >= job.required_personnel:
+        messages.warning(request, "This job has already reached the maximum number of applicants.")
+        return redirect('job_detail', job_id=job.id)
+
+    JobApplication.objects.create(
+        job=job,
+        applicant=personal_details,
+        status='pending'
+    )
+    
+    messages.success(request, "Application submitted successfully!")
+    return redirect('job_detail', job_id=job.id)
+
+@login_required
+def applications_list(request):
+    if check_employer(request.user):
+        applications = JobApplication.objects.filter(job__posted_by=request.user)
+    else:
+        applications = JobApplication.objects.filter(applicant__id=request.user.id)
+
+    paginator = Paginator(applications, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    is_employer = check_employer(request.user)
+
+    context = {
+        "applications": page_obj,
+        "is_paginated": paginator.num_pages > 1,
+        "is_employer": is_employer,
+        "status_choices": JobApplication.STATUS_CHOICES,
+    }
+
+    return render(request, "app/applications_list.html", context)
+
+@login_required
+def update_application_status(request):
+    if request.method == "POST" and check_employer(request.user):
+        application_id = request.POST.get("application_id")
+        new_status = request.POST.get("status")
+
+        try:
+            application = JobApplication.objects.get(pk=application_id, job__posted_by=request.user)
+            application.status = new_status
+            application.save()
+            return JsonResponse({
+                'success': True,
+                'new_status': application.get_status_display(),
+                'status_class': get_status_badge_class(new_status)
+            })
+        except JobApplication.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Application not found'}, status=404)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+@login_required
+def application_delete(request, pk):
+    application = get_object_or_404(JobApplication, pk=pk)
+    
+    # Check if user is the job poster
+    if application.job.posted_by != request.user:
+        messages.error(request, "You are not authorized to delete this application.")
+        return redirect('applications_list')
+
+    if request.method == "POST":
+        application.delete()
+        messages.success(request, "Application deleted successfully!")
+        return redirect('applications_list')
+
+    context = { "application": application }
+
+    return render(request, "app/application_confirm_delete.html", context)
