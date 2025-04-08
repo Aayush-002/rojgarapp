@@ -176,3 +176,60 @@ class JobAnnouncement(models.Model):
 
     def __str__(self):
         return self.title
+
+class JobApplication(models.Model):
+    STATUS_CHOICES = [
+        ("pending", _("Pending")),
+        ("reviewed", _("Reviewed")),
+        ("accepted", _("Accepted")),
+        ("rejected", _("Rejected")),
+    ]
+
+    job = models.ForeignKey(
+        JobAnnouncement, 
+        on_delete=models.CASCADE, 
+        related_name="applications",
+        verbose_name=_("Job")
+    )
+    applicant = models.ForeignKey(
+        PersonalDetails,
+        on_delete=models.CASCADE,
+        related_name="job_applications",
+        verbose_name=_("Applicant")
+    )
+    application_date = models.DateTimeField(_("Application Date"), auto_now_add=True)
+    status = models.CharField(
+        _("Status"), 
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default="pending"
+    )
+
+    class Meta:
+        unique_together = ("job", "applicant")
+        ordering = ["-application_date"]
+
+    def __str__(self):
+        return f"{self.applicant} - {self.job}"
+
+    def clean(self):
+        # Check if job has reached maximum applicants
+        if self.job.applications.filter(status='accepted').count() >= self.job.required_personnel:
+            raise ValidationError(_("This job has already reached the maximum number of applicants."))
+
+    def save(self, *args, **kwargs):
+        old_status = None
+        if self.pk:
+            old_status = JobApplication.objects.get(pk=self.pk).status
+
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+        # Check if status changed to 'accepted'
+        if self.status == "accepted" and old_status != "accepted":
+            self.applicant.employment_status = "occupied"
+            self.applicant.save()
+
+        elif old_status == "accepted" and self.status != "accepted":
+            self.applicant.employment_status = "unoccupied"
+            self.applicant.save()
