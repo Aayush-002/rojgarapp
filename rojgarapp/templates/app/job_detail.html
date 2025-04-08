@@ -1,0 +1,121 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% block title %}{{ job.title }} - {% trans "Job Details" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ job.title }}</h2>
+            <small class="d-block">
+                {% trans "Posted by" %}: {{ job.posted_by.get_full_name|default:job.posted_by.username }}
+                | {% trans "Posted on" %}: {{ job.posted_date|date:"F d, Y" }}
+            </small>
+        </div>
+        
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h4 class="text-primary">{% trans "Job Description" %}</h4>
+                    <p>{{ job.description|linebreaks }}</p>
+                    
+                    <h4 class="text-primary mt-4">{% trans "Requirements" %}</h4>
+                    <ul>
+                        <li>{% trans "Profession" %}: {{ job.profession }}</li>
+                        <li>
+                            {% trans "Positions Available" %}: 
+                            {{ accepted_count }} / {{ job.required_personnel }}
+                            {% if accepted_count >= job.required_personnel %}
+                                <span class="badge bg-danger ms-2">{% trans "Filled" %}</span>
+                            {% else %}
+                                <span class="badge bg-success ms-2">{% trans "Open" %}</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card border-primary">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">{% trans "Job Summary" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>{% trans "Profession" %}:</strong> {{ job.profession }}</p>
+                            <p><strong>{% trans "Positions Available" %}:</strong> 
+                                {{ accepted_count }} / {{ job.required_personnel }}
+                            </p>
+                            <p><strong>{% trans "Posted On" %}:</strong> {{ job.posted_date|date:"F d, Y" }}</p>
+                            
+                            {% if user.is_authenticated %}
+                                {% if has_applied %}
+                                    <div class="alert alert-success mt-3">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        {% trans "You have already applied for this position." %}
+                                        <br>
+                                        <small>{% trans "Status" %}: 
+                                            {{ user_application.get_status_display }}
+                                        </small>
+                                    </div>
+                                {% elif accepted_count >= job.required_personnel %}
+                                    <div class="alert alert-warning mt-3">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        {% trans "This job has reached the maximum number of applicants." %}
+                                    </div>
+                                {% else %}
+                                    <form method="post" action="{% url 'apply_job' job.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary w-100 mt-3">
+                                            <i class="fas fa-paper-plane me-2"></i>{% trans "Apply Now" %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    {% trans "You need to login to apply for this job." %}
+                                    <a href="{% url 'login' %}?next={% url 'job_detail' job.id %}" class="alert-link">
+                                        {% trans "Login here" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+{% if messages %}
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">{% trans "Application Submitted" %}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">{% trans "OK" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+// Show success modal if there are messages
+document.addEventListener('DOMContentLoaded', function() {
+    const successModal = document.getElementById('successModal');
+    if (successModal) {
+        const modal = new bootstrap.Modal(successModal);
+        modal.show();
+    }
+});
+</script>
+{% endblock %}
