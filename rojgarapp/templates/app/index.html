@@ -4,17 +4,17 @@
 {% block content %}
 <div
   class="container-fluid px-0 min-vh-100"
-  style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)"
+  style="background: linear-gradient(120deg, #f8f9fa 0%, #e2e8f0 50%, #cbd5e1 100%)"
 >
   <!-- App Title -->
   <div class="text-center py-5">
     <h1
       class="display-4 fw-bold text-primary animate__animated animate__fadeInDown"
-      style="letter-spacing: 1px"
+      style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);"
     >
       {% trans "Job Registration Portal" %}
     </h1>
-    <p class="lead text-muted mt-2 animate__animated animate__fadeInUp">
+    <p class="lead text-muted mt-3 animate__animated animate__fadeInUp" style="font-size: 1.3rem;">
       {% trans "Connecting Opportunities with Talent" %}
     </p>
   </div>
@@ -24,18 +24,18 @@
     <div class="row g-4 align-items-start">
       <!-- Main Image Section -->
       <div class="col-lg-8">
-        <div class="card shadow-lg border-0 animate__animated animate__zoomIn">
+        <div class="card shadow-lg border-0 animate__animated animate__zoomIn" style="border-radius: 15px; overflow: hidden;">
           <img
             src="/media/IMG_1467.jpg"
-            class="img-fluid rounded-top"
+            class="img-fluid"
             alt="Municipality Image"
-            style="width: 100%; height: 50vh; object-fit: cover"
+            style="width: 100%; height: 50vh; object-fit: cover; transform: scale(1.01); transition: transform 0.3s ease;"
           />
-          <div class="card-body text-center p-4">
-            <h3 class="fw-bold text-primary">
+          <div class="card-body text-center p-5 bg-white">
+            <h3 class="fw-bold text-primary mb-3" style="letter-spacing: 1px;">
               {% trans "Welcome to RojgarApp" %}
             </h3>
-            <p class="text-muted">
+            <p class="text-muted" style="font-size: 1.1rem; line-height: 1.6;">
               {% trans "Your gateway to municipal job opportunities." %}
             </p>
           </div>
@@ -46,42 +46,44 @@
       <div class="col-lg-4">
         <div
           class="card shadow-lg border-0 animate__animated animate__fadeInRight"
-          style="height: 64vh"
+          style="height: 64vh; border-radius: 15px; overflow: hidden;"
         >
-          <div class="card-header bg-primary text-white p-3 rounded-top">
+          <div class="card-header bg-primary text-white p-4 rounded-top" style="background: linear-gradient(45deg, #2563eb, #3b82f6);">
             <h5 class="fw-bold mb-0">
               <i class="fas fa-bullhorn me-2"></i>{% trans "Job Notices" %}
             </h5>
           </div>
-          <div class="card-body p-0" style="max-height: 80vh; overflow-y: auto">
+          <div class="card-body p-0" style="max-height: 80vh; overflow-y: auto; scrollbar-width: thin;">
             {% for job in jobs %}
             <a
               href="{% url 'job_detail' job.id %}"
               class="text-decoration-none text-reset"
             >
               <div
-                class="p-3 border-bottom hover-bg-light"
-                style="transition: background 0.3s; cursor: pointer"
+                class="p-4 border-bottom hover-bg-light"
+                style="transition: all 0.3s ease;"
               >
-                <h6 class="fw-bold text-primary mb-1">
+                <h6 class="fw-bold text-primary mb-2" style="font-size: 1.1rem;">
                   <i class="fas fa-briefcase me-2"></i>{{ job.title }}
                 </h6>
-                <p class="text-muted small mb-1">
+                <p class="text-muted small mb-2" style="line-height: 1.5;">
                   {{ job.description|truncatewords:15 }}
                 </p>
-                <p class="text-muted small mb-1">
-                  <i class="fas fa-user me-1"></i>{{ job.posted_by.username }}
-                </p>
-                <p class="text-muted small mb-0">
-                  <i class="fas fa-calendar-alt me-1"></i>
-                  {{ job.posted_date|date:"F d, Y" }}
-                </p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="text-muted small">
+                    <i class="fas fa-user me-1"></i>{{ job.posted_by.username }}
+                  </span>
+                  <span class="text-muted small">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    {{ job.posted_date|date:"F d, Y" }}
+                  </span>
+                </div>
               </div>
             </a>
             {% empty %}
-            <div class="text-center p-3">
-              <p class="text-muted">
-                <i class="fas fa-info-circle me-2"></i>
+            <div class="text-center p-5">
+              <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
+              <p class="text-muted mb-0">
                 {% trans "No active jobs found." %}
               </p>
             </div>
@@ -97,36 +99,36 @@
     <div class="row g-4 justify-content-center">
       <div class="col-md-6 col-lg-3">
         <a
-          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn {% if request.path == '/' %}active{% endif %}"
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-lg animate__animated animate__bounceIn {% if request.path == '/' %}active{% endif %}"
           href="/"
-          style="font-size: 1.25rem; transition: transform 0.2s"
+          style="font-size: 1.25rem; transition: all 0.3s ease; border-radius: 12px; background: linear-gradient(45deg, #2563eb, #3b82f6);"
         >
           <i class="fas fa-home me-2"></i>{% trans "Home" %}
         </a>
       </div>
       <div class="col-md-6 col-lg-3">
         <a
-          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn {% if request.path == '/dashboard/' %}active{% endif %}"
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-lg animate__animated animate__bounceIn {% if request.path == '/dashboard/' %}active{% endif %}"
           href="/dashboard"
-          style="font-size: 1.25rem; transition: transform 0.2s"
+          style="font-size: 1.25rem; transition: all 0.3s ease; border-radius: 12px; background: linear-gradient(45deg, #2563eb, #3b82f6);"
         >
           <i class="fas fa-chart-bar me-2"></i>{% trans "Dashboard" %}
         </a>
       </div>
       <div class="col-md-6 col-lg-3">
         <a
-          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn {% if request.path == '/forms_list/' %}active{% endif %}"
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-lg animate__animated animate__bounceIn {% if request.path == '/forms_list/' %}active{% endif %}"
           href="/forms_list"
-          style="font-size: 1.25rem; transition: transform 0.2s"
+          style="font-size: 1.25rem; transition: all 0.3s ease; border-radius: 12px; background: linear-gradient(45deg, #2563eb, #3b82f6);"
         >
           <i class="fas fa-list me-2"></i>{% trans "Details" %}
         </a>
       </div>
       <div class="col-md-6 col-lg-3">
         <a
-          class="btn btn-primary w-100 py-4 rounded-lg shadow-sm animate__animated animate__bounceIn"
+          class="btn btn-primary w-100 py-4 rounded-lg shadow-lg animate__animated animate__bounceIn"
           href="/forms"
-          style="font-size: 1.25rem; transition: transform 0.2s"
+          style="font-size: 1.25rem; transition: all 0.3s ease; border-radius: 12px; background: linear-gradient(45deg, #2563eb, #3b82f6);"
         >
           <i class="fas fa-edit me-2"></i>{% trans "Register Your Details" %}
         </a>
@@ -145,10 +147,38 @@
 
 <style>
   .btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
   .hover-bg-light:hover {
     background-color: #f8f9fa;
+    transform: translateX(5px);
+  }
+  .card {
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  /* Active button state */
+  .btn.active {
+    background: linear-gradient(45deg, #1d4ed8, #2563eb) !important;
+    transform: scale(1.02);
   }
 </style>
 {% endblock %}
