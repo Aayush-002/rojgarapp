@@ -177,6 +177,7 @@ class JobAnnouncement(models.Model):
     def __str__(self):
         return self.title
 
+
 class JobApplication(models.Model):
     STATUS_CHOICES = [
         ("pending", _("Pending")),
@@ -186,23 +187,20 @@ class JobApplication(models.Model):
     ]
 
     job = models.ForeignKey(
-        JobAnnouncement, 
-        on_delete=models.CASCADE, 
+        JobAnnouncement,
+        on_delete=models.CASCADE,
         related_name="applications",
-        verbose_name=_("Job")
+        verbose_name=_("Job"),
     )
     applicant = models.ForeignKey(
         PersonalDetails,
         on_delete=models.CASCADE,
         related_name="job_applications",
-        verbose_name=_("Applicant")
+        verbose_name=_("Applicant"),
     )
     application_date = models.DateTimeField(_("Application Date"), auto_now_add=True)
     status = models.CharField(
-        _("Status"), 
-        max_length=20, 
-        choices=STATUS_CHOICES, 
-        default="pending"
+        _("Status"), max_length=20, choices=STATUS_CHOICES, default="pending"
     )
 
     class Meta:
@@ -213,9 +211,17 @@ class JobApplication(models.Model):
         return f"{self.applicant} - {self.job}"
 
     def clean(self):
-        # Check if job has reached maximum applicants
-        if self.job.applications.filter(status='accepted').count() >= self.job.required_personnel:
-            raise ValidationError(_("This job has already reached the maximum number of applicants."))
+        # Only check limit when trying to accept an application
+        if self.status == "accepted":
+            # Count current accepted applications (excluding this one if it's being updated)
+            current_accepted = self.job.applications.filter(status="accepted")
+            if self.pk:
+                current_accepted = current_accepted.exclude(pk=self.pk)
+
+            if current_accepted.count() >= self.job.required_personnel:
+                raise ValidationError(
+                    _("This job has already reached the maximum number of applicants.")
+                )
 
     def save(self, *args, **kwargs):
         old_status = None
