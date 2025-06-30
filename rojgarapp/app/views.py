@@ -8,25 +8,91 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 
-from datetime import datetime
 from .forms import PersonalDetailsForm, JobAnnouncementForm
 from .models import PersonalDetails, Professions, JobAnnouncement, JobApplication
-from .utils import get_gender_counts, get_employment_status_counts, get_status_badge_class
+from .utils import (
+    get_gender_counts,
+    get_employment_status_counts,
+    get_status_badge_class,
+)
+
 
 def check_employer(user):
     return user.groups.filter(name="Employers").exists()
 
+
 @login_required
 def home(request):
     jobs = JobAnnouncement.objects.filter(is_active=True).order_by("-posted_date")
-    return render(
-        request, "app/index.html", {"jobs": jobs}
-    )
+    return render(request, "app/index.html", {"jobs": jobs})
 
 
 @login_required
 def dashboard(request):
     user_count = PersonalDetails.objects.count()
+
+    # Get job statistics
+    total_jobs = JobAnnouncement.objects.count()
+    filled_jobs = (
+        JobAnnouncement.objects.filter(applications__status="accepted")
+        .distinct()
+        .count()
+    )
+    active_jobs = JobAnnouncement.objects.filter(is_active=True).count()
+
+    # Get profession counts with percentage
+    professions_count = list(
+        PersonalDetails.objects.values("professional_skill")
+        .annotate(count=Count("id"))
+        .order_by("-count")
+    )
+
+    # Calculate percentages for professions
+    for profession in professions_count:
+        profession["percentage"] = (
+            round((profession["count"] / user_count * 100), 1) if user_count > 0 else 0
+        )
+
+    # Get job statistics by profession
+    jobs_by_profession = (
+        JobAnnouncement.objects.values("profession__name")
+        .annotate(count=Count("id"))
+        .order_by("-count")
+    )
+
+    # Prepare data for jobs by profession chart
+    profession_names = [job["profession__name"] for job in jobs_by_profession]
+    profession_counts = [job["count"] for job in jobs_by_profession]
+
+    # Get application status statistics
+    application_stats = (
+        JobApplication.objects.values("status")
+        .annotate(count=Count("id"))
+        .order_by("status")
+    )
+
+    # Prepare data for application status chart
+    status_labels = [app["status"] for app in application_stats]
+    status_counts = [app["count"] for app in application_stats]
+
+    # Get monthly job posting trends (last 6 months)
+    from django.db.models.functions import TruncMonth
+    from datetime import datetime, timedelta
+
+    six_months_ago = datetime.now() - timedelta(days=180)
+
+    monthly_jobs = (
+        JobAnnouncement.objects.filter(posted_date__gte=six_months_ago)
+        .annotate(month=TruncMonth("posted_date"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .order_by("month")
+    )
+
+    job_months = [entry["month"].strftime("%B %Y") for entry in monthly_jobs]
+    job_counts = [entry["count"] for entry in monthly_jobs]
+
+    # Get ward-wise statistics
     registered_users = (
         PersonalDetails.objects.values("ward_no")
         .annotate(count=Count("id"))
@@ -35,32 +101,41 @@ def dashboard(request):
     ward_numbers = [entry["ward_no"] for entry in registered_users]
     ward_counts = [entry["count"] for entry in registered_users]
 
-    professions_count = (
-        PersonalDetails.objects.values("professional_skill")
-        .annotate(count=Count("id"))
-        .order_by("professional_skill")
-    )
-
     gender_counts = get_gender_counts()
     employment_status_counts = get_employment_status_counts()
+
+    # Calculate application success rate
+    total_applications = JobApplication.objects.count()
+    successful_applications = JobApplication.objects.filter(status="accepted").count()
+    application_success_rate = (
+        (successful_applications / total_applications * 100)
+        if total_applications > 0
+        else 0
+    )
 
     context = {
         "ward_numbers": ward_numbers,
         "ward_counts": ward_counts,
         "user_count": user_count,
+        "total_jobs": total_jobs,
+        "filled_jobs": filled_jobs,
+        "active_jobs": active_jobs,
         "male_count": gender_counts["male"],
         "female_count": gender_counts["female"],
         "others_count": gender_counts["others"],
-        "professions_count": list(professions_count),
+        "proffessions_count": professions_count,
+        "profession_names": profession_names,
+        "profession_counts": profession_counts,
+        "status_labels": status_labels,
+        "status_counts": status_counts,
+        "job_months": job_months,
+        "job_counts": job_counts,
+        "application_success_rate": round(application_success_rate, 1),
         "occupied_count": employment_status_counts["occupied"],
         "unoccupied_count": employment_status_counts["unoccupied"],
     }
 
-    return render(
-        request,
-        "app/dashboard.html",
-        context,
-    )
+    return render(request, "app/dashboard.html", context)
 
 
 def auth_login(request):
@@ -226,6 +301,7 @@ def post_job(request):
 
     return render(request, "app/post_job.html", {"form": form})
 
+
 @login_required
 def job_detail(request, job_id):
     job = get_object_or_404(JobAnnouncement, pk=job_id, is_active=True)
@@ -242,8 +318,8 @@ def job_detail(request, job_id):
         except PersonalDetails.DoesNotExist:
             pass
 
-    accepted_count = applications.filter(status='accepted').count()
-    
+    accepted_count = applications.filter(status="accepted").count()
+
     context = {
         "job": job,
         "applications": applications,
@@ -253,10 +329,11 @@ def job_detail(request, job_id):
     }
     return render(request, "app/job_detail.html", context)
 
+
 @login_required
 def apply_job(request, job_id):
     job = get_object_or_404(JobAnnouncement, pk=job_id, is_active=True)
-    
+
     try:
         personal_details = PersonalDetails.objects.get(pk=request.user.id)
     except PersonalDetails.DoesNotExist:
@@ -265,22 +342,21 @@ def apply_job(request, job_id):
 
     if job.applications.filter(applicant=personal_details).exists():
         messages.error(request, "You have already applied for this job.")
-        return redirect('job_detail', job_id=job.id)
+        return redirect("job_detail", job_id=job.id)
 
     # Check if job has available positions
-    accepted_applications = job.applications.filter(status='accepted').count()
+    accepted_applications = job.applications.filter(status="accepted").count()
     if accepted_applications >= job.required_personnel:
-        messages.warning(request, "This job has already reached the maximum number of applicants.")
-        return redirect('job_detail', job_id=job.id)
+        messages.warning(
+            request, "This job has already reached the maximum number of applicants."
+        )
+        return redirect("job_detail", job_id=job.id)
 
-    JobApplication.objects.create(
-        job=job,
-        applicant=personal_details,
-        status='pending'
-    )
-    
+    JobApplication.objects.create(job=job, applicant=personal_details, status="pending")
+
     messages.success(request, "Application submitted successfully!")
-    return redirect('job_detail', job_id=job.id)
+    return redirect("job_detail", job_id=job.id)
+
 
 @login_required
 def applications_list(request):
@@ -303,6 +379,7 @@ def applications_list(request):
 
     return render(request, "app/applications_list.html", context)
 
+
 @login_required
 def update_application_status(request):
     if request.method == "POST" and check_employer(request.user):
@@ -310,33 +387,40 @@ def update_application_status(request):
         new_status = request.POST.get("status")
 
         try:
-            application = JobApplication.objects.get(pk=application_id, job__posted_by=request.user)
+            application = JobApplication.objects.get(
+                pk=application_id, job__posted_by=request.user
+            )
             application.status = new_status
             application.save()
-            return JsonResponse({
-                'success': True,
-                'new_status': application.get_status_display(),
-                'status_class': get_status_badge_class(new_status)
-            })
+            return JsonResponse(
+                {
+                    "success": True,
+                    "new_status": application.get_status_display(),
+                    "status_class": get_status_badge_class(new_status),
+                }
+            )
         except JobApplication.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Application not found'}, status=404)
+            return JsonResponse(
+                {"success": False, "error": "Application not found"}, status=404
+            )
 
-    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
+
 
 @login_required
 def application_delete(request, pk):
     application = get_object_or_404(JobApplication, pk=pk)
-    
+
     # Check if user is the job poster
     if application.job.posted_by != request.user:
         messages.error(request, "You are not authorized to delete this application.")
-        return redirect('applications_list')
+        return redirect("applications_list")
 
     if request.method == "POST":
         application.delete()
         messages.success(request, "Application deleted successfully!")
-        return redirect('applications_list')
+        return redirect("applications_list")
 
-    context = { "application": application }
+    context = {"application": application}
 
     return render(request, "app/application_confirm_delete.html", context)

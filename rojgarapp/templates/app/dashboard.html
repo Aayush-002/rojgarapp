@@ -33,21 +33,21 @@ RojgarApp{% endblock %} {% block content %}
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-graph-up"></i>
           <h5 class="mt-2">{% trans "Jobs Posted" %}</h5>
-          <p class="h3 mb-0">865</p>
+          <p class="h3 mb-0">{{ total_jobs }}</p>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-briefcase"></i>
           <h5 class="mt-2">{% trans "Jobs Filled" %}</h5>
-          <p class="h3 mb-0">540</p>
+          <p class="h3 mb-0">{{ filled_jobs }}</p>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-clock-history"></i>
           <h5 class="mt-2">{% trans "Active Jobs" %}</h5>
-          <p class="h3 mb-0">325</p>
+          <p class="h3 mb-0">{{ active_jobs }}</p>
         </div>
       </div>
     </div>
@@ -57,9 +57,9 @@ RojgarApp{% endblock %} {% block content %}
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{% trans "Monthly User Growth" %}</h5>
+            <h5 class="card-title">{% trans "Monthly Job Trends" %}</h5>
             <div class="chart-container">
-              <canvas id="userGrowthChart"></canvas>
+              <canvas id="jobTrendsChart"></canvas>
             </div>
           </div>
         </div>
@@ -67,19 +67,67 @@ RojgarApp{% endblock %} {% block content %}
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{% trans "Jobs Status" %}</h5>
-            <div
-              class="d-flex justify-content-center align-items-center chart-container"
-            >
-              <canvas id="jobsStatusChart"></canvas>
+            <h5 class="card-title">{% trans "Gender Distribution" %}</h5>
+            <div class="chart-container">
+              <canvas id="genderChart"></canvas>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card mt-5">
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              {% trans "Application Status Distribution" %}
+            </h5>
+            <div class="chart-container">
+              <canvas id="applicationStatusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{% trans "Jobs by Profession" %}</h5>
+            <div class="chart-container">
+              <canvas id="jobsByProfessionChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Rate Card -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h5 class="card-title">{% trans "Application Success Rate" %}</h5>
+            <div class="progress" style="height: 25px">
+              <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: {{ application_success_rate }}%;"
+                aria-valuenow="{{ application_success_rate }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {{ application_success_rate }}%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profession Count Table -->
+    <div class="card mt-4">
       <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">{% trans "Profession Count" %}</h4>
+        <h4 class="mb-0">{% trans "Profession Distribution" %}</h4>
       </div>
       <div class="card-body">
         <table class="table table-bordered">
@@ -87,6 +135,7 @@ RojgarApp{% endblock %} {% block content %}
             <tr>
               <th>{% trans "Profession" %}</th>
               <th>{% trans "Count" %}</th>
+              <th>{% trans "Percentage" %}</th>
             </tr>
           </thead>
           <tbody>
@@ -94,10 +143,11 @@ RojgarApp{% endblock %} {% block content %}
             <tr>
               <td>{{ profession.professional_skill }}</td>
               <td>{{ profession.count }}</td>
+              <td>{{ profession.percentage }}%</td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="2" class="text-center">
+              <td colspan="3" class="text-center">
                 {% trans "No data available" %}
               </td>
             </tr>
@@ -113,30 +163,19 @@ RojgarApp{% endblock %} {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const wardNumbers = {{ ward_numbers| safe }};
-  const wardCounts = {{ ward_counts| safe }};
-  const label = "{% trans 'User growth based on wards' %}";
-  const xlabel = "{% trans 'Ward numbers' %}";
-  const ylabel = "{% trans 'Number of registered users' %}";
-
-  const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
-  const userGrowthChart = new Chart(userGrowthCtx, {
-    type: 'bar',
+  // Monthly Job Trends Chart
+  const jobTrendsCtx = document.getElementById('jobTrendsChart').getContext('2d');
+  new Chart(jobTrendsCtx, {
+    type: 'line',
     data: {
-      labels: wardNumbers,
+      labels: {{ job_months|safe }},
       datasets: [{
-        label: label,
-        data: wardCounts,
-        backgroundColor: wardNumbers.map((_, i) =>
-          `hsl(${(i * 360 / wardNumbers.length)}, 70%, 50%)`
-        ),
-        borderColor: '#ffffff',
-        borderWidth: 2,
-        hoverBackgroundColor: wardNumbers.map((_, i) =>
-          `hsl(${(i * 360 / wardNumbers.length)}, 80%, 60%)`
-        ),
-        hoverBorderColor: '#ffffff',
-        borderRadius: 4
+        label: '{% trans "Jobs Posted" %}',
+        data: {{ job_counts|safe }},
+        borderColor: '#007bff',
+        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+        fill: true,
+        tension: 0.4
       }]
     },
     options: {
@@ -144,79 +183,110 @@ RojgarApp{% endblock %} {% block content %}
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          display: true,
           position: 'top',
-          labels: {
-            color: '#333',
-            font: {
-              size: 14
-            }
-          }
-        },
-        tooltip: {
-          enabled: true,
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          borderColor: '#007bff',
-          borderWidth: 1,
-          cornerRadius: 4
         }
       },
       scales: {
-        x: {
-          title: {
-            display: true,
-            text: xlabel,
-            color: '#333',
-            font: {
-              size: 14,
-              weight: 'bold'
-            }
-          },
-          grid: {
-            display: false
-          }
-        },
         y: {
-          title: {
-            display: true,
-            text: ylabel,
-            color: '#333',
-            font: {
-              size: 14,
-              weight: 'bold'
-            }
-          },
           beginAtZero: true,
-          grid: {
-            color: '#e9ecef'
+          ticks: {
+            precision: 0
           }
         }
-      },
-      animation: {
-        duration: 1000,
-        easing: 'easeInOutQuart'
       }
     }
   });
-  const alabel = "{% trans 'Male' %}";
-  const blabel = "{% trans 'Female' %}";
-  const clabel = "{% trans 'Others' %}";
-  const male_count = {{ male_count }};
-  const female_count = {{ female_count }};
-  const others_count = {{ others_count }};
 
-  const jobsStatusCtx = document.getElementById('jobsStatusChart').getContext('2d');
-  const jobsStatusChart = new Chart(jobsStatusCtx, {
-      type: 'pie',
-      data: {
-         labels: [alabel, blabel, clabel],
-          datasets: [{
-              data: [male_count, female_count, others_count],
-              backgroundColor: ['#007bff', '#28a745', '#ffc107']
-          }]
+  // Gender Distribution Chart
+  const genderCtx = document.getElementById('genderChart').getContext('2d');
+  new Chart(genderCtx, {
+    type: 'doughnut',
+    data: {
+      labels: [
+        '{% trans "Male" %}',
+        '{% trans "Female" %}',
+        '{% trans "Others" %}'
+      ],
+      datasets: [{
+        data: [{{ male_count }}, {{ female_count }}, {{ others_count }}],
+        backgroundColor: ['#007bff', '#28a745', '#ffc107']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right'
+        }
       }
+    }
+  });
+
+  // Application Status Chart
+  const applicationStatusCtx = document.getElementById('applicationStatusChart').getContext('2d');
+  new Chart(applicationStatusCtx, {
+    type: 'bar',
+    data: {
+      labels: {{ status_labels|safe }},
+      datasets: [{
+        label: '{% trans "Applications" %}',
+        data: {{ status_counts|safe }},
+        backgroundColor: [
+          'rgba(40, 167, 69, 0.7)',  // accepted
+          'rgba(255, 193, 7, 0.7)',  // pending
+          'rgba(220, 53, 69, 0.7)'   // rejected
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0
+          }
+        }
+      }
+    }
+  });
+
+  // Jobs by Profession Chart
+  const jobsByProfessionCtx = document.getElementById('jobsByProfessionChart').getContext('2d');
+  new Chart(jobsByProfessionCtx, {
+    type: 'bar',
+    data: {
+      labels: {{ profession_names|safe }},
+      datasets: [{
+        label: '{% trans "Number of Jobs" %}',
+        data: {{ profession_counts|safe }},
+        backgroundColor: 'rgba(0, 123, 255, 0.7)'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0
+          }
+        }
+      }
+    }
   });
 </script>
 
