@@ -267,7 +267,9 @@ RojgarApp{% endblock %} {% block content %}
       datasets: [{
         label: '{% trans "Number of Jobs" %}',
         data: {{ profession_counts|safe }},
-        backgroundColor: 'rgba(0, 123, 255, 0.7)'
+        backgroundColor: 'rgba(0, 123, 255, 0.7)',
+        borderColor: 'rgba(0, 123, 255, 1)',
+        borderWidth: 1
       }]
     },
     options: {
@@ -275,7 +277,12 @@ RojgarApp{% endblock %} {% block content %}
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          display: false
+          display: true,
+          position: 'top'
+        },
+        title: {
+          display: true,
+          text: '{% trans "Distribution of Jobs by Profession" %}'
         }
       },
       scales: {
@@ -283,6 +290,16 @@ RojgarApp{% endblock %} {% block content %}
           beginAtZero: true,
           ticks: {
             precision: 0
+          },
+          title: {
+            display: true,
+            text: '{% trans "Number of Jobs" %}'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: '{% trans "Professions" %}'
           }
         }
       }

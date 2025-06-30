@@ -55,7 +55,8 @@ def dashboard(request):
 
     # Get job statistics by profession
     jobs_by_profession = (
-        JobAnnouncement.objects.values("profession__name")
+        JobAnnouncement.objects.exclude(profession__isnull=True)
+        .values("profession__name")
         .annotate(count=Count("id"))
         .order_by("-count")
     )
@@ -63,6 +64,11 @@ def dashboard(request):
     # Prepare data for jobs by profession chart
     profession_names = [job["profession__name"] for job in jobs_by_profession]
     profession_counts = [job["count"] for job in jobs_by_profession]
+
+    # If no jobs with professions, provide default empty lists
+    if not profession_names:
+        profession_names = []
+        profession_counts = []
 
     # Get application status statistics
     application_stats = (
