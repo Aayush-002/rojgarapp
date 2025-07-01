@@ -4,13 +4,13 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserDetails(models.Model):
-    name = models.CharField(_("Name"), max_length=20)
-    Email = models.EmailField(_("Email"))
-    Gender = models.CharField(_("Gender"), max_length=7)
-    PhoneNumber = models.CharField(_("Phone Number"), max_length=12)
-    DOB = models.DateField(_("Date of Birth"))
-    Skill = models.CharField(_("Skill"), max_length=25)
-    Address = models.CharField(_("Address"), max_length=30)
+    name = models.CharField(verbose_name=_("Name"), max_length=20)
+    Email = models.EmailField(verbose_name=_("Email"))
+    Gender = models.CharField(verbose_name=_("Gender"), max_length=7)
+    PhoneNumber = models.CharField(verbose_name=_("Phone Number"), max_length=12)
+    DOB = models.DateField(verbose_name=_("Date of Birth"))
+    Skill = models.CharField(verbose_name=_("Skill"), max_length=25)
+    Address = models.CharField(verbose_name=_("Address"), max_length=30)
 
     def __str__(self):
         return self.name
@@ -61,70 +61,78 @@ class PersonalDetails(models.Model):
     ]
 
     # Personal Information
-    first_name = models.CharField(_("First Name"), max_length=100)
+    first_name = models.CharField(verbose_name=_("First Name"), max_length=100)
     middle_name = models.CharField(
-        _("Middle Name"), max_length=100, blank=True, null=True
+        verbose_name=_("Middle Name"), max_length=100, blank=True, null=True
     )
-    last_name = models.CharField(_("Last Name"), max_length=100)
-    dob = models.DateField(_("Date of Birth"))
-    mobile_number = models.CharField(_("Mobile Number"), max_length=10)
+    last_name = models.CharField(verbose_name=_("Last Name"), max_length=100)
+    dob = models.DateField(verbose_name=_("Date of Birth"))
+    mobile_number = models.CharField(verbose_name=_("Mobile Number"), max_length=10)
     contact_number = models.CharField(
-        _("Contact Number"), max_length=10, blank=True, null=True
+        verbose_name=_("Contact Number"), max_length=10, blank=True, null=True
     )
-    email_address = models.EmailField(_("Email Address"), blank=True, null=True)
+    email_address = models.EmailField(
+        verbose_name=_("Email Address"), blank=True, null=True
+    )
     national_id_number = models.CharField(
-        _("National ID Number"), max_length=50, blank=True, null=True
+        verbose_name=_("National ID Number"), max_length=50, blank=True, null=True
     )
-    gender = models.CharField(_("Gender"), max_length=10, choices=GENDER_CHOICES)
-    citizenship_number = models.CharField(_("Citizenship Number"), max_length=50)
-    citizenship_issued_date = models.DateField(_("Citizenship Issued Date"))
+    gender = models.CharField(
+        verbose_name=_("Gender"), max_length=10, choices=GENDER_CHOICES
+    )
+    citizenship_number = models.CharField(
+        verbose_name=_("Citizenship Number"), max_length=50
+    )
+    citizenship_issued_date = models.DateField(
+        verbose_name=_("Citizenship Issued Date")
+    )
     citizenship_issued_district = models.CharField(
-        _("Citizenship Issued District"), max_length=100
+        verbose_name=_("Citizenship Issued District"), max_length=100
     )
-    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name=_("Created At"), auto_now_add=True)
 
     # Family Information
-    fathers_name = models.CharField(_("Father's Name"), max_length=100)
-    mothers_name = models.CharField(_("Mother's Name"), max_length=100)
+    fathers_name = models.CharField(verbose_name=_("Father's Name"), max_length=100)
+    mothers_name = models.CharField(verbose_name=_("Mother's Name"), max_length=100)
     spouse_name = models.CharField(
-        _("Spouse Name"), max_length=100, blank=True, null=True
+        verbose_name=_("Spouse Name"), max_length=100, blank=True, null=True
     )
 
     # Address
-    province = models.CharField(_("Province"), max_length=100)
-    district = models.CharField(_("District"), max_length=100)
-    municipality = models.CharField(_("Municipality"), max_length=100)
-    ward_no = models.PositiveIntegerField(_("Ward No"))
-    tole_name = models.CharField(_("Tole Name"), max_length=100)
+    province = models.CharField(verbose_name=_("Province"), max_length=100)
+    district = models.CharField(verbose_name=_("District"), max_length=100)
+    municipality = models.CharField(verbose_name=_("Municipality"), max_length=100)
+    ward_no = models.PositiveIntegerField(verbose_name=_("Ward No"))
+    tole_name = models.CharField(verbose_name=_("Tole Name"), max_length=100)
 
     # Education and Professional Details
     education_background = models.CharField(
-        _("Education Background"), max_length=20, choices=EDUCATION_CHOICES
+        verbose_name=_("Education Background"), max_length=20, choices=EDUCATION_CHOICES
     )
-    professional_skill = models.TextField(_("Professional Skill"))
+    professional_skill = models.TextField(verbose_name=_("Professional Skill"))
 
     # File Uploads
     # Profile Photo
     photo_pp = models.ImageField(
-        _("Profile Photo"),
+        verbose_name=_("Profile Photo"),
         upload_to="uploads/photos/",
         validators=[validate_photo_pp],
     )
     # Citizenship Photo (Front)
     citizenship_photo_front = models.ImageField(
-        _("Citizenship Photo (Front)"),
+        verbose_name=_("Citizenship Photo (Front)"),
         upload_to="uploads/citizenship/",
         validators=[validate_citizenship_photo],
     )
     # Citizenship Photo (Back)
     citizenship_photo_back = models.ImageField(
-        _("Citizenship Photo (Back)"),
+        verbose_name=_("Citizenship Photo (Back)"),
         upload_to="uploads/citizenship/",
         validators=[validate_citizenship_photo],
     )
     # Resume/CV
     cv_resume = models.FileField(
-        _("Resume/CV"),
+        verbose_name=_("Resume/CV"),
         upload_to="uploads/resumes/",
         blank=True,
         null=True,
@@ -132,7 +140,7 @@ class PersonalDetails(models.Model):
     )
     # Status
     status = models.CharField(
-        _("Status"),
+        verbose_name=_("Status"),
         max_length=10,
         choices=STATUS_CHOICES,
         default="pending",
@@ -140,7 +148,7 @@ class PersonalDetails(models.Model):
         blank=True,
     )
     employment_status = models.CharField(
-        _("Employment Status"),
+        verbose_name=_("Employment Status"),
         max_length=20,
         choices=[("occupied", "Occupied"), ("unoccupied", "Unoccupied")],
         default="unoccupied",
@@ -151,27 +159,30 @@ class PersonalDetails(models.Model):
 
 
 class Professions(models.Model):
-    name = models.CharField(_("Profession Name"), max_length=100)
+    name = models.CharField(verbose_name=_("Profession Name"), max_length=100)
 
     def __str__(self):
         return self.name
 
 
 class JobAnnouncement(models.Model):
-    title = models.CharField(_("Job Title"), max_length=200)
-    description = models.TextField(_("Job Description"))
+    title = models.CharField(verbose_name=_("Job Title"), max_length=200)
+    description = models.TextField(verbose_name=_("Job Description"))
     posted_by = models.ForeignKey(
         "auth.User", on_delete=models.CASCADE, verbose_name=_("Posted By")
     )
-    posted_date = models.DateTimeField(_("Posted Date"), auto_now_add=True)
-    is_active = models.BooleanField(_("Is Active"), default=True)
-    required_personnel = models.PositiveIntegerField(_("Required Personnel"), default=1)
+    posted_date = models.DateTimeField(verbose_name=_("Posted Date"), auto_now_add=True)
+    is_active = models.BooleanField(verbose_name=_("Is Active"), default=True)
+    required_personnel = models.PositiveIntegerField(
+        verbose_name=_("Required Personnel"), default=1
+    )
     profession = models.ForeignKey(
         "Professions",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name=_("Profession"),
+        related_name="job_announcements",
     )
 
     def __str__(self):
