@@ -233,18 +233,14 @@
                      <div class="row">
                         <div class="col-md-6">
                            <label class="form-label fw-bold">{% trans "Education Background" %} <span class="text-danger">*</span></label>
-                           <select class="form-select" name="education_background" required>
-                              <option value="">{% trans "Select Education Level" %}</option>
-                              <option value="slc_see" {% if form.education_background.value == "slc_see" %}selected{% endif %}>{% trans "SLC/SEE" %}</option>
-                              <option value="plus_two" {% if form.education_background.value == "plus_two" %}selected{% endif %}>{% trans "+2" %}</option>
-                              <option value="bachelor" {% if form.education_background.value == "bachelor" %}selected{% endif %}>{% trans "Bachelor" %}</option>
-                              <option value="masters" {% if form.education_background.value == "masters" %}selected{% endif %}>{% trans "Masters" %}</option>
-                              <option value="diploma" {% if form.education_background.value == "diploma" %}selected{% endif %}>{% trans "Diploma" %}</option>
-                              <option value="phd" {% if form.education_background.value == "phd" %}selected{% endif %}>{% trans "Phd" %}</option>
-                              <option value="class_eight_pass" {% if form.education_background.value == "class_eight_pass" %}selected{% endif %}>{% trans "Class 8 pass" %}</option>
-                              <option value="class_five_pass" {% if form.education_background.value == "class_five_pass" %}selected{% endif %}>{% trans "Class 5 pass" %}</option>
-                              <option value="uneducated" {% if form.education_background.value == "uneducated" %}selected{% endif %}>{% trans "Uneducated" %}</option>
-                           </select>
+                           {{ form.education_background }}
+                           {% if form.education_background.errors %}
+                           <div class="text-danger">
+                              {% for error in form.education_background.errors %}
+                              <small>{{ error }}</small>
+                              {% endfor %}
+                           </div>
+                           {% endif %}
                         </div>
                         <div class="col-md-6">
                            <label class="form-label fw-bold">{% trans "Professional Skills" %} <span class="text-danger">*</span></label>

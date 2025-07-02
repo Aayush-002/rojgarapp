@@ -137,6 +137,7 @@ class PersonalDetailsForm(forms.ModelForm):
                 attrs={"accept": "image/*"}
             ),
             "cv_resume": forms.ClearableFileInput(attrs={"accept": ".pdf,.doc,.docx"}),
+            "education_background": forms.Select(attrs={"class": "form-select"}),
         }
 
     status = forms.ChoiceField(

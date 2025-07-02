@@ -13,8 +13,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rojgarapp.settings")
 django.setup()
 
 # Now we can import Django models
-from django.contrib.auth.models import User, Group
-from app.models import PersonalDetails, Professions, JobAnnouncement, JobApplication
+from django.contrib.auth.models import Group
+from app.models import (
+    CustomUser,
+    PersonalDetails,
+    Professions,
+    JobAnnouncement,
+    JobApplication,
+)
 
 
 def create_groups():
@@ -23,42 +29,78 @@ def create_groups():
     return employers_group
 
 
+def generate_unique_phone(existing_phones):
+    """Generate a unique Nepalese phone number that's not in DB or used in memory."""
+    from app.models import CustomUser  # adjust the import to your app name
+
+    while True:
+        phone = f"+977{random.choice(['97', '98'])}{random.randint(10000000, 99999999)}"
+        if phone in existing_phones:
+            continue
+        if CustomUser.objects.filter(phone_number=phone).exists():
+            continue
+        return phone
+
+
 def create_users():
     """Create test users"""
-    # Create employer users
     employers = []
+    used_phones = set()
+
+    # Create employer users
     for i in range(1, 6):
         username = f"employer{i}"
-        user, created = User.objects.get_or_create(
+        
+        # Check if user already exists
+        try:
+            user = CustomUser.objects.get(username=username)
+            employers.append(user)
+            continue
+        except CustomUser.DoesNotExist:
+            pass
+        
+        # Generate unique phone number
+        phone_number = generate_unique_phone(used_phones)
+        used_phones.add(phone_number)
+
+        user = CustomUser.objects.create(
             username=username,
-            defaults={
-                "email": f"{username}@example.com",
-                "first_name": f"Employer{i}",
-                "last_name": "Test",
-            },
+            first_name=f"Employer{i}",
+            last_name="Test",
+            phone_number=phone_number,
         )
-        if created:
-            user.set_password("password123")
-            user.save()
-            employers_group = Group.objects.get(name="Employers")
-            employers_group.user_set.add(user)
+        user.set_password("password123")
+        user.save()
+        employers_group = Group.objects.get(name="Employers")
+        employers_group.user_set.add(user)
         employers.append(user)
 
     # Create regular users
     regular_users = []
     for i in range(1, 21):
         username = f"user{i}"
-        user, created = User.objects.get_or_create(
+        
+        # Check if user already exists
+        try:
+            user = CustomUser.objects.get(username=username)
+            regular_users.append(user)
+            continue
+        except CustomUser.DoesNotExist:
+            pass
+        
+        # Generate unique phone number for regular users too
+        phone_number = generate_unique_phone(used_phones)
+        used_phones.add(phone_number)
+        
+        user = CustomUser.objects.create(
             username=username,
-            defaults={
-                "email": f"{username}@example.com",
-                "first_name": f"User{i}",
-                "last_name": "Test",
-            },
+            email=f"{username}@example.com",
+            first_name=f"User{i}",
+            last_name="Test",
+            phone_number=phone_number,
         )
-        if created:
-            user.set_password("password123")
-            user.save()
+        user.set_password("password123")
+        user.save()
         regular_users.append(user)
 
     return employers, regular_users
