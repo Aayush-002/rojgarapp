@@ -1,15 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
+from django.db import IntegrityError
 
-from .forms import PersonalDetailsForm, JobAnnouncementForm
-from .models import PersonalDetails, Professions, JobAnnouncement, JobApplication
+from .forms import PersonalDetailsForm, JobAnnouncementForm, CustomUserCreationForm, CustomAuthenticationForm
+from .models import PersonalDetails, Professions, JobAnnouncement, JobApplication, CustomUser
 from .utils import (
     get_gender_counts,
     get_employment_status_counts,
@@ -146,48 +146,50 @@ def dashboard(request):
 
 def auth_login(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            messages.success(request, "Login successful!")
-            return redirect("home")
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data.get('phone_number')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, phone_number=phone_number, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Login successful!")
+                return redirect("home")
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, "Invalid phone number or password.")
+    else:
+        form = CustomAuthenticationForm()
 
-    return render(request, "auth/login.html")
+    return render(request, "auth/login.html", {"form": form})
 
 
 def auth_signup(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save()
+                messages.success(request, "Account created successfully!")
+                return redirect("login")
+            except IntegrityError as e:
+                if "username" in str(e):
+                    messages.error(request, "Username already exists. Please choose a different username.")
+                elif "phone_number" in str(e):
+                    messages.error(request, "Phone number already registered. Please use a different phone number.")
+                elif "email" in str(e):
+                    messages.error(request, "Email already registered. Please use a different email address.")
+                else:
+                    messages.error(request, "Registration failed. Please try again with different information.")
+            except Exception as e:
+                messages.error(request, "An error occurred during registration. Please try again.")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = CustomUserCreationForm()
 
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match!")
-            return redirect("signup")
-
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists!")
-            return redirect("signup")
-
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already registered!")
-            return redirect("signup")
-
-        user = User.objects.create_user(
-            username=username, email=email, password=password
-        )
-        user.save()
-
-        messages.success(request, "Account created successfully!")
-        return redirect("login")
-    return render(request, "auth/signup.html")
+    return render(request, "auth/signup.html", {"form": form})
 
 
 def auth_logout(request):

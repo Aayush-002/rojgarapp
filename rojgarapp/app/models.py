@@ -1,6 +1,32 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+
+
+class CustomUser(AbstractUser):
+    phone_number = models.CharField(
+        verbose_name=_("Phone Number"), 
+        max_length=15, 
+        unique=True,
+        help_text=_("Enter your phone number (e.g., +9771234567890)")
+    )
+    
+    email = models.EmailField(blank=True, null=True)
+    
+    USERNAME_FIELD = 'phone_number'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.phone_number})"
+    
+    class Meta:
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
+
+
+
 
 
 class UserDetails(models.Model):
@@ -169,7 +195,7 @@ class JobAnnouncement(models.Model):
     title = models.CharField(verbose_name=_("Job Title"), max_length=200)
     description = models.TextField(verbose_name=_("Job Description"))
     posted_by = models.ForeignKey(
-        "auth.User", on_delete=models.CASCADE, verbose_name=_("Posted By")
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("Posted By")
     )
     posted_date = models.DateTimeField(verbose_name=_("Posted Date"), auto_now_add=True)
     is_active = models.BooleanField(verbose_name=_("Is Active"), default=True)

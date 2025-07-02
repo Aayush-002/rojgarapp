@@ -70,6 +70,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "rojgarapp.wsgi.application"
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://3e49-27-34-73-184.ngrok-free.app",
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -112,11 +116,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE = "en-us"
 
 LANGUAGES = [
-    ("en", "English"),
-    ("ne", "Nepali"),
+    ("en-us", "English"),
+    ("ne-np", "Nepali"),
 ]
 USE_I18N = True
 USE_L10N = True
@@ -154,3 +158,12 @@ LOGIN_URL = "/login/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # APPEND_SLASH = False
+
+# Custom User Model
+AUTH_USER_MODEL = 'app.CustomUser'
+
+# Custom Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'app.backends.PhoneNumberBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
