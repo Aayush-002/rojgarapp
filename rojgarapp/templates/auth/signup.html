@@ -1,5 +1,5 @@
 {% extends 'layouts/base.html' %}
-
+{% load i18n %}
 {% block title %}Sign Up - RojgarApp{% endblock %}
 
 {% block navbar %}{% endblock %}
@@ -10,42 +10,221 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow-lg p-4 auth-card">
         <div class="card-body">
-            <h3 class="card-title text-center mb-4 auth-heading">Create an Account</h3>
+            <h3 class="card-title text-center mb-4 auth-heading">{% trans "Create an Account" %}</h3>
 
-            <!-- Display Error/Sucess Messages -->
+            <!-- Display Error/Success Messages -->
             {% if messages %}
-            <div class="alert alert-danger">
                 {% for message in messages %}
-                <p>{{ message }}</p>
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endfor %}
-            </div>
             {% endif %}
 
             <form method="POST">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control auth-input" id="username" name="username" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control auth-input" id="email" name="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control auth-input" id="password" name="password" required>
-                </div>
-                <div class="mb-3">
-                    <label for="confirm_password" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control auth-input" id="confirm_password" name="confirm_password"
-                        required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 auth-btn">Sign Up</button>
+                {% if form %}
+                    <div class="mb-3">
+                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">{{ form.phone_number.label }}</label>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.help_text %}
+                            <div class="form-text">{{ form.phone_number.help_text }}</div>
+                        {% endif %}
+                        {% if form.phone_number.errors %}
+                            <div class="text-danger">
+                                {% for error in form.phone_number.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger">
+                                {% for error in form.first_name.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger">
+                                {% for error in form.last_name.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                {% for error in form.email.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}</label>
+                        <div class="input-group">
+                            {{ form.password1 }}
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                <i class="fas fa-eye" id="eyeIcon1"></i>
+                            </button>
+                        </div>
+                        {% if form.password1.errors %}
+                            <div class="text-danger">
+                                {% for error in form.password1.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}</label>
+                        <div class="input-group">
+                            {{ form.password2 }}
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                <i class="fas fa-eye" id="eyeIcon2"></i>
+                            </button>
+                        </div>
+                        {% if form.password2.errors %}
+                            <div class="text-danger">
+                                {% for error in form.password2.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">{% trans "Phone Number" %}</label>
+                        <input type="text" class="form-control auth-input" id="phone_number" name="phone_number" placeholder="+977" value="+977" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">{% trans "First Name" %}</label>
+                        <input type="text" class="form-control auth-input" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">{% trans "Last Name" %}</label>
+                        <input type="text" class="form-control auth-input" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{% trans "Email" %}</label>
+                        <input type="email" class="form-control auth-input" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">{% trans "Password" %}</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control auth-input" id="password1" name="password1" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                <i class="fas fa-eye" id="eyeIcon1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password2" class="form-label">{% trans "Confirm Password" %}</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control auth-input" id="password2" name="password2" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                <i class="fas fa-eye" id="eyeIcon2"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary w-100 auth-btn">{% trans "Sign Up" %}</button>
             </form>
             <div class="mt-3 text-center">
-                <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                <p class="mb-0">{% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Login" %}</a></p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to toggle password visibility
+    function setupPasswordToggle(toggleId, passwordId, eyeIconId) {
+        const toggleButton = document.getElementById(toggleId);
+        const passwordField = document.getElementById(passwordId);
+        const eyeIcon = document.getElementById(eyeIconId);
+        
+        if (toggleButton && passwordField && eyeIcon) {
+            toggleButton.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                
+                // Toggle eye icon
+                if (type === 'text') {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        }
+    }
+    
+    // Setup password toggles for both password fields
+    setupPasswordToggle('togglePassword1', 'id_password1', 'eyeIcon1');
+    setupPasswordToggle('togglePassword2', 'id_password2', 'eyeIcon2');
+    
+    // Also handle fallback form fields
+    setupPasswordToggle('togglePassword1', 'password1', 'eyeIcon1');
+    setupPasswordToggle('togglePassword2', 'password2', 'eyeIcon2');
+    
+    // Phone number validation and formatting
+    const phoneInput = document.querySelector('input[name="phone_number"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            
+            // Ensure it starts with +977
+            if (!value.startsWith('+977')) {
+                value = '+977' + value.replace(/^\+977/, '');
+            }
+            
+            // Remove any non-digit characters after +977
+            const prefix = '+977';
+            const numberPart = value.substring(prefix.length).replace(/\D/g, '');
+            
+            // Limit to 10 digits after +977
+            const limitedNumber = numberPart.substring(0, 10);
+            
+            // Update the input value
+            e.target.value = prefix + limitedNumber;
+            
+            // Add visual feedback
+            if (limitedNumber.length === 10) {
+                e.target.classList.remove('is-invalid');
+                e.target.classList.add('is-valid');
+            } else if (limitedNumber.length > 0) {
+                e.target.classList.remove('is-valid');
+                e.target.classList.add('is-invalid');
+            } else {
+                e.target.classList.remove('is-valid', 'is-invalid');
+            }
+        });
+        
+        // Prevent backspace from deleting +977
+        phoneInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                const cursorPosition = e.target.selectionStart;
+                if (cursorPosition <= 4) { // +977 is 4 characters
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

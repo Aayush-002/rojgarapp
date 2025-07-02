@@ -1,3 +1,4 @@
+{% load i18n %}
 <section class="text-white py-5">
     <div class="container">
         <div class="row g-4">
@@ -5,27 +6,27 @@
             <div class="col-lg-4 mb-4 mb-lg-0">
                 <h5 class="fw-bold mb-3" style="color: #ffffff;">RojgarApp</h5>
                 <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6;">
-                    Connecting opportunities with talent, making job searching easier and more accessible for everyone.
+                    {% trans "Connecting opportunities with talent, making job searching easier and more accessible for everyone." %}
                 </p>
             </div>
 
             <!-- Quick Links -->
             <div class="col-lg-4 mb-4 mb-lg-0">
-                <h5 class="fw-bold mb-3" style="color: #ffffff;">Quick Links</h5>
+                <h5 class="fw-bold mb-3" style="color: #ffffff;">{% trans "Quick Links" %}</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
                         <a href="/" class="footer-link">
-                            <i class="fas fa-home me-2"></i>Home
+                            <i class="fas fa-home me-2"></i>{% trans "Home" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="/dashboard" class="footer-link">
-                            <i class="fas fa-chart-bar me-2"></i>Dashboard
+                            <i class="fas fa-chart-bar me-2"></i>{% trans "Dashboard" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="/forms" class="footer-link">
-                            <i class="fas fa-edit me-2"></i>Register
+                            <i class="fas fa-edit me-2"></i>{% trans "Register" %}
                         </a>
                     </li>
                 </ul>
@@ -33,16 +34,16 @@
 
             <!-- Legal Links -->
             <div class="col-lg-4">
-                <h5 class="fw-bold mb-3" style="color: #ffffff;">Legal</h5>
+                <h5 class="fw-bold mb-3" style="color: #ffffff;">{% trans "Legal" %}</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
                         <a href="#" class="footer-link">
-                            <i class="fas fa-shield-alt me-2"></i>Privacy Policy
+                            <i class="fas fa-shield-alt me-2"></i>{% trans "Privacy Policy" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="#" class="footer-link">
-                            <i class="fas fa-gavel me-2"></i>Terms of Service
+                            <i class="fas fa-gavel me-2"></i>{% trans "Terms of Service" %}
                         </a>
                     </li>
                 </ul>
@@ -54,7 +55,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start">
                     <p class="mb-0" style="color: rgba(255, 255, 255, 0.8);">
-                        &copy; {{ current_year }} RojgarApp. All rights reserved.
+                        &copy; {{ current_year }} RojgarApp. {% trans "All rights reserved." %}
                     </p>
                 </div>
                 <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">

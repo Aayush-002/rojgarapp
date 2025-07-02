@@ -302,8 +302,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a 
-              class="nav-link {% if request.path == '/forms/' %}active{% endif %}" 
+            <a
+              class="nav-link {% if request.path == '/forms/' %}active{% endif %}"
               href="/forms"
             >
               <i class="fas fa-edit me-2"></i>{% trans "Register Details" %}
@@ -319,19 +319,13 @@
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a 
-              class="nav-link" 
-              href="{% url 'logout' %}"
-            >
+            <a class="nav-link" href="{% url 'logout' %}">
               <i class="fas fa-sign-out-alt me-2"></i>{% trans "Logout" %}
             </a>
           </li>
           {% else %}
           <li class="nav-item">
-            <a 
-              class="nav-link" 
-              href="{% url 'login' %}"
-            >
+            <a class="nav-link" href="{% url 'login' %}">
               <i class="fas fa-sign-in-alt me-2"></i>{% trans "Login" %}
             </a>
           </li>
@@ -362,10 +356,12 @@
                 <button
                   type="submit"
                   name="language"
-                  value="en"
-                  class="dropdown-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}"
+                  value="en-us"
+                  class="dropdown-item {% if LANGUAGE_CODE == 'en-us' %}active{% endif %}"
                 >
-                  <i class="fas fa-check me-2 {% if LANGUAGE_CODE != 'en' %}invisible{% endif %}"></i>
+                  <i
+                    class="fas fa-check me-2 {% if LANGUAGE_CODE != 'en-us' %}invisible{% endif %}"
+                  ></i>
                   {% trans "English" %}
                 </button>
               </form>
@@ -378,10 +374,12 @@
                 <button
                   type="submit"
                   name="language"
-                  value="ne"
-                  class="dropdown-item {% if LANGUAGE_CODE == 'ne' %}active{% endif %}"
+                  value="ne-np"
+                  class="dropdown-item {% if LANGUAGE_CODE == 'ne-np' %}active{% endif %}"
                 >
-                  <i class="fas fa-check me-2 {% if LANGUAGE_CODE != 'ne' %}invisible{% endif %}"></i>
+                  <i
+                    class="fas fa-check me-2 {% if LANGUAGE_CODE != 'ne-np' %}invisible{% endif %}"
+                  ></i>
                   {% trans "नेपाली" %}
                 </button>
               </form>
