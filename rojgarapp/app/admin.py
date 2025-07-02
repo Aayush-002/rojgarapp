@@ -1,5 +1,6 @@
 from django.contrib import admin
-from app.models import UserDetails, PersonalDetails, Professions, JobAnnouncement, JobApplication
+from django.contrib.auth.admin import UserAdmin
+from app.models import UserDetails, PersonalDetails, Professions, JobAnnouncement, JobApplication, CustomUser
 from django.utils.translation import gettext_lazy as _
 
 # Register your models here.
@@ -41,6 +42,27 @@ class JobApplicationAdmin(admin.ModelAdmin):
     readonly_fields = ("application_date",)
 
 
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ('phone_number', 'first_name', 'last_name', 'email', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_active', 'groups')
+    fieldsets = (
+        (None, {'fields': ('phone_number', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('phone_number', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff', 'is_active')}
+        ),
+    )
+    search_fields = ('phone_number', 'first_name', 'last_name', 'email')
+    ordering = ('phone_number',)
+
+
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(UserDetails, UserDetailsAdmin)
 admin.site.register(PersonalDetails, PersonalDetailsAdmin)
 admin.site.register(Professions, ProfessionsAdmin)
