@@ -40,6 +40,10 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = _("User Detail")
+        verbose_name_plural = _("User Details")
 
 
 # Validators
@@ -176,12 +180,16 @@ class PersonalDetails(models.Model):
     employment_status = models.CharField(
         verbose_name=_("Employment Status"),
         max_length=20,
-        choices=[("occupied", "Occupied"), ("unoccupied", "Unoccupied")],
+        choices=[("occupied", _("Occupied")), ("unoccupied", _("Unoccupied"))],
         default="unoccupied",
     )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+    class Meta:
+        verbose_name = _("Personal Detail")
+        verbose_name_plural = _("Personal Details")
 
 
 class Professions(models.Model):
@@ -189,6 +197,10 @@ class Professions(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = _("Profession")
+        verbose_name_plural = _("Professions")
 
 
 class JobAnnouncement(models.Model):
@@ -213,6 +225,10 @@ class JobAnnouncement(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name = _("Job Announcement")
+        verbose_name_plural = _("Job Announcements")
 
 
 class JobApplication(models.Model):
@@ -241,6 +257,8 @@ class JobApplication(models.Model):
     )
 
     class Meta:
+        verbose_name = _("Job Application")
+        verbose_name_plural = _("Job Applications")
         unique_together = ("job", "applicant")
         ordering = ["-application_date"]
 
