@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-02 03:29+0000\n"
+"POT-Creation-Date: 2025-07-02 15:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,23 +98,23 @@ msgstr "महिला"
 msgid "Others"
 msgstr "अन्य"
 
-#: app/models.py:77 templates/app/forms.html:238
+#: app/models.py:77
 msgid "SLC/SEE"
 msgstr "एसएलसी/एसईई"
 
-#: app/models.py:78 templates/app/forms.html:239
+#: app/models.py:78
 msgid "+2"
 msgstr "+२"
 
-#: app/models.py:79 templates/app/forms.html:240
+#: app/models.py:79
 msgid "Bachelor"
 msgstr "स्नातक"
 
-#: app/models.py:80 templates/app/forms.html:241
+#: app/models.py:80
 msgid "Masters"
 msgstr "स्नातकोत्तर"
 
-#: app/models.py:81 templates/app/forms.html:242
+#: app/models.py:81
 msgid "Diploma"
 msgstr "डिप्लोमा"
 
@@ -122,15 +122,15 @@ msgstr "डिप्लोमा"
 msgid "PHD"
 msgstr "पीएचडी"
 
-#: app/models.py:83 templates/app/forms.html:246
+#: app/models.py:83
 msgid "Uneducated"
 msgstr "अशिक्षित"
 
-#: app/models.py:84 templates/app/forms.html:244
+#: app/models.py:84
 msgid "Class 8 pass"
 msgstr "कक्षा ८ उत्तीर्ण"
 
-#: app/models.py:85 templates/app/forms.html:245
+#: app/models.py:85
 msgid "Class 5 pass"
 msgstr "कक्षा ५ उत्तीर्ण"
 
@@ -227,7 +227,7 @@ msgstr "शैक्षिक पृष्ठभूमि"
 msgid "Professional Skill"
 msgstr "व्यावसायिक सीप"
 
-#: app/models.py:147 templates/app/forms.html:295
+#: app/models.py:147 templates/app/forms.html:291
 msgid "Profile Photo"
 msgstr "प्रोफाइल फोटो"
 
@@ -250,15 +250,15 @@ msgstr "बायोडाटा/सीभी"
 msgid "Status"
 msgstr "स्थिति"
 
-#: app/models.py:181 templates/app/forms.html:268
+#: app/models.py:181 templates/app/forms.html:264
 msgid "Employment Status"
 msgstr "रोजगारी स्थिति"
 
-#: app/models.py:183 templates/app/forms.html:274
+#: app/models.py:183 templates/app/forms.html:270
 msgid "Occupied"
 msgstr "रोजगारीमा"
 
-#: app/models.py:183 templates/app/forms.html:271
+#: app/models.py:183 templates/app/forms.html:267
 msgid "Unoccupied"
 msgstr "बेरोजगार"
 
@@ -355,6 +355,36 @@ msgstr "जागिर आवेदनहरू"
 msgid "This job has already reached the maximum number of applicants."
 msgstr "यो जागिरको लागि अधिकतम आवेदक संख्या पुगिसकेको छ।"
 
+#: templates/admin/rojgarapp/submit_line.html:5
+msgid "Save"
+msgstr "सुरक्षित गर्नुहोस्"
+
+#: templates/admin/rojgarapp/submit_line.html:10
+msgid "Save as new"
+msgstr "नयाँको रूपमा सुरक्षित गर्नुहोस्"
+
+#: templates/admin/rojgarapp/submit_line.html:14
+msgid "Save and add another"
+msgstr "सुरक्षित गर्नुहोस् र अर्को थप्नुहोस्"
+
+#: templates/admin/rojgarapp/submit_line.html:18
+msgid "Save and continue editing"
+msgstr "सुरक्षित गर्नुहोस् र सम्पादन जारी राख्नुहोस्"
+
+#: templates/admin/rojgarapp/submit_line.html:18
+msgid "Save and view"
+msgstr "सुरक्षित गर्नुहोस् र हेर्नुहोस्"
+
+#: templates/admin/rojgarapp/submit_line.html:26
+msgid "Close"
+msgstr "बन्द गर्नुहोस्"
+
+#: templates/admin/rojgarapp/submit_line.html:34
+#: templates/app/application_confirm_delete.html:43
+#: templates/app/forms_confirm_delete.html:23 templates/app/forms_list.html:90
+msgid "Delete"
+msgstr "मेटाउनुहोस्"
+
 #: templates/app/application_confirm_delete.html:4
 #: templates/app/application_confirm_delete.html:12
 msgid "Delete Application"
@@ -373,11 +403,6 @@ msgstr "आवेदन गरेको मिति"
 #: templates/app/forms_confirm_delete.html:29
 msgid "Cancel"
 msgstr "रद्द गर्नुहोस्"
-
-#: templates/app/application_confirm_delete.html:43
-#: templates/app/forms_confirm_delete.html:23 templates/app/forms_list.html:90
-msgid "Delete"
-msgstr "मेटाउनुहोस्"
 
 #: templates/app/applications_list.html:4
 msgid "My Applications"
@@ -526,47 +551,39 @@ msgstr "ठेगाना विवरण"
 msgid "Education & Skills"
 msgstr "शिक्षा र सीप"
 
-#: templates/app/forms.html:237
-msgid "Select Education Level"
-msgstr "शिक्षा स्तर छनोट गर्नुहोस्"
-
-#: templates/app/forms.html:243
-msgid "Phd"
-msgstr "पीएचडी"
-
-#: templates/app/forms.html:250 templates/app/forms_list.html:45
+#: templates/app/forms.html:246 templates/app/forms_list.html:45
 msgid "Professional Skills"
 msgstr "व्यावसायिक सीप"
 
-#: templates/app/forms.html:252
+#: templates/app/forms.html:248
 msgid "Select Professional Skill"
 msgstr "व्यावसायिक सीप छनोट गर्नुहोस्"
 
-#: templates/app/forms.html:287
+#: templates/app/forms.html:283
 msgid "Document Uploads"
 msgstr "कागजात अपलोड"
 
-#: templates/app/forms.html:309
+#: templates/app/forms.html:305
 msgid "Biodata"
 msgstr "बायोडाटा"
 
-#: templates/app/forms.html:313
+#: templates/app/forms.html:309
 msgid "Current Resume Uploaded"
 msgstr "हालको बायोडाटा अपलोड गरिएको"
 
-#: templates/app/forms.html:315
+#: templates/app/forms.html:311
 msgid "Download"
 msgstr "डाउनलोड"
 
-#: templates/app/forms.html:330
+#: templates/app/forms.html:326
 msgid "Citizenship (Front)"
 msgstr "नागरिकता (अगाडि)"
 
-#: templates/app/forms.html:343
+#: templates/app/forms.html:339
 msgid "Citizenship (Back)"
 msgstr "नागरिकता (पछाडि)"
 
-#: templates/app/forms.html:357
+#: templates/app/forms.html:353
 msgid "Save Information"
 msgstr "जानकारी बचत गर्नुहोस्"
 
@@ -838,3 +855,9 @@ msgstr "लगआउट"
 #: templates/includes/navbar.html:343
 msgid "Language"
 msgstr "भाषा"
+
+#~ msgid "Select Education Level"
+#~ msgstr "शिक्षा स्तर छनोट गर्नुहोस्"
+
+#~ msgid "Phd"
+#~ msgstr "पीएचडी"
