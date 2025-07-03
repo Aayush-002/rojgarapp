@@ -7,6 +7,9 @@
 <div class="container-fluid py-4">
    <div class="row justify-content-center">
       <div class="col-lg-10">
+         <!-- Profile Completion Banner -->
+         {% include 'includes/profile_completion_banner.html' %}
+         
          {% if messages %}
          <div class="alert alert-danger alert-dismissible fade show mb-4">
             {% for message in messages %}
@@ -29,6 +32,22 @@
                   <span class="text-danger fw-bold">*</span>
                   {% trans "are required" %}
                </p>
+               {% if profile_status.profile_status != 'missing' %}
+               <div class="text-center mt-3">
+                  <div class="progress" style="height: 10px; max-width: 300px; margin: 0 auto;">
+                     <div class="progress-bar bg-warning" 
+                          role="progressbar" 
+                          style="width: {{ profile_status.completion_percentage }}%"
+                          aria-valuenow="{{ profile_status.completion_percentage }}" 
+                          aria-valuemin="0" 
+                          aria-valuemax="100">
+                     </div>
+                  </div>
+                  <small class="text-white-50 mt-2 d-block">
+                     {% trans "Profile Completion:" %} {{ profile_status.completion_percentage|nepali_percentage }}
+                  </small>
+               </div>
+               {% endif %}
                <div class="d-flex justify-content-end align-items-center">
                   <!-- Language Icon -->
                   <div class="dropdown">

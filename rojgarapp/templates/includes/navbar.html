@@ -318,6 +318,26 @@
             </a>
           </li>
           {% if user.is_authenticated %}
+          <!-- Profile Status Indicator -->
+          <li class="nav-item">
+            <a class="nav-link position-relative" href="{% url 'forms' %}" title="{% trans 'Profile Status' %}">
+              <i class="fas fa-user-circle me-2"></i>
+              {% if profile_status.profile_status == 'complete' %}
+                <span class="badge bg-success position-absolute top-0 start-100 translate-middle" style="font-size: 0.6rem;">
+                  <i class="fas fa-check"></i>
+                </span>
+              {% elif profile_status.profile_status == 'incomplete' %}
+                <span class="badge bg-warning position-absolute top-0 start-100 translate-middle" style="font-size: 0.6rem;">
+                  {{ profile_status.completion_percentage }}%
+                </span>
+              {% else %}
+                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="font-size: 0.6rem;">
+                  <i class="fas fa-exclamation"></i>
+                </span>
+              {% endif %}
+              {% trans "Profile" %}
+            </a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">
               <i class="fas fa-sign-out-alt me-2"></i>{% trans "Logout" %}

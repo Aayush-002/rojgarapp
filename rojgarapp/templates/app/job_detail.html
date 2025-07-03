@@ -5,6 +5,9 @@
 
 {% block content %}
 <div class="container py-5">
+    <!-- Profile Completion Banner -->
+    {% include 'includes/profile_completion_banner.html' %}
+    
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
             <h2 class="mb-0">{{ job.title }}</h2>
@@ -61,6 +64,19 @@
                                     <div class="alert alert-warning mt-3">
                                         <i class="fas fa-exclamation-circle me-2"></i>
                                         {% trans "This job has reached the maximum number of applicants." %}
+                                    </div>
+                                {% elif profile_status.profile_status != 'complete' %}
+                                    <div class="alert alert-warning mt-3">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        {% if profile_status.profile_status == 'missing' %}
+                                            {% trans "You need to complete your profile before applying." %}
+                                        {% else %}
+                                            {% trans "Your profile is incomplete. Please update your information." %}
+                                        {% endif %}
+                                        <br>
+                                        <a href="{% url 'forms' %}" class="btn btn-warning btn-sm mt-2">
+                                            <i class="fas fa-edit me-2"></i>{% trans "Complete Profile" %}
+                                        </a>
                                     </div>
                                 {% else %}
                                     <form method="post" action="{% url 'apply_job' job.id %}">
