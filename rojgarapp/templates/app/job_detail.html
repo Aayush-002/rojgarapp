@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load i18n %}
+{% load nepali_numbers %}
 {% block title %}{{ job.title }} - {% trans "Job Details" %}{% endblock %}
 
 {% block content %}
@@ -24,7 +25,7 @@
                         <li>{% trans "Profession" %}: {{ job.get_profession_display|default:"Not specified" }}</li>
                         <li>
                             {% trans "Positions Available" %}: 
-                            {{ accepted_count }} / {{ job.required_personnel }}
+                            {{ accepted_count|nepali_count }} / {{ job.required_personnel|nepali_count }}
                             {% if accepted_count >= job.required_personnel %}
                                 <span class="badge bg-danger ms-2">{% trans "Filled" %}</span>
                             {% else %}
@@ -42,7 +43,7 @@
                         <div class="card-body">
                             <p><strong>{% trans "Profession" %}:</strong> {{ job.get_profession_display|default:"Not specified" }}</p>
                             <p><strong>{% trans "Positions Available" %}:</strong> 
-                                {{ accepted_count }} / {{ job.required_personnel }}
+                                {{ accepted_count|nepali_count }} / {{ job.required_personnel|nepali_count }}
                             </p>
                             <p><strong>{% trans "Posted On" %}:</strong> {{ job.posted_date|date:"F d, Y" }}</p>
                             

@@ -1,5 +1,7 @@
-{% extends 'layouts/base.html' %} {% load i18n %} {% block title %}Dashboard -
-RojgarApp{% endblock %} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% load i18n %}
+{% load nepali_numbers %}
+{% block title %}Dashboard - RojgarApp{% endblock %} {% block content %}
 <div class="container min-vh-100">
   <style>
     .card {
@@ -26,28 +28,28 @@ RojgarApp{% endblock %} {% block content %}
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-people"></i>
           <h5 class="mt-2">{% trans "Total Users" %}</h5>
-          <p class="h3 mb-0">{{ user_count }}</p>
+          <p class="h3 mb-0">{{ user_count|nepali_count }}</p>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-graph-up"></i>
           <h5 class="mt-2">{% trans "Jobs Posted" %}</h5>
-          <p class="h3 mb-0">{{ total_jobs }}</p>
+          <p class="h3 mb-0">{{ total_jobs|nepali_count }}</p>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-briefcase"></i>
           <h5 class="mt-2">{% trans "Jobs Filled" %}</h5>
-          <p class="h3 mb-0">{{ filled_jobs }}</p>
+          <p class="h3 mb-0">{{ filled_jobs|nepali_count }}</p>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="kpi-icon bi bi-clock-history"></i>
           <h5 class="mt-2">{% trans "Active Jobs" %}</h5>
-          <p class="h3 mb-0">{{ active_jobs }}</p>
+          <p class="h3 mb-0">{{ active_jobs|nepali_count }}</p>
         </div>
       </div>
     </div>
@@ -116,7 +118,7 @@ RojgarApp{% endblock %} {% block content %}
                 aria-valuemin="0"
                 aria-valuemax="100"
               >
-                {{ application_success_rate }}%
+                {{ application_success_rate|nepali_percentage }}
               </div>
             </div>
           </div>
@@ -142,8 +144,8 @@ RojgarApp{% endblock %} {% block content %}
             {% for profession in proffessions_count %}
             <tr>
               <td>{{ profession.display_name }}</td>
-              <td>{{ profession.count }}</td>
-              <td>{{ profession.percentage }}%</td>
+              <td>{{ profession.count|nepali_count }}</td>
+              <td>{{ profession.percentage|nepali_percentage }}</td>
             </tr>
             {% empty %}
             <tr>

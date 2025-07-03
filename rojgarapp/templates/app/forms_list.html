@@ -1,5 +1,7 @@
-{% extends 'layouts/base.html' %} {% load i18n %} {% block title %}{%translate
-"List of Forms"%}{% endblock %} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% load i18n %}
+{% load nepali_numbers %}
+{% block title %}{%translate "List of Forms"%}{% endblock %} {% block content %}
 <div class="container py-5">
   <div class="row mb-4">
     <div class="col-md-8">
@@ -53,7 +55,7 @@
           <tbody>
             {% for form in forms %}
             <tr>
-              <td class="px-4 py-3">{{ forloop.counter }}</td>
+              <td class="px-4 py-3">{{ forloop.counter|nepali_count }}</td>
               <td class="px-4 py-3">
                 {{ form.first_name|default:"" }}
                 {% if form.middle_name %}
