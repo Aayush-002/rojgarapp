@@ -21,7 +21,7 @@
                     
                     <h4 class="text-primary mt-4">{% trans "Requirements" %}</h4>
                     <ul>
-                        <li>{% trans "Profession" %}: {{ job.profession }}</li>
+                        <li>{% trans "Profession" %}: {{ job.get_profession_display|default:"Not specified" }}</li>
                         <li>
                             {% trans "Positions Available" %}: 
                             {{ accepted_count }} / {{ job.required_personnel }}
@@ -40,7 +40,7 @@
                             <h5 class="mb-0">{% trans "Job Summary" %}</h5>
                         </div>
                         <div class="card-body">
-                            <p><strong>{% trans "Profession" %}:</strong> {{ job.profession }}</p>
+                            <p><strong>{% trans "Profession" %}:</strong> {{ job.get_profession_display|default:"Not specified" }}</p>
                             <p><strong>{% trans "Positions Available" %}:</strong> 
                                 {{ accepted_count }} / {{ job.required_personnel }}
                             </p>

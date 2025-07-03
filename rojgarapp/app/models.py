@@ -7,26 +7,23 @@ from django.conf import settings
 
 class CustomUser(AbstractUser):
     phone_number = models.CharField(
-        verbose_name=_("Phone Number"), 
-        max_length=15, 
+        verbose_name=_("Phone Number"),
+        max_length=15,
         unique=True,
-        help_text=_("Enter your phone number (e.g., +9771234567890)")
+        help_text=_("Enter your phone number (e.g., +9771234567890)"),
     )
-    
+
     email = models.EmailField(blank=True, null=True)
-    
-    USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
-    
+
+    USERNAME_FIELD = "phone_number"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.phone_number})"
-    
+
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
-
-
-
 
 
 class UserDetails(models.Model):
@@ -40,7 +37,7 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = _("User Detail")
         verbose_name_plural = _("User Details")
@@ -88,6 +85,43 @@ class PersonalDetails(models.Model):
     STATUS_CHOICES = [
         ("pending", _("Pending")),
         ("confirmed", _("Confirmed")),
+    ]
+
+    PROFESSION_CHOICES = [
+        ("teacher", _("Teacher")),
+        ("doctor", _("Doctor")),
+        ("engineer", _("Engineer")),
+        ("labor", _("Labor")),
+        ("driver", _("Driver")),
+        ("jyami", _("Jyami")),
+        ("mistri", _("Mistri")),
+        ("electrician", _("Electrician")),
+        ("plumber", _("Plumber")),
+        ("painter", _("Painter")),
+        ("mason", _("Mason")),
+        ("mechanic", _("Mechanic")),
+        ("welder", _("Welder")),
+        ("carpenter", _("Carpenter")),
+        ("tailor", _("Tailor")),
+        ("agricultural_worker", _("Agricultural Worker")),
+        ("construction_worker", _("Construction Worker")),
+        ("porter", _("Porter")),
+        ("cleaner", _("Cleaner")),
+        ("waiter", _("Waiter")),
+        ("cook", _("Cook")),
+        ("security_guard", _("Security Guard")),
+        ("delivery_person", _("Delivery Person")),
+        ("shop_assistant", _("Shop Assistant")),
+        ("street_vendor", _("Street Vendor")),
+        ("butcher", _("Butcher")),
+        ("fisherman", _("Fisherman")),
+        ("rickshaw_driver", _("Rickshaw Driver")),
+        ("barber", _("Barber")),
+        ("fruit_seller", _("Fruit Seller")),
+        ("taxi_driver", _("Taxi Driver")),
+        ("auto_rickshaw_driver", _("Auto Rickshaw Driver")),
+        ("garbage_collector", _("Garbage Collector")),
+        ("other", _("Other")),
     ]
 
     # Personal Information
@@ -139,7 +173,11 @@ class PersonalDetails(models.Model):
     education_background = models.CharField(
         verbose_name=_("Education Background"), max_length=20, choices=EDUCATION_CHOICES
     )
-    professional_skill = models.TextField(verbose_name=_("Professional Skill"))
+    professional_skill = models.CharField(
+        verbose_name=_("Professional Skill"), 
+        max_length=50, 
+        choices=PROFESSION_CHOICES
+    )
 
     # File Uploads
     # Profile Photo
@@ -186,7 +224,7 @@ class PersonalDetails(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-    
+
     class Meta:
         verbose_name = _("Personal Detail")
         verbose_name_plural = _("Personal Details")
@@ -197,7 +235,7 @@ class Professions(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = _("Profession")
         verbose_name_plural = _("Professions")
@@ -214,18 +252,17 @@ class JobAnnouncement(models.Model):
     required_personnel = models.PositiveIntegerField(
         verbose_name=_("Required Personnel"), default=1
     )
-    profession = models.ForeignKey(
-        "Professions",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+    profession = models.CharField(
         verbose_name=_("Profession"),
-        related_name="job_announcements",
+        max_length=50,
+        choices=PersonalDetails.PROFESSION_CHOICES,
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         verbose_name = _("Job Announcement")
         verbose_name_plural = _("Job Announcements")

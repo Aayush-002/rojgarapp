@@ -99,10 +99,12 @@
                            <label class="form-label fw-bold">{% trans "Profession" %}</label>
                            <select class="form-select" name="profession">
                               <option value="">{% trans "Select Profession (Optional)" %}</option>
-                              {% for profession in form.profession.field.queryset %}
-                              <option value="{{ profession.pk }}" {% if form.profession.value == profession.pk %}selected{% endif %}>
-                                 {{ profession.name }}
+                              {% for profession_code, profession_name in form.profession.field.choices %}
+                              {% if profession_code %}
+                              <option value="{{ profession_code }}" {% if form.profession.value == profession_code %}selected{% endif %}>
+                                 {{ profession_name }}
                               </option>
+                              {% endif %}
                               {% endfor %}
                            </select>
                         </div>

@@ -246,9 +246,9 @@
                            <label class="form-label fw-bold">{% trans "Professional Skills" %} <span class="text-danger">*</span></label>
                            <select class="form-select" name="professional_skill" required>
                               <option value="">{% trans "Select Professional Skill" %}</option>
-                              {% for skill in professions %}
-                              <option value="{{ skill }}" {% if form.professional_skill.value|stringformat:"s" == skill|stringformat:"s" %}selected{% endif %}>
-                              {{ skill }}
+                              {% for skill_code, skill_name in professions %}
+                              <option value="{{ skill_code }}" {% if form.professional_skill.value == skill_code %}selected{% endif %}>
+                              {{ skill_name }}
                               </option>
                               {% endfor %}
                            </select>

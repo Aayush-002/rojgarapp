@@ -29,10 +29,14 @@ class ProfessionsAdmin(admin.ModelAdmin):
 
 
 class JobAnnouncementAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "profession", "posted_by", "required_personnel", "is_active", "posted_date")
+    list_display = ("id", "title", "get_profession_display", "posted_by", "required_personnel", "is_active", "posted_date")
     list_filter = ("is_active", "posted_date", "profession")
     search_fields = ("title", "description", "posted_by__username")
     readonly_fields = ("posted_date",)
+    
+    def get_profession_display(self, obj):
+        return obj.get_profession_display() if obj.profession else "-"
+    get_profession_display.short_description = "Profession"
 
 
 class JobApplicationAdmin(admin.ModelAdmin):

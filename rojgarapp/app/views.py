@@ -47,23 +47,32 @@ def dashboard(request):
         .order_by("-count")
     )
 
-    # Calculate percentages for professions
+    # Calculate percentages for professions and get display names
     for profession in professions_count:
         profession["percentage"] = (
             round((profession["count"] / user_count * 100), 1) if user_count > 0 else 0
+        )
+        # Get display name from choices
+        profession["display_name"] = dict(PersonalDetails.PROFESSION_CHOICES).get(
+            profession["professional_skill"], profession["professional_skill"]
         )
 
     # Get job statistics by profession
     jobs_by_profession = (
         JobAnnouncement.objects.exclude(profession__isnull=True)
-        .values("profession__name")
+        .values("profession")
         .annotate(count=Count("id"))
         .order_by("-count")
     )
 
     # Prepare data for jobs by profession chart
-    profession_names = [job["profession__name"] for job in jobs_by_profession]
-    profession_counts = [job["count"] for job in jobs_by_profession]
+    profession_names = []
+    profession_counts = []
+    for job in jobs_by_profession:
+        profession_code = job["profession"]
+        profession_name = dict(PersonalDetails.PROFESSION_CHOICES).get(profession_code, profession_code)
+        profession_names.append(profession_name)
+        profession_counts.append(job["count"])
 
     # If no jobs with professions, provide default empty lists
     if not profession_names:
@@ -200,7 +209,7 @@ def auth_logout(request):
 
 def forms(request):
     editForm = False
-    professions = Professions.objects.all()
+    professions = PersonalDetails.PROFESSION_CHOICES
     is_employer = (
         request.user.is_authenticated
         and request.user.groups.filter(name="Employers").exists()
@@ -243,7 +252,7 @@ def forms_list(request):
 @login_required
 def forms_edit(request, form_id):
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
-    professions = Professions.objects.all()
+    professions = PersonalDetails.PROFESSION_CHOICES
     is_employer = (
         request.user.is_authenticated
         and request.user.groups.filter(name="Employers").exists()

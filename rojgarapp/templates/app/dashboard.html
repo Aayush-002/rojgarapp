@@ -141,7 +141,7 @@ RojgarApp{% endblock %} {% block content %}
           <tbody>
             {% for profession in proffessions_count %}
             <tr>
-              <td>{{ profession.professional_skill }}</td>
+              <td>{{ profession.display_name }}</td>
               <td>{{ profession.count }}</td>
               <td>{{ profession.percentage }}%</td>
             </tr>
