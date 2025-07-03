@@ -225,6 +225,58 @@ class PersonalDetails(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def is_profile_complete(self):
+        """
+        Check if all required fields are filled for profile completion
+        """
+        required_fields = [
+            'first_name', 'last_name', 'dob', 'mobile_number', 
+            'gender', 'citizenship_number', 'citizenship_issued_date',
+            'citizenship_issued_district', 'fathers_name', 'mothers_name',
+            'province', 'district', 'municipality', 'ward_no', 'tole_name',
+            'education_background', 'professional_skill', 'photo_pp',
+            'citizenship_photo_front', 'citizenship_photo_back'
+        ]
+        
+        for field in required_fields:
+            value = getattr(self, field)
+            if not value:
+                return False
+        return True
+
+    def get_profile_completion_percentage(self):
+        """
+        Calculate profile completion percentage
+        """
+        required_fields = [
+            'first_name', 'last_name', 'dob', 'mobile_number', 
+            'gender', 'citizenship_number', 'citizenship_issued_date',
+            'citizenship_issued_district', 'fathers_name', 'mothers_name',
+            'province', 'district', 'municipality', 'ward_no', 'tole_name',
+            'education_background', 'professional_skill', 'photo_pp',
+            'citizenship_photo_front', 'citizenship_photo_back'
+        ]
+        
+        optional_fields = ['middle_name', 'contact_number', 'email_address', 
+                          'national_id_number', 'spouse_name', 'cv_resume']
+        
+        total_fields = len(required_fields) + len(optional_fields)
+        completed_fields = 0
+        
+        # Check required fields
+        for field in required_fields:
+            value = getattr(self, field)
+            if value:
+                completed_fields += 1
+        
+        # Check optional fields (bonus points)
+        for field in optional_fields:
+            value = getattr(self, field)
+            if value:
+                completed_fields += 0.5  # Half point for optional fields
+        
+        return min(100, int((completed_fields / total_fields) * 100))
+
     class Meta:
         verbose_name = _("Personal Detail")
         verbose_name_plural = _("Personal Details")

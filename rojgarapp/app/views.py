@@ -14,17 +14,24 @@ from .utils import (
     get_gender_counts,
     get_employment_status_counts,
     get_status_badge_class,
+    check_employer,
+    get_user_profile_status,
 )
-
-
-def check_employer(user):
-    return user.groups.filter(name="Employers").exists()
 
 
 @login_required
 def home(request):
     jobs = JobAnnouncement.objects.filter(is_active=True).order_by("-posted_date")
-    return render(request, "app/index.html", {"jobs": jobs})
+    
+    # Get user profile status
+    profile_status = get_user_profile_status(request.user)
+    
+    context = {
+        "jobs": jobs,
+        "profile_status": profile_status,
+    }
+    
+    return render(request, "app/index.html", context)
 
 
 @login_required
@@ -207,6 +214,7 @@ def auth_logout(request):
     return redirect("login")
 
 
+@login_required
 def forms(request):
     editForm = False
     professions = PersonalDetails.PROFESSION_CHOICES
@@ -215,14 +223,23 @@ def forms(request):
         and request.user.groups.filter(name="Employers").exists()
     )
 
+    # Get user profile status
+    profile_status = get_user_profile_status(request.user)
+    
+    # If user already has personal details, redirect to edit
+    if profile_status['has_profile']:
+        return redirect('forms_edit', form_id=request.user.id)
+
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Successfully registered!")
+            personal_details = form.save(commit=False)
+            personal_details.id = request.user.id  # Link to user
+            personal_details.save()
+            messages.success(request, "Personal details registered successfully!")
             return redirect("forms_list")
         else:
-            messages.error(request, "Something went wrong, please try again later.")
+            messages.error(request, "Please correct the errors below.")
     else:
         form = PersonalDetailsForm()
 
@@ -234,6 +251,7 @@ def forms(request):
             "editForm": editForm,
             "professions": professions,
             "is_employer": is_employer,
+            "profile_status": profile_status,
         },
     )
 
@@ -251,12 +269,20 @@ def forms_list(request):
 
 @login_required
 def forms_edit(request, form_id):
+    # Ensure user can only edit their own profile
+    if request.user.id != form_id:
+        messages.error(request, "You can only edit your own profile.")
+        return redirect("forms")
+    
     edit_form = get_object_or_404(PersonalDetails, pk=form_id)
     professions = PersonalDetails.PROFESSION_CHOICES
     is_employer = (
         request.user.is_authenticated
         and request.user.groups.filter(name="Employers").exists()
     )
+    
+    # Get user profile status
+    profile_status = get_user_profile_status(request.user)
 
     if request.method == "POST":
         form = PersonalDetailsForm(request.POST, request.FILES, instance=edit_form)
@@ -265,7 +291,7 @@ def forms_edit(request, form_id):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Successfully updated!")
+            messages.success(request, "Personal details updated successfully!")
             return redirect("forms_list")
         else:
             for field, errors in form.errors.items():
@@ -281,6 +307,7 @@ def forms_edit(request, form_id):
             "editForm": True,
             "professions": professions,
             "is_employer": is_employer,
+            "profile_status": profile_status,
         },
     )
 
@@ -326,6 +353,9 @@ def job_detail(request, job_id):
     has_applied = False
     user_application = None
 
+    # Get user profile status
+    profile_status = get_user_profile_status(request.user)
+
     if request.user.is_authenticated:
         try:
             personal_details = PersonalDetails.objects.get(pk=request.user.id)
@@ -343,6 +373,7 @@ def job_detail(request, job_id):
         "accepted_count": accepted_count,
         "has_applied": has_applied,
         "user_application": user_application,
+        "profile_status": profile_status,
     }
     return render(request, "app/job_detail.html", context)
 

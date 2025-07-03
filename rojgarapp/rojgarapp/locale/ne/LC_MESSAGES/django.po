@@ -993,3 +993,75 @@ msgstr "लगआउट"
 #: templates/includes/navbar.html:343
 msgid "Language"
 msgstr "भाषा"
+
+#: templates/includes/profile_completion_banner.html:11
+msgid "Complete Your Profile"
+msgstr "आफ्नो प्रोफाइल पूरा गर्नुहोस्"
+
+#: templates/includes/profile_completion_banner.html:13
+msgid "Profile Incomplete"
+msgstr "प्रोफाइल अपूर्ण"
+
+#: templates/includes/profile_completion_banner.html:16
+msgid "You need to complete your personal details before you can apply for jobs."
+msgstr "तपाईंले नोकरीको लागि आवेदन दिनु अघि आफ्नो व्यक्तिगत विवरणहरू पूरा गर्नुपर्छ।"
+
+#: templates/includes/profile_completion_banner.html:18
+msgid "Your profile is"
+msgstr "तपाईंको प्रोफाइल"
+
+#: templates/includes/profile_completion_banner.html:18
+msgid "complete. Please fill in all required information to apply for jobs."
+msgstr "पूर्ण छ। कृपया नोकरीको लागि आवेदन दिन सबै आवश्यक जानकारी भर्नुहोस्।"
+
+#: templates/includes/profile_completion_banner.html:30
+msgid "Completion:"
+msgstr "पूर्णता:"
+
+#: templates/includes/profile_completion_banner.html:33
+msgid "Complete Profile"
+msgstr "प्रोफाइल पूरा गर्नुहोस्"
+
+#: templates/includes/profile_completion_banner.html:35
+msgid "Update Profile"
+msgstr "प्रोफाइल अपडेट गर्नुहोस्"
+
+#: templates/app/job_detail.html:58
+msgid "You need to complete your profile before applying."
+msgstr "आवेदन दिनु अघि तपाईंले आफ्नो प्रोफाइल पूरा गर्नुपर्छ।"
+
+#: templates/app/job_detail.html:60
+msgid "Your profile is incomplete. Please update your information."
+msgstr "तपाईंको प्रोफाइल अपूर्ण छ। कृपया आफ्नो जानकारी अपडेट गर्नुहोस्।"
+
+#: templates/app/forms.html:42
+msgid "Profile Completion:"
+msgstr "प्रोफाइल पूर्णता:"
+
+#: app/views.py:225
+msgid "Personal details registered successfully!"
+msgstr "व्यक्तिगत विवरण सफलतापूर्वक दर्ता गरियो!"
+
+#: app/views.py:227
+msgid "Please correct the errors below."
+msgstr "कृपया तलका त्रुटिहरू सुधार्नुहोस्।"
+
+#: app/views.py:260
+msgid "You can only edit your own profile."
+msgstr "तपाईंले आफ्नो प्रोफाइल मात्र सम्पादन गर्न सक्नुहुन्छ।"
+
+#: app/views.py:275
+msgid "Personal details updated successfully!"
+msgstr "व्यक्तिगत विवरण सफलतापूर्वक अपडेट गरियो!"
+
+#: app/views.py:355
+msgid "You need to fill out your personal details first."
+msgstr "तपाईंले पहिले आफ्नो व्यक्तिगत विवरणहरू भर्नुपर्छ।"
+
+#: templates/includes/navbar.html:295
+msgid "Profile Status"
+msgstr "प्रोफाइल स्थिति"
+
+#: templates/includes/navbar.html:310
+msgid "Profile"
+msgstr "प्रोफाइल"
