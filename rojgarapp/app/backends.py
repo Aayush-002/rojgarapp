@@ -10,6 +10,9 @@ class PhoneNumberBackend(ModelBackend):
         if phone_number is None or password is None:
             return None
         
+        # Clean phone number - remove any spaces or dashes
+        phone_number = ''.join(filter(str.isdigit, phone_number))
+        
         try:
             user = CustomUser.objects.get(phone_number=phone_number)
         except CustomUser.DoesNotExist:
