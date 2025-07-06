@@ -1,11 +1,15 @@
 {% extends 'layouts/base.html' %}
-{% load i18n %} 
+{% load i18n %}
+{% load nepali_numbers %} 
 {% block title %}{% trans "Personal Information Form - RojgarApp" %}{% endblock %}
 {% load static %}
 {% block content %}
 <div class="container-fluid py-4">
    <div class="row justify-content-center">
       <div class="col-lg-10">
+         <!-- Profile Completion Banner -->
+         {% include 'includes/profile_completion_banner.html' %}
+         
          {% if messages %}
          <div class="alert alert-danger alert-dismissible fade show mb-4">
             {% for message in messages %}
@@ -28,6 +32,22 @@
                   <span class="text-danger fw-bold">*</span>
                   {% trans "are required" %}
                </p>
+               {% if profile_status.profile_status != 'missing' %}
+               <div class="text-center mt-3">
+                  <div class="progress" style="height: 10px; max-width: 300px; margin: 0 auto;">
+                     <div class="progress-bar bg-warning" 
+                          role="progressbar" 
+                          style="width: {{ profile_status.completion_percentage }}%"
+                          aria-valuenow="{{ profile_status.completion_percentage }}" 
+                          aria-valuemin="0" 
+                          aria-valuemax="100">
+                     </div>
+                  </div>
+                  <small class="text-white-50 mt-2 d-block">
+                     {% trans "Profile Completion:" %} {{ profile_status.completion_percentage|nepali_percentage }}
+                  </small>
+               </div>
+               {% endif %}
                <div class="d-flex justify-content-end align-items-center">
                   <!-- Language Icon -->
                   <div class="dropdown">
@@ -132,15 +152,15 @@
                         </div>
                         <div class="col-md-3">
                            <label class="form-label fw-bold">{% trans "Contact Number" %}</label>
-                           <input type="tel" class="form-control" name="contact_number">
+                           <input type="tel" class="form-control" name="contact_number" value="{{ form.contact_number.value|default:'' }}">
                         </div>
                         <div class="col-md-3">
                            <label class="form-label fw-bold">{% trans "Email Address" %} <span class="text-danger">*</span></label>
-                           <input type="email" class="form-control" name="email_address" value="{{ form.email_address.value|default:'' }}">
+                           <input type="email" class="form-control" name="email_address" value="{{ form.email_address.value|default:'' }}" required>
                         </div>
                      </div>
                      <!-- Identity Information -->
-                     <div class="row">
+                     <div class="row mb-4">
                         <div class="col-md-4">
                            <label class="form-label fw-bold">{% trans "Gender" %} <span class="text-danger">*</span></label>
                            <select class="form-select" name="gender" required>
@@ -154,186 +174,204 @@
                            <label class="form-label fw-bold">{% trans "National ID Number" %} <span class="text-danger">*</span></label>
                            <input type="text" class="form-control" name="national_id_number" value="{{ form.national_id_number.value|default:''}}" required>
                         </div>
-                     </div>
-                     <div class="row mb-4">
                         <div class="col-md-4">
                            <label class="form-label fw-bold">{% trans "Citizenship Number" %}<span class="text-danger">*</span></label>
                            <input type="text" class="form-control" id="citizenship_number" name="citizenship_number" value="{{ form.citizenship_number.value|default:'' }}" required>
                         </div>
-                        <div class="col-md-4">
+                     </div>
+                     <div class="row mb-4">
+                        <div class="col-md-6">
                            <label class="form-label fw-bold">{% trans "Citizenship Issued Date" %} <span class="text-danger">*</span></label>
                            <div class="input-group">
                               <input type="date" class="form-control" id="citizenship_issued_date" name="citizenship_issued_date" value="{{ form.citizenship_issued_date.value|date:'Y-m-d' }}" required placeholder="YYYY-MM-DD">
-                              <span class="input-group-text" id="dob-icon">
+                              <span class="input-group-text" id="citizenship-icon">
                               <i class="fas fa-calendar-alt"></i>
                               </span>
                            </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                            <label class="form-label fw-bold">{% trans "Citizenship Issued District" %} <span class="text-danger">*</span></label>
                            <input type="text" class="form-control" id="citizenship_issued_district" name="citizenship_issued_district" value="{{ form.citizenship_issued_district.value|default:'' }}" required>
                         </div>
                      </div>
-                     <!-- Family Information -->
-                     <div class="mb-5">
-                        <h4 class="text-primary border-bottom pb-2 mb-4">
-                           <i class="fas fa-users me-2"></i>{% trans "Family Information" %}
-                        </h4>
-                        <div class="row">
-                           <div class="col-md-4">
-                              <label class="form-label fw-bold">{% trans "Father's Name" %} <span class="text-danger">*</span></label>
-                              <input type="text" class="form-control" name="fathers_name" value="{{ form.fathers_name.value|default:'' }}" required>
-                           </div>
-                           <div class="col-md-4">
-                              <label class="form-label fw-bold">{% trans "Mother's Name" %} <span class="text-danger">*</span></label>
-                              <input type="text" class="form-control" name="mothers_name" value="{{ form.mothers_name.value|default:'' }}" required>
-                           </div>
-                           <div class="col-md-4">
-                              <label class="form-label fw-bold">{% trans "Spouse Name" %}</label>
-                              <input type="text" class="form-control" name="spouse_name" value="{{ form.spouse_name.value|default:'' }}">
-                           </div>
+                  </div>
+                  <!-- Family Information -->
+                  <div class="mb-5">
+                     <h4 class="text-primary border-bottom pb-2 mb-4">
+                        <i class="fas fa-users me-2"></i>{% trans "Family Information" %}
+                     </h4>
+                     <div class="row">
+                        <div class="col-md-4">
+                           <label class="form-label fw-bold">{% trans "Father's Name" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="fathers_name" value="{{ form.fathers_name.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-4">
+                           <label class="form-label fw-bold">{% trans "Mother's Name" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="mothers_name" value="{{ form.mothers_name.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-4">
+                           <label class="form-label fw-bold">{% trans "Spouse Name" %}</label>
+                           <input type="text" class="form-control" name="spouse_name" value="{{ form.spouse_name.value|default:'' }}">
                         </div>
                      </div>
-                     <!-- Address Information -->
-                     <div class="mb-5">
-                        <h4 class="text-primary border-bottom pb-2 mb-4">
-                           <i class="fas fa-map-marker-alt me-2"></i>{% trans "Address Details" %}
-                        </h4>
-                        <div class="row mb-4">
-                           <div class="col-md-4">
-                              <label class="form-label fw-bold">{% trans "Province" %} <span class="text-danger">*</span></label>
-                              <input type="text" class="form-control" name="province" value="{{ form.province.value|default:'' }}" required>
-                           </div>
-                           <div class="col-md-4">
-                              <label class="form-label fw-bold">{% trans "District" %} <span class="text-danger">*</span></label>
-                              <input type="text" class="form-control" name="district" value="{{ form.district.value|default:'' }}" required>
-                           </div>
-                           <div class="col-md-4">
-                              <label class="form-label fw-bold">{% trans "Municipality" %} <span class="text-danger">*</span></label>
-                              <input type="text" class="form-control" name="municipality" value="{{ form.municipality.value|default:''}}" required>
-                           </div>
+                  </div>
+                  <!-- Address Information -->
+                  <div class="mb-5">
+                     <h4 class="text-primary border-bottom pb-2 mb-4">
+                        <i class="fas fa-map-marker-alt me-2"></i>{% trans "Address Details" %}
+                     </h4>
+                     <div class="row mb-4">
+                        <div class="col-md-4">
+                           <label class="form-label fw-bold">{% trans "Province" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="province" value="{{ form.province.value|default:'' }}" required>
                         </div>
-                        <div class="row">
-                           <div class="col-md-6">
-                              <label class="form-label fw-bold">{% trans "Ward No" %} <span class="text-danger">*</span></label>
-                              <input type="number" class="form-control" name="ward_no" value="{{ form.ward_no.value|default:'' }}" required>
-                           </div>
-                           <div class="col-md-6">
-                              <label class="form-label fw-bold">{% trans "Tole Name" %} <span class="text-danger">*</span></label>
-                              <input type="text" class="form-control" name="tole_name" value="{{ form.tole_name.value|default:'' }}" required>
-                           </div>
+                        <div class="col-md-4">
+                           <label class="form-label fw-bold">{% trans "District" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="district" value="{{ form.district.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-4">
+                           <label class="form-label fw-bold">{% trans "Municipality" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="municipality" value="{{ form.municipality.value|default:''}}" required>
                         </div>
                      </div>
-                     <!-- Education and Skills -->
-                     <div class="mb-5">
-                        <h4 class="text-primary border-bottom pb-2 mb-4">
-                           <i class="fas fa-graduation-cap me-2"></i>{% trans "Education & Skills" %}
-                        </h4>
-                        <div class="row">
-                           <div class="col-md-6">
-                              <label class="form-label fw-bold">{% trans "Education Background" %} <span class="text-danger">*</span></label>
-                              <select class="form-select" name="education_background" required>
-                                 <option value="">{% trans "Select Education Level" %}</option>
-                                 <option value="slc_see" {% if form.education_background.value == "slc_see" %}selected{% endif %}>{% trans "SLC/SEE" %}</option>
-                                 <option value="plus_two" {% if form.education_background.value == "plus_two" %}selected{% endif %}>{% trans "+2" %}</option>
-                                 <option value="bachelor" {% if form.education_background.value == "bachelor" %}selected{% endif %}>{% trans "Bachelor" %}</option>
-                                 <option value="masters" {% if form.education_background.value == "masters" %}selected{% endif %}>{% trans "Masters" %}</option>
-                                 <option value="diploma" {% if form.education_background.value == "diploma" %}selected{% endif %}>{% trans "Diploma" %}</option>
-                                 <option value="phd" {% if form.education_background.value == "phd" %}selected{% endif %}>{% trans "Phd" %}</option>
-                                 <option value="class_eight_pass" {% if form.education_background.value == "class_eight_pass" %}selected{% endif %}>{% trans "Class 8 pass" %}</option>
-                                 <option value="class_five_pass" {% if form.education_background.value == "class_five_pass" %}selected{% endif %}>{% trans "Class 5 pass" %}</option>
-                                 <option value="uneducated" {% if form.education_background.value == "uneducated" %}selected{% endif %}>{% trans "Uneducated" %}</option>
-                              </select>
-                           </div>
-                           <div class="col-md-6">
-                              <label class="form-label fw-bold">{% trans "Professional Skills" %} <span class="text-danger">*</span></label>
-                              <select class="form-select" name="professional_skill" required>
-                                 <option value="">{% trans "Select Professional Skill" %}</option>
-                                 {% for skill in professions %}
-                                 <option value="{{ skill }}" {% if form.professional_skill.value|stringformat:"s" == skill|stringformat:"s" %}selected{% endif %}>
-                                 {{ skill }}
-                                 </option>
-                                 {% endfor %}
-                              </select>
-                           </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Ward No" %} <span class="text-danger">*</span></label>
+                           <input type="number" class="form-control" name="ward_no" value="{{ form.ward_no.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Tole Name" %} <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" name="tole_name" value="{{ form.tole_name.value|default:'' }}" required>
                         </div>
                      </div>
-                     <!-- Document Uploads -->
-                     <div class="mb-5">
-                        <h4 class="text-primary border-bottom pb-2 mb-4">
-                           <i class="fas fa-file-upload me-2"></i>{% trans "Document Uploads" %}
-                        </h4>
-                        <div class="row mb-4">
-                           <!-- Profile Photo -->
-                           <div class="col-md-6">
-                              <div class="card h-100">
-                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                       <i class="fas fa-user-circle me-2"></i>{% trans "Profile Photo" %} <span class="text-danger">*</span>
-                                    </h5>
-                                    {% if form.instance.photo_pp %}
-                                    <img src="{{ form.instance.photo_pp.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
-                                    {% endif %}
-                                    <input type="file" class="form-control" name="photo_pp" accept="image/*" {% if not form.instance.photo_pp %}required{% endif %}>
-                                 </div>
-                              </div>
+                  </div>
+                  <!-- Education and Skills -->
+                  <div class="mb-5">
+                     <h4 class="text-primary border-bottom pb-2 mb-4">
+                        <i class="fas fa-graduation-cap me-2"></i>{% trans "Education & Skills" %}
+                     </h4>
+                     <div class="row">
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Education Background" %} <span class="text-danger">*</span></label>
+                           {{ form.education_background }}
+                           {% if form.education_background.errors %}
+                           <div class="text-danger">
+                              {% for error in form.education_background.errors %}
+                              <small>{{ error }}</small>
+                              {% endfor %}
                            </div>
-                           <!-- CV/Resume -->
-                           <div class="col-md-6">
-                              <div class="card h-100">
-                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                       <i class="fas fa-file-alt me-2"></i>{% trans "Biodata" %} <span class="text-danger">*</span>
-                                    </h5>
-                                    {% if form.instance.cv_resume %}
-                                    <p class="text-success">
-                                       <i class="fas fa-check-circle me-2"></i>{% trans "Current Resume Uploaded" %}
-                                       <a href="{{ form.instance.cv_resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
-                                       <i class="fas fa-download me-1"></i>{% trans "Download" %}
-                                       </a>
-                                    </p>
-                                    {% endif %}
-                                    <input type="file" class="form-control" name="cv_resume" accept=".pdf,.doc,.docx" {% if not form.instance.cv_resume %}required{% endif %}>
-                                 </div>
+                           {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Professional Skills" %} <span class="text-danger">*</span></label>
+                           <select class="form-select" name="professional_skill" required>
+                              <option value="">{% trans "Select Professional Skill" %}</option>
+                              {% for skill_code, skill_name in professions %}
+                              <option value="{{ skill_code }}" {% if form.professional_skill.value == skill_code %}selected{% endif %}>
+                              {{ skill_name }}
+                              </option>
+                              {% endfor %}
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <!-- Employment Status Section (Visible only to employers when editing) -->
+                  {% if editForm and is_employer %}
+                  <div class="mb-5">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <label class="form-label fw-bold">{% trans "Employment Status" %}</label>
+                           <select class="form-select" name="employment_status" required>
+                              <option value="unoccupied" {% if form.employment_status.value == "unoccupied" %}selected{% endif %}>
+                                 {% trans "Unoccupied" %}
+                              </option>
+                              <option value="occupied" {% if form.employment_status.value == "occupied" %}selected{% endif %}>
+                                 {% trans "Occupied" %}
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  {% else %}
+                  <input type="hidden" name="employment_status" value="{{ form.employment_status.value|default:'unoccupied' }}">
+                  {% endif %}
+
+                  <!-- Document Uploads -->
+                  <div class="mb-5">
+                     <h4 class="text-primary border-bottom pb-2 mb-4">
+                        <i class="fas fa-file-upload me-2"></i>{% trans "Document Uploads" %}
+                     </h4>
+                     <div class="row mb-4">
+                        <!-- Profile Photo -->
+                        <div class="col-md-6">
+                           <div class="card h-100">
+                              <div class="card-body">
+                                 <h5 class="card-title">
+                                    <i class="fas fa-user-circle me-2"></i>{% trans "Profile Photo" %} <span class="text-danger">*</span>
+                                 </h5>
+                                 {% if form.instance.photo_pp %}
+                                 <img src="{{ form.instance.photo_pp.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
+                                 {% endif %}
+                                 <input type="file" class="form-control" name="photo_pp" accept="image/*" {% if not form.instance.photo_pp %}required{% endif %}>
                               </div>
                            </div>
                         </div>
-                        <!-- Citizenship Photos -->
-                        <div class="row">
-                           <div class="col-md-6">
-                              <div class="card h-100">
-                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                       <i class="fas fa-id-card me-2"></i>{% trans "Citizenship (Front)" %} <span class="text-danger">*</span>
-                                    </h5>
-                                    {% if form.instance.citizenship_photo_front %}
-                                    <img src="{{ form.instance.citizenship_photo_front.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
-                                    {% endif %}
-                                    <input type="file" class="form-control" name="citizenship_photo_front" accept="image/*" {% if not form.instance.citizenship_photo_front %}required{% endif %}>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="col-md-6">
-                              <div class="card h-100">
-                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                       <i class="fas fa-id-card me-2"></i>{% trans "Citizenship (Back)" %} <span class="text-danger">*</span>
-                                    </h5>
-                                    {% if form.instance.citizenship_photo_back %}
-                                    <img src="{{ form.instance.citizenship_photo_back.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
-                                    {% endif %}
-                                    <input type="file" class="form-control" name="citizenship_photo_back" accept="image/*" {% if not form.instance.citizenship_photo_back %}required{% endif %}>
-                                 </div>
+                        <!-- CV/Resume -->
+                        <div class="col-md-6">
+                           <div class="card h-100">
+                              <div class="card-body">
+                                 <h5 class="card-title">
+                                    <i class="fas fa-file-alt me-2"></i>{% trans "Biodata" %} <span class="text-danger">*</span>
+                                 </h5>
+                                 {% if form.instance.cv_resume %}
+                                 <p class="text-success">
+                                    <i class="fas fa-check-circle me-2"></i>{% trans "Current Resume Uploaded" %}
+                                    <a href="{{ form.instance.cv_resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
+                                    <i class="fas fa-download me-1"></i>{% trans "Download" %}
+                                    </a>
+                                 </p>
+                                 {% endif %}
+                                 <input type="file" class="form-control" name="cv_resume" accept=".pdf,.doc,.docx" {% if not form.instance.cv_resume %}required{% endif %}>
                               </div>
                            </div>
                         </div>
                      </div>
-                     <!-- Submit Button -->
-                     <div class="text-center mt-5">
-                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                     <!-- Citizenship Photos -->
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="card h-100">
+                              <div class="card-body">
+                                 <h5 class="card-title">
+                                    <i class="fas fa-id-card me-2"></i>{% trans "Citizenship (Front)" %} <span class="text-danger">*</span>
+                                 </h5>
+                                 {% if form.instance.citizenship_photo_front %}
+                                 <img src="{{ form.instance.citizenship_photo_front.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
+                                 {% endif %}
+                                 <input type="file" class="form-control" name="citizenship_photo_front" accept="image/*" {% if not form.instance.citizenship_photo_front %}required{% endif %}>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="card h-100">
+                              <div class="card-body">
+                                 <h5 class="card-title">
+                                    <i class="fas fa-id-card me-2"></i>{% trans "Citizenship (Back)" %} <span class="text-danger">*</span>
+                                 </h5>
+                                 {% if form.instance.citizenship_photo_back %}
+                                 <img src="{{ form.instance.citizenship_photo_back.url }}" class="img-thumbnail mb-2" style="max-height: 150px">
+                                 {% endif %}
+                                 <input type="file" class="form-control" name="citizenship_photo_back" accept="image/*" {% if not form.instance.citizenship_photo_back %}required{% endif %}>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Submit Button -->
+                  <div class="text-center mt-5">
+                     <button type="submit" class="btn btn-primary btn-lg px-5">
                         <i class="fas fa-save me-2"></i>{% trans "Save Information" %}
-                        </button>
-                     </div>
+                     </button>
                   </div>
                </form>
             </div>
@@ -341,6 +379,7 @@
       </div>
    </div>
 </div>
+
 <!-- Form Validation Script -->
 <script>
    (function () {
@@ -373,9 +412,27 @@
        hiddenStatusInput.value = newStatus;
    });
 </script>
+<script>
+   const empToggle = document.getElementById('employmentStatusToggle');
+   if (empToggle) {
+       const empLabel = document.getElementById('employmentStatusLabel');
+       const hiddenEmpStatusInput = document.createElement('input');
+       hiddenEmpStatusInput.type = 'hidden';
+       hiddenEmpStatusInput.name = 'employment_status';
+       
+       hiddenEmpStatusInput.value = empToggle.checked ? 'occupied' : 'unoccupied';
+       document.querySelector('form').appendChild(hiddenEmpStatusInput);
+       
+       empToggle.addEventListener('change', () => {
+           const newStatus = empToggle.checked ? 'occupied' : 'unoccupied';
+           empLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+           hiddenEmpStatusInput.value = newStatus;
+       });
+   }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-   document.querySelectorAll('.dob-icon').forEach(icon => {
+   document.querySelectorAll('.dob-icon, .citizenship-icon').forEach(icon => {
        icon.addEventListener('click', function() {
            const dateInput = this.closest('.input-group').querySelector('input[type="date"]');
            dateInput.focus();

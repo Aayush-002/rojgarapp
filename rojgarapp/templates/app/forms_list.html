@@ -1,9 +1,11 @@
-{% extends 'layouts/base.html' %} {% load i18n %} {% block title %}{%translate
-"List of Forms"%}{% endblock %} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% load i18n %}
+{% load nepali_numbers %}
+{% block title %}{%translate "List of Forms"%}{% endblock %} {% block content %}
 <div class="container py-5">
   <div class="row mb-4">
     <div class="col-md-8">
-      <h2 class="display-5 text-primary fw-bold">{% trans "Form Records" %}</h2>
+      <h2 class="display-5 text-primary fw-bold">{% trans "Applicant Records" %}</h2>
     </div>
     <div class="col-md-4">
       <form method="get" class="d-flex gap-2">
@@ -36,15 +38,14 @@
             <tr>
               <th scope="col" class="px-4 py-3">{% trans "S.N." %}</th>
               <th scope="col" class="px-4 py-3">{% trans "Name" %}</th>
-              <th scope="col" class="px-4 py-3">{% trans "Mobile Number" %}</th>
+              <th scope="col" class="px-4 py-3">{% trans "Phone No." %}</th>
               <th scope="col" class="px-4 py-3">{% trans "Education" %}</th>
               <th scope="col" class="px-4 py-3">
-                {% trans "Citizenship Number" %}
+                {% trans "Citizenship No." %}
               </th>
               <th scope="col" class="px-4 py-3">
-                {% trans "Professional Skill" %}
+                {% trans "Professional Skills" %}
               </th>
-              <th scope="col" class="px-4 py-3">{% trans "Father's Name" %}</th>
               <th scope="col" class="px-4 py-3">{% trans "Status" %}</th>
               <th scope="col" class="px-4 py-3 text-center">
                 {% trans "Actions" %}
@@ -54,16 +55,19 @@
           <tbody>
             {% for form in forms %}
             <tr>
-              <td class="px-4 py-3">{{ forloop.counter }}</td>
+              <td class="px-4 py-3">{{ forloop.counter|nepali_count }}</td>
               <td class="px-4 py-3">
-                {{ form.first_name|default:"" }} {{form.middle_name|default:""}} {{ form.last_name|default:"" }}
+                {{ form.first_name|default:"" }}
+                {% if form.middle_name %}
+                  {{ form.middle_name|slice:":1" }}.
+                {% endif %}
+                {{ form.last_name|default:"" }}
               </td>
 
               <td class="px-4 py-3">{{ form.mobile_number }}</td>
-              <td class="px-4 py-3">{{ form.education_background }}</td>
+              <td class="px-4 py-3">{{ form.get_education_background_display }}</td>
               <td class="px-4 py-3">{{ form.citizenship_number }}</td>
-              <td class="px-4 py-3">{{ form.professional_skill }}</td>
-              <td class="px-4 py-3">{{ form.fathers_name }}</td>
+              <td class="px-4 py-3">{{ form.get_professional_skill_display }}</td>
               <td class="px-4 py-3">
                 {% if form.status == 'pending' %}
                 <span class="badge bg-warning text-dark"

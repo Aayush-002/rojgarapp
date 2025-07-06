@@ -14,25 +14,18 @@ import os
 from pathlib import Path
 import dj_database_url
 from decouple import config
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
 # ".vercel.app", ".now.sh", "127.0.0.1", "localhost",
 ALLOWED_HOSTS = ["*"]
-
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -41,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
     "whitenoise.runserver_nostatic",
     "app",
 ]
@@ -70,6 +64,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "app.context_processors.profile_status",
             ],
         },
     },
@@ -77,17 +72,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "rojgarapp.wsgi.application"
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://3e49-27-34-73-184.ngrok-free.app",
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=config(
-            "DATABASE_URL",
-            default="postgres://neondb_owner:npg_oBQyli4wRkI5@ep-divine-salad-a1qyyimb-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require",
-        )
-    )
+    # Prod database
+    # "default": dj_database_url.config(
+    #     default=config(
+    #         "DATABASE_URL",
+    #         default="postgres://neondb_owner:npg_oBQyli4wRkI5@ep-divine-salad-a1qyyimb-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require",
+    #     )
+    # )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
 
@@ -114,11 +118,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE = "en-us"
 
 LANGUAGES = [
-    ("en", "English"),
-    ("ne", "Nepali"),
+    ("en-us", "English"),
+    ("ne-np", "Nepali"),
 ]
 USE_I18N = True
 USE_L10N = True
@@ -156,3 +160,12 @@ LOGIN_URL = "/login/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # APPEND_SLASH = False
+
+# Custom User Model
+AUTH_USER_MODEL = 'app.CustomUser'
+
+# Custom Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'app.backends.PhoneNumberBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

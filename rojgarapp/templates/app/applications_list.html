@@ -1,0 +1,166 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% load nepali_numbers %}
+
+{% block title %}{% trans "My Applications" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                {% if is_employer %}
+                    {% trans "Job Applications" %}
+                {% else %}
+                    {% trans "All Applications" %}
+                {% endif %}
+            </h2>
+        </div>
+        
+        <div class="card-body">
+            {% if applications %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Job Title" %}</th>
+                                <th>{% trans "Applicant" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th>{% trans "Applied On" %}</th>
+                                <th>{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in applications %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'job_detail' application.job.id %}">
+                                        {{ application.job.title }}
+                                    </a>
+                                </td>
+                                <td>{{ application.applicant }}</td>
+                                <td>
+                                    {% if is_employer %}
+                                        <select class="form-select status-select" 
+                                                data-application-id="{{ application.id }}"
+                                                style="width: auto; display: inline-block;">
+                                            {% for choice in status_choices %}
+                                            <option value="{{ choice.0 }}" 
+                                                {% if choice.0 == application.status %}selected{% endif %}>
+                                                {{ choice.1 }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <span class="badge ms-2 status-badge 
+                                            {% if application.status == 'accepted' %}bg-success
+                                            {% elif application.status == 'rejected' %}bg-danger
+                                            {% elif application.status == 'pending' %}bg-warning
+                                            {% else %}bg-info{% endif %}">
+                                            {{ application.get_status_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge 
+                                            {% if application.status == 'accepted' %}bg-success
+                                            {% elif application.status == 'rejected' %}bg-danger
+                                            {% elif application.status == 'pending' %}bg-warning
+                                            {% else %}bg-info{% endif %}">
+                                            {{ application.get_status_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ application.application_date|date:"F d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'application_delete' application.id %}" 
+                                       class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if is_paginated %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        {% trans "Previous" %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        {% trans "Next" %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {% trans "No applications found." %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Status update functionality
+    document.querySelectorAll('.status-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const applicationId = this.dataset.applicationId;
+            const newStatus = this.value;
+            const badge = this.nextElementSibling;
+            
+            fetch("{% url 'update_application_status' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `application_id=${applicationId}&status=${newStatus}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    badge.textContent = data.new_status;
+                    badge.className = `badge ms-2 status-badge ${data.status_class}`;
+                } else {
+                    alert('Error updating status: ' + data.error);
+                    // Revert the select to its original value
+                    this.value = this.dataset.originalValue;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                this.value = this.dataset.originalValue;
+            });
+        });
+        
+        // Store original value for reverting if needed
+        select.dataset.originalValue = select.value;
+    });
+});
+</script>
+{% endblock %}
