@@ -6,22 +6,22 @@ from .models import PersonalDetails, JobAnnouncement, CustomUser
 
 
 def validate_phone_number(value):
-    """Validate that phone number has exactly 10 digits after +977"""
-    if not value.startswith('+977'):
-        raise ValidationError('Phone number must start with +977')
+    """Validate that phone number has exactly 10 digits"""
+    # Remove any spaces or dashes
+    number = ''.join(filter(str.isdigit, value))
     
-    # Remove +977 and check if remaining part has exactly 10 digits
-    number_part = value[4:]  # Remove '+977'
-    if not number_part.isdigit() or len(number_part) != 10:
-        raise ValidationError('Phone number must have exactly 10 digits after +977 (e.g., +9771234567890)')
+    if not number.isdigit() or len(number) != 10:
+        raise ValidationError('Phone number must have exactly 10 digits')
 
 
 class CustomUserCreationForm(UserCreationForm):
     phone_number = forms.CharField(
         max_length=15,
-        help_text="Enter your phone number (e.g., +9771234567890)",
-        widget=forms.TextInput(attrs={'class': 'form-control auth-input', 'placeholder': '+977'}),
-        initial='+977',
+        help_text="Enter your 10-digit phone number",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control auth-input',
+            'placeholder': '98XXXXXXXX'
+        }),
         validators=[validate_phone_number]
     )
     first_name = forms.CharField(
@@ -84,9 +84,11 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomAuthenticationForm(AuthenticationForm):
     phone_number = forms.CharField(
         max_length=15,
-        widget=forms.TextInput(attrs={'class': 'form-control auth-input', 'placeholder': '+977'}),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control auth-input',
+            'placeholder': '98XXXXXXXX'
+        }),
         label="Phone Number",
-        initial='+977',
         validators=[validate_phone_number]
     )
     password = forms.CharField(

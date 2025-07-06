@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
         verbose_name=_("Phone Number"),
         max_length=15,
         unique=True,
-        help_text=_("Enter your phone number (e.g., +9771234567890)"),
+        help_text=_("Enter your 10-digit phone number"),
     )
 
     email = models.EmailField(blank=True, null=True)

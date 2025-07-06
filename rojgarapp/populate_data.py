@@ -31,10 +31,9 @@ def create_groups():
 
 def generate_unique_phone(existing_phones):
     """Generate a unique Nepalese phone number that's not in DB or used in memory."""
-    from app.models import CustomUser  # adjust the import to your app name
-
     while True:
-        phone = f"+977{random.choice(['97', '98'])}{random.randint(10000000, 99999999)}"
+        # Generate a 10-digit phone number starting with 98
+        phone = f"98{random.randint(10000000, 99999999)}"
         if phone in existing_phones:
             continue
         if CustomUser.objects.filter(phone_number=phone).exists():
@@ -150,15 +149,19 @@ def create_personal_details(users, professions):
         # Generate random citizenship number
         citizenship_number = f"{random.randint(1000, 9999)}-{random.randint(100, 999)}"
 
+        # Generate 10-digit mobile number starting with 98
+        mobile_number = f"98{random.randint(10000000, 99999999)}"
+        # Generate landline number without country code
+        contact_number = f"01{random.randint(1000000, 9999999)}"
+
         PersonalDetails.objects.create(
             first_name=user.first_name,
             middle_name="",
             last_name=user.last_name,
             gender=random.choice(genders),
-            dob=datetime.now()
-            - timedelta(days=random.randint(6570, 18250)),  # 18-50 years
-            mobile_number=f"98{random.randint(10000000, 99999999)}",
-            contact_number=f"01{random.randint(1000000, 9999999)}",
+            dob=datetime.now() - timedelta(days=random.randint(6570, 18250)),  # 18-50 years
+            mobile_number=mobile_number,
+            contact_number=contact_number,
             email_address=user.email,
             province=random.choice(provinces),
             district=random.choice(districts),
@@ -167,15 +170,10 @@ def create_personal_details(users, professions):
             tole_name=f"Tole {random.randint(1, 10)}",
             fathers_name=f"Father {random.randint(1, 100)}",
             mothers_name=f"Mother {random.randint(1, 100)}",
-            spouse_name=(
-                f"Spouse {random.randint(1, 100)}"
-                if random.choice([True, False])
-                else ""
-            ),
+            spouse_name=f"Spouse {random.randint(1, 100)}" if random.choice([True, False]) else "",
             citizenship_number=citizenship_number,
             citizenship_issued_district=random.choice(districts),
-            citizenship_issued_date=datetime.now()
-            - timedelta(days=random.randint(365, 3650)),
+            citizenship_issued_date=datetime.now() - timedelta(days=random.randint(365, 3650)),
             education_background=random.choice(education_backgrounds),
             professional_skill=random.choice(professions).name,
             employment_status=random.choice(employment_statuses),
@@ -208,9 +206,7 @@ def create_job_announcements(employers, professions):
             required_personnel=random.randint(1, 5),
             posted_by=random.choice(employers),
             posted_date=posted_date,
-            is_active=random.choice(
-                [True, True, True, False]
-            ),  # 75% chance of being active
+            is_active=random.choice([True, True, True, False]),  # 75% chance of being active
         )
 
 
@@ -229,9 +225,7 @@ def create_job_applications(users, jobs):
 
         # Get random number of applications for this job
         # Make sure we don't exceed remaining slots
-        max_new_applications = min(
-            5, remaining_slots * 2
-        )  # Allow 2x applications per slot
+        max_new_applications = min(5, remaining_slots * 2)  # Allow 2x applications per slot
         num_applications = random.randint(0, max_new_applications)
 
         # Get all existing applicants for this job
