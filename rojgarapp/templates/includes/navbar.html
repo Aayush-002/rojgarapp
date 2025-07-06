@@ -293,6 +293,7 @@
               <i class="fas fa-list me-2"></i>{% trans "Details" %}
             </a>
           </li>
+          {% if user.groups.all.0.name == 'Employers' %}
           <li class="nav-item">
             <a
               class="nav-link {% if request.path == '/post-job/' %}active{% endif %}"
@@ -301,6 +302,7 @@
               <i class="fas fa-briefcase me-2"></i>{% trans "Job Post" %}
             </a>
           </li>
+          {% endif %}
           <li class="nav-item">
             <a
               class="nav-link {% if request.path == '/forms/' %}active{% endif %}"

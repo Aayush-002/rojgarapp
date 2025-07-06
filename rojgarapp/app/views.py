@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import IntegrityError
 
 from .forms import PersonalDetailsForm, JobAnnouncementForm, CustomUserCreationForm, CustomAuthenticationForm
-from .models import PersonalDetails, Professions, JobAnnouncement, JobApplication, CustomUser
+from .models import PersonalDetails, JobAnnouncement, JobApplication
 from .utils import (
     get_gender_counts,
     get_employment_status_counts,
@@ -411,7 +411,11 @@ def applications_list(request):
     if check_employer(request.user):
         applications = JobApplication.objects.filter(job__posted_by=request.user)
     else:
-        applications = JobApplication.objects.filter(applicant__id=request.user.id)
+        try:
+            personal_details = PersonalDetails.objects.get(pk=request.user.id)
+            applications = JobApplication.objects.filter(applicant=personal_details)
+        except PersonalDetails.DoesNotExist:
+            applications = JobApplication.objects.none()
 
     paginator = Paginator(applications, 10)
     page_number = request.GET.get("page")
